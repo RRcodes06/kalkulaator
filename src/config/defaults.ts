@@ -1,20 +1,23 @@
-import type { ConfigConstants, UserInputs } from '@/types/calculator';
+import type { CalculatorConfig } from '@/types/calculator';
 
-export const DEFAULT_CONFIG: ConfigConstants = {
+export const DEFAULT_CONFIG: CalculatorConfig = {
   HOURS_PER_MONTH: 168,
   EST_AVG_GROSS_WAGE: 2075,
   
-  // Tax rates (Estonia 2024)
+  // Employer taxes (Estonia 2024)
   SOCIAL_TAX_RATE: 0.33,
   EMPLOYER_UI_RATE: 0.008,
-  EMPLOYEE_UI_RATE: 0.016,
-  INCOME_TAX_RATE: 0.22,
-  PILLAR_II_RATE: 0.02,
-  TAX_FREE_ALLOWANCE: 700,
   
   // Risk parameters
-  BAD_HIRE_RISK: 0.15,
-  BAD_HIRE_MONTHS: 2,
+  BAD_HIRE_RISK_RATE: 0.15,
+  BAD_HIRE_PAY_MONTHS: 2,
+  
+  // Recommended ranges for warnings
+  RECOMMENDED_ONBOARDING_MONTHS_MIN: 1,
+  RECOMMENDED_ONBOARDING_MONTHS_MAX: 12,
+  RECOMMENDED_PRODUCTIVITY_PCT_MIN: 20,
+  RECOMMENDED_PRODUCTIVITY_PCT_MAX: 80,
+  RECOMMENDED_VACANCY_DAYS_MAX: 90,
   
   // Text snippets
   disclaimerText: 'See kalkulaator annab ligikaudse hinnangu värbamisprotsessi kogukulule. Tegelikud kulud võivad varieeruda sõltuvalt konkreetsetest asjaoludest.',
@@ -22,34 +25,20 @@ export const DEFAULT_CONFIG: ConfigConstants = {
   privacyNotice: 'Sisestatud infot ei salvestata. Lehelt lahkudes kõik kustub.',
 };
 
-export const DEFAULT_USER_INPUTS: UserInputs = {
-  positionTitle: '',
-  grossSalary: 2500,
-  
-  hrHoursSpent: 20,
-  hrHourlyRate: 0,
-  managerHoursSpent: 15,
-  managerHourlyRate: 0,
-  otherStaffHoursSpent: 10,
-  otherStaffHourlyRate: 0,
-  
-  jobAdsCost: 500,
-  recruitmentAgencyFee: 0,
-  backgroundCheckCost: 0,
-  assessmentToolsCost: 0,
-  travelCost: 0,
-  otherExternalCosts: 0,
-  
-  trainingCost: 0,
-  equipmentCost: 500,
-  onboardingHours: 40,
-  mentorHoursSpent: 20,
-  mentorHourlyRate: 0,
-  
-  monthsToFullProductivity: 3,
-  productivityDuringRampUp: 50,
-};
-
 export const STORAGE_KEYS = {
   CONFIG: 'recruitment-calc-config',
 } as const;
+
+export const BLOCK_LABELS: Record<string, string> = {
+  strategyPrep: 'Strateegia ja ettevalmistus',
+  adsBranding: 'Kuulutused ja bränding',
+  candidateMgmt: 'Kandidaatide haldus ja testid',
+  interviews: 'Intervjuud',
+  backgroundOffer: 'Taustakontroll ja pakkumine',
+  otherServices: 'Muud teenused',
+  preboarding: 'Ettevalmistus enne alustamist',
+  onboarding: 'Sisseelamine',
+  vacancy: 'Vaba ametikoha kulu',
+  indirectCosts: 'Kaudsed kulud',
+  expectedRisk: 'Oodatav riskikulu',
+};

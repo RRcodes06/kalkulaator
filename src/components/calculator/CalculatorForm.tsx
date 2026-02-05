@@ -6,252 +6,394 @@ import {
   Users, 
   Megaphone, 
   GraduationCap, 
-  TrendingDown 
+  TrendingDown,
+  UserCheck,
+  Clock,
+  Package,
+  Wrench
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import type { PayType } from '@/types/calculator';
 
 export function CalculatorForm() {
-  const { userInputs, computedResults, defaultsUsed, updateUserInput } = useAppStore();
+  const { inputs, results, updateInput, updateNestedInput } = useAppStore();
+
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('et-EE', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(Math.round(value));
+  };
 
   return (
     <div className="space-y-4">
-      {/* Position & Salary */}
+      {/* Position & Hire Pay */}
       <CalculatorSection
         id="position"
         title="Ametikoht ja palk"
-        subtitle="Põhiandmed värbatava positsiooni kohta"
+        subtitle="Värbatava positsiooni põhiandmed"
         icon={<Briefcase className="w-5 h-5" />}
-        subtotal={computedResults.totalEmployerCost}
+        subtotal={results.normalizedHirePay.employerMonthlyCost}
       >
         <div className="space-y-1.5">
           <Label className="text-sm font-medium">Ametikoha nimetus</Label>
           <Input
-            value={userInputs.positionTitle}
-            onChange={(e) => updateUserInput('positionTitle', e.target.value)}
+            value={inputs.positionTitle}
+            onChange={(e) => updateInput('positionTitle', e.target.value)}
             placeholder="nt. Tarkvaraarendaja"
             className="bg-card"
           />
         </div>
-        <NumberInput
-          label="Brutopalk"
-          value={userInputs.grossSalary}
-          onChange={(v) => updateUserInput('grossSalary', v)}
-          suffix="€/kuu"
-          min={0}
-          step={100}
-          hint="Igakuine brutopalk enne makse"
-        />
+        
+        <div className="space-y-1.5">
+          <Label className="text-sm font-medium">Palga tüüp</Label>
+          <Select
+            value={inputs.hirePay.payType}
+            onValueChange={(v) => updateInput('hirePay', { ...inputs.hirePay, payType: v as PayType })}
+          >
+            <SelectTrigger className="bg-card">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="unset">Määramata (kasuta keskmist)</SelectItem>
+              <SelectItem value="monthly">Kuupalk</SelectItem>
+              <SelectItem value="hourly">Tunnipalk</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {inputs.hirePay.payType !== 'unset' && (
+          <NumberInput
+            label={inputs.hirePay.payType === 'monthly' ? 'Brutopalk' : 'Tunnipalk'}
+            value={inputs.hirePay.payAmount}
+            onChange={(v) => updateInput('hirePay', { ...inputs.hirePay, payAmount: v })}
+            suffix={inputs.hirePay.payType === 'monthly' ? '€/kuu' : '€/h'}
+            min={0}
+            step={inputs.hirePay.payType === 'monthly' ? 100 : 1}
+          />
+        )}
+
+        {inputs.hirePay.payType === 'hourly' && (
+          <NumberInput
+            label="Töötunde kuus"
+            value={inputs.hirePay.hoursPerMonth ?? 168}
+            onChange={(v) => updateInput('hirePay', { ...inputs.hirePay, hoursPerMonth: v })}
+            suffix="h/kuu"
+            min={1}
+          />
+        )}
+
         <div className="p-4 bg-muted rounded-lg">
           <p className="text-sm text-muted-foreground mb-2">Tööandja kulud</p>
           <div className="space-y-1 text-sm">
             <div className="flex justify-between">
-              <span>Sotsiaalmaks (33%)</span>
-              <span className="font-medium">{computedResults.employerSocialTax.toFixed(0)} €</span>
+              <span>Brutopalk</span>
+              <span className="font-medium">{formatCurrency(results.normalizedHirePay.monthlyGross)} €</span>
             </div>
             <div className="flex justify-between">
-              <span>Töötuskindlustusmakse (0.8%)</span>
-              <span className="font-medium">{computedResults.employerUiTax.toFixed(0)} €</span>
+              <span>+ maksud (33.8%)</span>
+              <span className="font-medium">
+                {formatCurrency(results.normalizedHirePay.employerMonthlyCost - results.normalizedHirePay.monthlyGross)} €
+              </span>
             </div>
             <div className="flex justify-between font-semibold pt-1 border-t border-border">
               <span>Kokku tööjõukulu</span>
-              <span>{computedResults.totalEmployerCost.toFixed(0)} €/kuu</span>
+              <span>{formatCurrency(results.normalizedHirePay.employerMonthlyCost)} €/kuu</span>
             </div>
           </div>
+          {results.defaultsUsed.hirePay && (
+            <p className="text-xs text-warning mt-2">⚠ Kasutatakse Eesti keskmist palka</p>
+          )}
         </div>
       </CalculatorSection>
 
-      {/* Internal Time Costs */}
+      {/* Strategy & Prep */}
       <CalculatorSection
-        id="internal"
-        title="Sisemised ajakulud"
-        subtitle="Töötajate aeg, mis kulub värbamisprotsessile"
+        id="strategy"
+        title="Strateegia ja ettevalmistus"
+        subtitle="Ametiprofiili koostamine, nõuete määramine"
         icon={<Users className="w-5 h-5" />}
-        subtotal={computedResults.totalInternalTimeCost}
+        subtotal={results.blockCosts.strategyPrep.total}
       >
         <NumberInput
           label="Personalitöötaja tunnid"
-          value={userInputs.hrHoursSpent}
-          onChange={(v) => updateUserInput('hrHoursSpent', v)}
+          value={inputs.strategyPrep.hrHours}
+          onChange={(v) => updateNestedInput('strategyPrep', 'hrHours', v)}
           suffix="h"
         />
-        <NumberInput
-          label="Personalitöötaja tunnihind"
-          value={userInputs.hrHourlyRate}
-          onChange={(v) => updateUserInput('hrHourlyRate', v)}
-          suffix="€/h"
-          showDefaultIndicator={defaultsUsed.hrHourlyRate}
-          hint={defaultsUsed.hrHourlyRate ? 'Kasutab Eesti keskmist' : undefined}
-        />
-        <div className="p-3 bg-muted/50 rounded-lg flex justify-between items-center">
-          <span className="text-sm text-muted-foreground">Personalitöötaja kulu</span>
-          <span className="font-semibold">{computedResults.hrTimeCost.toFixed(0)} €</span>
-        </div>
-
         <NumberInput
           label="Juhi tunnid"
-          value={userInputs.managerHoursSpent}
-          onChange={(v) => updateUserInput('managerHoursSpent', v)}
+          value={inputs.strategyPrep.managerHours}
+          onChange={(v) => updateNestedInput('strategyPrep', 'managerHours', v)}
           suffix="h"
         />
         <NumberInput
-          label="Juhi tunnihind"
-          value={userInputs.managerHourlyRate}
-          onChange={(v) => updateUserInput('managerHourlyRate', v)}
-          suffix="€/h"
-          showDefaultIndicator={defaultsUsed.managerHourlyRate}
-          hint={defaultsUsed.managerHourlyRate ? 'Kasutab 1.5× keskmist' : undefined}
-        />
-        <div className="p-3 bg-muted/50 rounded-lg flex justify-between items-center">
-          <span className="text-sm text-muted-foreground">Juhi kulu</span>
-          <span className="font-semibold">{computedResults.managerTimeCost.toFixed(0)} €</span>
-        </div>
-
-        <NumberInput
-          label="Teiste töötajate tunnid"
-          value={userInputs.otherStaffHoursSpent}
-          onChange={(v) => updateUserInput('otherStaffHoursSpent', v)}
+          label="Tiimi tunnid"
+          value={inputs.strategyPrep.teamHours}
+          onChange={(v) => updateNestedInput('strategyPrep', 'teamHours', v)}
           suffix="h"
-          hint="nt. intervjueerijad, tiimikaaslased"
         />
-        <NumberInput
-          label="Teiste töötajate tunnihind"
-          value={userInputs.otherStaffHourlyRate}
-          onChange={(v) => updateUserInput('otherStaffHourlyRate', v)}
-          suffix="€/h"
-        />
-        <div className="p-3 bg-muted/50 rounded-lg flex justify-between items-center">
-          <span className="text-sm text-muted-foreground">Teiste töötajate kulu</span>
-          <span className="font-semibold">{computedResults.otherStaffTimeCost.toFixed(0)} €</span>
-        </div>
       </CalculatorSection>
 
-      {/* External Costs */}
+      {/* Ads & Branding */}
       <CalculatorSection
-        id="external"
-        title="Välised kulud"
-        subtitle="Teenused ja ostud väljastpoolt ettevõtet"
+        id="ads"
+        title="Kuulutused ja bränding"
+        subtitle="Töökuulutused, tööandja brändi materjalid"
         icon={<Megaphone className="w-5 h-5" />}
-        subtotal={computedResults.totalExternalCosts}
+        subtotal={results.blockCosts.adsBranding.total}
       >
         <NumberInput
-          label="Töökuulutused"
-          value={userInputs.jobAdsCost}
-          onChange={(v) => updateUserInput('jobAdsCost', v)}
-          suffix="€"
-          hint="CV-Online, LinkedIn, jne."
+          label="Personalitöötaja tunnid"
+          value={inputs.adsBranding.hrHours}
+          onChange={(v) => updateNestedInput('adsBranding', 'hrHours', v)}
+          suffix="h"
         />
         <NumberInput
-          label="Värbamisagentuuri tasu"
-          value={userInputs.recruitmentAgencyFee}
-          onChange={(v) => updateUserInput('recruitmentAgencyFee', v)}
-          suffix="€"
-          hint="Headhunteri või agentuuri teenustasu"
+          label="Juhi tunnid"
+          value={inputs.adsBranding.managerHours}
+          onChange={(v) => updateNestedInput('adsBranding', 'managerHours', v)}
+          suffix="h"
         />
         <NumberInput
-          label="Taustakontroll"
-          value={userInputs.backgroundCheckCost}
-          onChange={(v) => updateUserInput('backgroundCheckCost', v)}
+          label="Kuulutuste ja brändingu kulud"
+          value={inputs.adsBranding.directCosts}
+          onChange={(v) => updateNestedInput('adsBranding', 'directCosts', v)}
           suffix="€"
-        />
-        <NumberInput
-          label="Hindamisvahendid"
-          value={userInputs.assessmentToolsCost}
-          onChange={(v) => updateUserInput('assessmentToolsCost', v)}
-          suffix="€"
-          hint="Testid, psühholoogilised hindamised"
-        />
-        <NumberInput
-          label="Reisikulud"
-          value={userInputs.travelCost}
-          onChange={(v) => updateUserInput('travelCost', v)}
-          suffix="€"
-          hint="Kandidaatide sõidukulud intervjuudele"
-        />
-        <NumberInput
-          label="Muud välised kulud"
-          value={userInputs.otherExternalCosts}
-          onChange={(v) => updateUserInput('otherExternalCosts', v)}
-          suffix="€"
+          hint="CV-Online, LinkedIn, materjalid"
         />
       </CalculatorSection>
 
-      {/* Onboarding Costs */}
+      {/* Candidate Management */}
+      <CalculatorSection
+        id="candidate"
+        title="Kandidaatide haldus ja testid"
+        subtitle="CV-de läbivaatus, testid, suhtlus"
+        icon={<UserCheck className="w-5 h-5" />}
+        subtotal={results.blockCosts.candidateMgmt.total}
+      >
+        <NumberInput
+          label="Personalitöötaja tunnid"
+          value={inputs.candidateMgmt.hrHours}
+          onChange={(v) => updateNestedInput('candidateMgmt', 'hrHours', v)}
+          suffix="h"
+        />
+        <NumberInput
+          label="Juhi tunnid"
+          value={inputs.candidateMgmt.managerHours}
+          onChange={(v) => updateNestedInput('candidateMgmt', 'managerHours', v)}
+          suffix="h"
+        />
+        <NumberInput
+          label="Hindamistestide kulud"
+          value={inputs.candidateMgmt.testsCost}
+          onChange={(v) => updateNestedInput('candidateMgmt', 'testsCost', v)}
+          suffix="€"
+          hint="Psühholoogilised testid, oskuste hindamine"
+        />
+      </CalculatorSection>
+
+      {/* Interviews */}
+      <CalculatorSection
+        id="interviews"
+        title="Intervjuud"
+        subtitle="Intervjuude läbiviimine ja koordineerimine"
+        icon={<Clock className="w-5 h-5" />}
+        subtotal={results.blockCosts.interviews.total}
+      >
+        <NumberInput
+          label="Personalitöötaja tunnid"
+          value={inputs.interviews.hrHours}
+          onChange={(v) => updateNestedInput('interviews', 'hrHours', v)}
+          suffix="h"
+        />
+        <NumberInput
+          label="Juhi tunnid"
+          value={inputs.interviews.managerHours}
+          onChange={(v) => updateNestedInput('interviews', 'managerHours', v)}
+          suffix="h"
+        />
+        <NumberInput
+          label="Tiimi tunnid"
+          value={inputs.interviews.teamHours}
+          onChange={(v) => updateNestedInput('interviews', 'teamHours', v)}
+          suffix="h"
+          hint="Tiimikaaslaste kaasamine intervjuudele"
+        />
+        <NumberInput
+          label="Otsesed kulud"
+          value={inputs.interviews.directCosts}
+          onChange={(v) => updateNestedInput('interviews', 'directCosts', v)}
+          suffix="€"
+          hint="Reisikulud, ruumid"
+        />
+      </CalculatorSection>
+
+      {/* Background & Offer */}
+      <CalculatorSection
+        id="background"
+        title="Taustakontroll ja pakkumine"
+        subtitle="Taustakontroll, lepingu koostamine"
+        icon={<Package className="w-5 h-5" />}
+        subtotal={results.blockCosts.backgroundOffer.total}
+      >
+        <NumberInput
+          label="Personalitöötaja tunnid"
+          value={inputs.backgroundOffer.hrHours}
+          onChange={(v) => updateNestedInput('backgroundOffer', 'hrHours', v)}
+          suffix="h"
+        />
+        <NumberInput
+          label="Juhi tunnid"
+          value={inputs.backgroundOffer.managerHours}
+          onChange={(v) => updateNestedInput('backgroundOffer', 'managerHours', v)}
+          suffix="h"
+        />
+        <NumberInput
+          label="Otsesed kulud"
+          value={inputs.backgroundOffer.directCosts}
+          onChange={(v) => updateNestedInput('backgroundOffer', 'directCosts', v)}
+          suffix="€"
+          hint="Taustakontroll, juriidilised tasud"
+        />
+      </CalculatorSection>
+
+      {/* Preboarding */}
+      <CalculatorSection
+        id="preboarding"
+        title="Ettevalmistus enne alustamist"
+        subtitle="Töökoha ettevalmistus, varustus"
+        icon={<Wrench className="w-5 h-5" />}
+        subtotal={results.blockCosts.preboarding.total}
+      >
+        <NumberInput
+          label="Seadmete kulu"
+          value={inputs.preboarding.devicesCost}
+          onChange={(v) => updateNestedInput('preboarding', 'devicesCost', v)}
+          suffix="€"
+          hint="Arvuti, telefon, monitor"
+        />
+        <NumberInput
+          label="IT seadistamise tunnid"
+          value={inputs.preboarding.itSetupHours}
+          onChange={(v) => updateNestedInput('preboarding', 'itSetupHours', v)}
+          suffix="h"
+        />
+        <NumberInput
+          label="HR ettevalmistuse tunnid"
+          value={inputs.preboarding.prepHours}
+          onChange={(v) => updateNestedInput('preboarding', 'prepHours', v)}
+          suffix="h"
+        />
+      </CalculatorSection>
+
+      {/* Onboarding */}
       <CalculatorSection
         id="onboarding"
-        title="Sisseelamise kulud"
-        subtitle="Uue töötaja koolitamine ja varustamine"
+        title="Sisseelamine"
+        subtitle="Tootlikkuse kadu uue töötaja sisseelamisel"
         icon={<GraduationCap className="w-5 h-5" />}
-        subtotal={computedResults.totalOnboardingCost}
+        subtotal={results.blockCosts.onboarding.total}
       >
         <NumberInput
-          label="Koolituskulud"
-          value={userInputs.trainingCost}
-          onChange={(v) => updateUserInput('trainingCost', v)}
-          suffix="€"
-          hint="Välised koolitused, sertifitseerimised"
-        />
-        <NumberInput
-          label="Töövarustus"
-          value={userInputs.equipmentCost}
-          onChange={(v) => updateUserInput('equipmentCost', v)}
-          suffix="€"
-          hint="Arvuti, telefon, töökoht"
-        />
-        <NumberInput
-          label="Sisseelamise tunnid"
-          value={userInputs.onboardingHours}
-          onChange={(v) => updateUserInput('onboardingHours', v)}
-          suffix="h"
-          hint="Uue töötaja orientatsioon"
-        />
-        <NumberInput
-          label="Mentori tunnid"
-          value={userInputs.mentorHoursSpent}
-          onChange={(v) => updateUserInput('mentorHoursSpent', v)}
-          suffix="h"
-        />
-        <NumberInput
-          label="Mentori tunnihind"
-          value={userInputs.mentorHourlyRate}
-          onChange={(v) => updateUserInput('mentorHourlyRate', v)}
-          suffix="€/h"
-          showDefaultIndicator={defaultsUsed.mentorHourlyRate}
-        />
-      </CalculatorSection>
-
-      {/* Productivity Loss */}
-      <CalculatorSection
-        id="productivity"
-        title="Tootlikkuse kadu"
-        subtitle="Sisseelamisperioodi vähenenud tootlikkus"
-        icon={<TrendingDown className="w-5 h-5" />}
-        subtotal={computedResults.productivityLossCost}
-      >
-        <NumberInput
-          label="Kuud täistootlikkuseni"
-          value={userInputs.monthsToFullProductivity}
-          onChange={(v) => updateUserInput('monthsToFullProductivity', v)}
+          label="Sisseelamisperiood"
+          value={inputs.onboarding.onboardingMonths}
+          onChange={(v) => updateNestedInput('onboarding', 'onboardingMonths', v)}
           suffix="kuud"
-          min={1}
+          min={0}
           max={24}
-          hint="Kui kaua võtab aega 100% tootlikkuse saavutamine"
+          hint="Aeg täistootlikkuse saavutamiseks"
         />
         <NumberInput
-          label="Keskmine tootlikkus sisseelamisel"
-          value={userInputs.productivityDuringRampUp}
-          onChange={(v) => updateUserInput('productivityDuringRampUp', v)}
+          label="Keskmine tootlikkus"
+          value={inputs.onboarding.productivityPct}
+          onChange={(v) => updateNestedInput('onboarding', 'productivityPct', v)}
           suffix="%"
           min={0}
           max={100}
-          hint="Keskmine tootlikkuse tase võrreldes kogenud töötajaga"
+          hint="Protsent täistootlikkusest sisseelamisel"
         />
-        <div className="p-4 bg-muted rounded-lg lg:col-span-1">
-          <p className="text-sm text-muted-foreground mb-2">Arvutus</p>
+        <NumberInput
+          label="Lisakulud"
+          value={inputs.onboarding.extraCosts}
+          onChange={(v) => updateNestedInput('onboarding', 'extraCosts', v)}
+          suffix="€"
+          hint="Koolitused, sertifikaadid"
+        />
+        <div className="p-4 bg-muted rounded-lg">
+          <p className="text-sm text-muted-foreground mb-2">Tootlikkuse kadu</p>
           <p className="text-sm">
-            {userInputs.monthsToFullProductivity} kuud × {computedResults.totalEmployerCost.toFixed(0)} € × {((100 - userInputs.productivityDuringRampUp) / 100 * 100).toFixed(0)}% kadu
+            {inputs.onboarding.onboardingMonths} kuud × {formatCurrency(results.normalizedHirePay.employerMonthlyCost)} € × {100 - inputs.onboarding.productivityPct}% kadu
           </p>
-          <p className="font-semibold mt-2">= {computedResults.productivityLossCost.toFixed(0)} €</p>
+          <p className="font-semibold mt-2">
+            = {formatCurrency(results.blockCosts.onboarding.total - inputs.onboarding.extraCosts)} €
+          </p>
+        </div>
+      </CalculatorSection>
+
+      {/* Vacancy Cost */}
+      <CalculatorSection
+        id="vacancy"
+        title="Vaba ametikoha kulu"
+        subtitle="Kaotatud tootlikkus täitmata positsiooni tõttu"
+        icon={<TrendingDown className="w-5 h-5" />}
+        subtotal={results.blockCosts.vacancy.total}
+      >
+        <NumberInput
+          label="Vakantsi kestus"
+          value={inputs.vacancy.vacancyDays}
+          onChange={(v) => updateNestedInput('vacancy', 'vacancyDays', v)}
+          suffix="päeva"
+          min={0}
+          hint="Päevi, mil positsioon on täitmata"
+        />
+        <NumberInput
+          label="Päevakulu"
+          value={inputs.vacancy.dailyCost}
+          onChange={(v) => updateNestedInput('vacancy', 'dailyCost', v)}
+          suffix="€/päev"
+          hint="Hinnanguline kaotatud tulu või tootlikkus"
+        />
+        <div className="p-4 bg-muted rounded-lg">
+          <p className="text-sm text-muted-foreground mb-2">Vakantsi kogukulu</p>
+          <p className="font-semibold">
+            {inputs.vacancy.vacancyDays} päeva × {inputs.vacancy.dailyCost} €/päev = {formatCurrency(results.blockCosts.vacancy.total)} €
+          </p>
+        </div>
+      </CalculatorSection>
+
+      {/* Indirect Costs */}
+      <CalculatorSection
+        id="indirect"
+        title="Kaudsed kulud"
+        subtitle="Administratiivne aeg (ilma tööandja maksudeta)"
+        icon={<Users className="w-5 h-5" />}
+        subtotal={results.blockCosts.indirectCosts.total}
+      >
+        <NumberInput
+          label="Personalitöötaja tunnid"
+          value={inputs.indirectCosts.hrHours}
+          onChange={(v) => updateNestedInput('indirectCosts', 'hrHours', v)}
+          suffix="h"
+        />
+        <NumberInput
+          label="Juhi tunnid"
+          value={inputs.indirectCosts.managerHours}
+          onChange={(v) => updateNestedInput('indirectCosts', 'managerHours', v)}
+          suffix="h"
+        />
+        <NumberInput
+          label="Tiimi tunnid"
+          value={inputs.indirectCosts.teamHours}
+          onChange={(v) => updateNestedInput('indirectCosts', 'teamHours', v)}
+          suffix="h"
+        />
+        <div className="p-4 bg-muted rounded-lg md:col-span-3">
+          <p className="text-xs text-muted-foreground">
+            ℹ Kaudsete kulude puhul arvestatakse ainult brutotunnipalka, ilma tööandja maksudeta.
+          </p>
         </div>
       </CalculatorSection>
     </div>
