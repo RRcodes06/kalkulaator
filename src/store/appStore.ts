@@ -1,8 +1,43 @@
 import { create } from 'zustand';
-import type { AppState, UserInputs, ComputedResults, ConfigConstants, Warnings, DefaultsUsed } from '@/types/calculator';
-import { DEFAULT_CONFIG, DEFAULT_USER_INPUTS, STORAGE_KEYS } from '@/config/defaults';
+import type { CalculatorInputs, CalculatorConfig, ComputedResult, ServiceRow } from '@/types/calculator';
+import { DEFAULT_CONFIG, STORAGE_KEYS } from '@/config/defaults';
+import { computeTotals, createDefaultInputs, createServiceRow } from '@/engine/calculationEngine';
 
-const loadConfigFromStorage = (): ConfigConstants => {
+// ============================================================================
+// STORE STATE TYPE
+// ============================================================================
+
+interface AppState {
+  inputs: CalculatorInputs;
+  config: CalculatorConfig;
+  results: ComputedResult;
+  
+  // Input actions
+  updateInput: <K extends keyof CalculatorInputs>(key: K, value: CalculatorInputs[K]) => void;
+  updateNestedInput: <
+    K extends keyof CalculatorInputs,
+    NK extends keyof NonNullable<CalculatorInputs[K]>
+  >(key: K, nestedKey: NK, value: NonNullable<CalculatorInputs[K]>[NK]) => void;
+  resetInputs: () => void;
+  
+  // Service row actions
+  addServiceRow: () => void;
+  updateServiceRow: (id: string, updates: Partial<ServiceRow>) => void;
+  removeServiceRow: (id: string) => void;
+  
+  // Config actions
+  updateConfig: <K extends keyof CalculatorConfig>(key: K, value: CalculatorConfig[K]) => void;
+  resetConfig: () => void;
+  
+  // Recompute results
+  recompute: () => void;
+}
+
+// ============================================================================
+// PERSISTENCE
+// ============================================================================
+
+const loadConfigFromStorage = (): CalculatorConfig => {
   try {
     const stored = localStorage.getItem(STORAGE_KEYS.CONFIG);
     if (stored) {
@@ -14,7 +49,7 @@ const loadConfigFromStorage = (): ConfigConstants => {
   return DEFAULT_CONFIG;
 };
 
-const saveConfigToStorage = (config: ConfigConstants): void => {
+const saveConfigToStorage = (config: CalculatorConfig): void => {
   try {
     localStorage.setItem(STORAGE_KEYS.CONFIG, JSON.stringify(config));
   } catch (e) {
@@ -22,139 +57,89 @@ const saveConfigToStorage = (config: ConfigConstants): void => {
   }
 };
 
-const calculateHourlyRate = (grossSalary: number, hoursPerMonth: number): number => {
-  return grossSalary / hoursPerMonth;
-};
+// ============================================================================
+// STORE IMPLEMENTATION
+// ============================================================================
 
-const computeResults = (inputs: UserInputs, config: ConfigConstants): ComputedResults => {
-  // Calculate hourly rates if not provided
-  const defaultHourlyRate = calculateHourlyRate(config.EST_AVG_GROSS_WAGE, config.HOURS_PER_MONTH);
-  
-  const hrRate = inputs.hrHourlyRate || defaultHourlyRate;
-  const managerRate = inputs.managerHourlyRate || (defaultHourlyRate * 1.5);
-  const mentorRate = inputs.mentorHourlyRate || defaultHourlyRate;
-  const otherRate = inputs.otherStaffHourlyRate || defaultHourlyRate;
-  
-  // Salary costs (employer perspective)
-  const employerSocialTax = inputs.grossSalary * config.SOCIAL_TAX_RATE;
-  const employerUiTax = inputs.grossSalary * config.EMPLOYER_UI_RATE;
-  const totalEmployerCost = inputs.grossSalary + employerSocialTax + employerUiTax;
-  
-  // Internal time costs
-  const hrTimeCost = inputs.hrHoursSpent * hrRate;
-  const managerTimeCost = inputs.managerHoursSpent * managerRate;
-  const otherStaffTimeCost = inputs.otherStaffHoursSpent * otherRate;
-  const totalInternalTimeCost = hrTimeCost + managerTimeCost + otherStaffTimeCost;
-  
-  // External costs
-  const totalExternalCosts = 
-    inputs.jobAdsCost +
-    inputs.recruitmentAgencyFee +
-    inputs.backgroundCheckCost +
-    inputs.assessmentToolsCost +
-    inputs.travelCost +
-    inputs.otherExternalCosts;
-  
-  // Onboarding costs
-  const onboardingTimeCost = inputs.onboardingHours * defaultHourlyRate;
-  const mentorTimeCost = inputs.mentorHoursSpent * mentorRate;
-  const totalOnboardingCost = 
-    inputs.trainingCost +
-    inputs.equipmentCost +
-    onboardingTimeCost +
-    mentorTimeCost;
-  
-  // Productivity loss during ramp-up
-  const monthlyEmployerCost = totalEmployerCost;
-  const productivityLossRate = (100 - inputs.productivityDuringRampUp) / 100;
-  const productivityLossCost = monthlyEmployerCost * inputs.monthsToFullProductivity * productivityLossRate;
-  
-  // Bad hire risk cost
-  const badHireRiskCost = totalEmployerCost * config.BAD_HIRE_MONTHS * config.BAD_HIRE_RISK;
-  
-  // Totals
-  const totalDirectCosts = totalInternalTimeCost + totalExternalCosts + totalOnboardingCost;
-  const totalIndirectCosts = productivityLossCost + badHireRiskCost;
-  const grandTotal = totalDirectCosts + totalIndirectCosts;
-  
-  // Insights
-  const annualSalary = inputs.grossSalary * 12;
-  const costAsPercentOfAnnualSalary = (grandTotal / annualSalary) * 100;
-  const monthsOfSalaryEquivalent = grandTotal / inputs.grossSalary;
-  
-  return {
-    employerSocialTax,
-    employerUiTax,
-    totalEmployerCost,
-    hrTimeCost,
-    managerTimeCost,
-    otherStaffTimeCost,
-    totalInternalTimeCost,
-    totalExternalCosts,
-    onboardingTimeCost,
-    mentorTimeCost,
-    totalOnboardingCost,
-    productivityLossCost,
-    badHireRiskCost,
-    totalDirectCosts,
-    totalIndirectCosts,
-    grandTotal,
-    costAsPercentOfAnnualSalary,
-    monthsOfSalaryEquivalent,
-  };
-};
-
-const computeWarnings = (inputs: UserInputs, config: ConfigConstants): Warnings => {
-  return {
-    lowSalary: inputs.grossSalary < config.EST_AVG_GROSS_WAGE * 0.5,
-    highProductivityLoss: inputs.productivityDuringRampUp < 30,
-    noExternalCosts: (
-      inputs.jobAdsCost === 0 &&
-      inputs.recruitmentAgencyFee === 0 &&
-      inputs.backgroundCheckCost === 0
-    ),
-    longRampUp: inputs.monthsToFullProductivity > 6,
-  };
-};
-
-const computeDefaultsUsed = (inputs: UserInputs): DefaultsUsed => {
-  return {
-    hrHourlyRate: inputs.hrHourlyRate === 0,
-    managerHourlyRate: inputs.managerHourlyRate === 0,
-    mentorHourlyRate: inputs.mentorHourlyRate === 0,
-  };
-};
+let serviceRowCounter = 0;
 
 export const useAppStore = create<AppState>((set, get) => {
   const initialConfig = loadConfigFromStorage();
-  const initialInputs = DEFAULT_USER_INPUTS;
+  const initialInputs = createDefaultInputs();
+  const initialResults = computeTotals(initialInputs, initialConfig);
   
   return {
-    userInputs: initialInputs,
-    computedResults: computeResults(initialInputs, initialConfig),
+    inputs: initialInputs,
     config: initialConfig,
-    warnings: computeWarnings(initialInputs, initialConfig),
-    defaultsUsed: computeDefaultsUsed(initialInputs),
+    results: initialResults,
     
-    updateUserInput: (key, value) => {
+    updateInput: (key, value) => {
       set((state) => {
-        const newInputs = { ...state.userInputs, [key]: value };
+        const newInputs = { ...state.inputs, [key]: value };
         return {
-          userInputs: newInputs,
-          computedResults: computeResults(newInputs, state.config),
-          warnings: computeWarnings(newInputs, state.config),
-          defaultsUsed: computeDefaultsUsed(newInputs),
+          inputs: newInputs,
+          results: computeTotals(newInputs, state.config),
         };
+      });
+    },
+    
+    updateNestedInput: (key, nestedKey, value) => {
+      set((state) => {
+        const currentValue = state.inputs[key];
+        if (typeof currentValue === 'object' && currentValue !== null) {
+          const newNested = { ...currentValue, [nestedKey]: value };
+          const newInputs = { ...state.inputs, [key]: newNested };
+          return {
+            inputs: newInputs,
+            results: computeTotals(newInputs, state.config),
+          };
+        }
+        return state;
       });
     },
     
     resetInputs: () => {
       const { config } = get();
+      const freshInputs = createDefaultInputs();
       set({
-        userInputs: DEFAULT_USER_INPUTS,
-        computedResults: computeResults(DEFAULT_USER_INPUTS, config),
-        warnings: computeWarnings(DEFAULT_USER_INPUTS, config),
-        defaultsUsed: computeDefaultsUsed(DEFAULT_USER_INPUTS),
+        inputs: freshInputs,
+        results: computeTotals(freshInputs, config),
+      });
+    },
+    
+    addServiceRow: () => {
+      set((state) => {
+        const newRow = createServiceRow(`service-${++serviceRowCounter}`);
+        const newServices = [...state.inputs.otherServices, newRow];
+        const newInputs = { ...state.inputs, otherServices: newServices };
+        return {
+          inputs: newInputs,
+          results: computeTotals(newInputs, state.config),
+        };
+      });
+    },
+    
+    updateServiceRow: (id, updates) => {
+      set((state) => {
+        const newServices = state.inputs.otherServices.map((row) =>
+          row.id === id ? { ...row, ...updates } : row
+        );
+        const newInputs = { ...state.inputs, otherServices: newServices };
+        return {
+          inputs: newInputs,
+          results: computeTotals(newInputs, state.config),
+        };
+      });
+    },
+    
+    removeServiceRow: (id) => {
+      set((state) => {
+        const newServices = state.inputs.otherServices.filter((row) => row.id !== id);
+        const newInputs = { ...state.inputs, otherServices: newServices };
+        return {
+          inputs: newInputs,
+          results: computeTotals(newInputs, state.config),
+        };
       });
     },
     
@@ -164,8 +149,7 @@ export const useAppStore = create<AppState>((set, get) => {
         saveConfigToStorage(newConfig);
         return {
           config: newConfig,
-          computedResults: computeResults(state.userInputs, newConfig),
-          warnings: computeWarnings(state.userInputs, newConfig),
+          results: computeTotals(state.inputs, newConfig),
         };
       });
     },
@@ -174,9 +158,13 @@ export const useAppStore = create<AppState>((set, get) => {
       localStorage.removeItem(STORAGE_KEYS.CONFIG);
       set((state) => ({
         config: DEFAULT_CONFIG,
-        computedResults: computeResults(state.userInputs, DEFAULT_CONFIG),
-        warnings: computeWarnings(state.userInputs, DEFAULT_CONFIG),
+        results: computeTotals(state.inputs, DEFAULT_CONFIG),
       }));
+    },
+    
+    recompute: () => {
+      const { inputs, config } = get();
+      set({ results: computeTotals(inputs, config) });
     },
   };
 });
