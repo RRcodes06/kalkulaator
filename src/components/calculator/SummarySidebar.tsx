@@ -135,10 +135,10 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
       {/* Warnings Section with Counter */}
       {hasWarnings && (
         <div className="p-4 bg-warning/10 rounded-lg border border-warning/20">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-warning" />
-              <p className="text-warning text-sm font-medium">Tähelepanu</p>
+              <p className="text-warning text-sm font-medium">Hoiatused</p>
             </div>
             <span className={cn(
               "text-xs font-semibold px-2 py-0.5 rounded-full",
@@ -147,16 +147,26 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
               {warningsCount}
             </span>
           </div>
-          <ul className="text-sm space-y-1 text-summary-muted">
+          <ul className="text-sm space-y-2">
             {results.missingPayWarnings.map((w, i) => (
-              <li key={`missing-${i}`}>• {w.message}</li>
+              <li key={`missing-${i}`} className="text-summary-muted">
+                <span className="font-medium text-summary-foreground">{w.field === 'hirePay' ? 'Värbatava palk' : w.field}:</span>{' '}
+                {w.message}
+              </li>
             ))}
             {results.rangeWarnings.map((w, i) => (
               <li key={`range-${i}`} className={cn(
+                "flex flex-col",
                 w.severity === 'warning' && "text-warning/90",
                 w.severity === 'info' && "text-summary-muted"
               )}>
-                • {w.message}
+                <span className="font-medium text-summary-foreground">{w.label}</span>
+                <span className="text-xs">
+                  {w.currentValue !== undefined && w.currentValue > 0 && (
+                    <>Praegu: {w.currentValue} {w.unit} · </>
+                  )}
+                  {w.message}
+                </span>
               </li>
             ))}
           </ul>

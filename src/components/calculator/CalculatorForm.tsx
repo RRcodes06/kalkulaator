@@ -30,6 +30,15 @@ export function CalculatorForm() {
     }).format(Math.round(value));
   };
 
+  // Helper to find warning for a specific field
+  const getWarningForField = (fieldName: string) => {
+    const warning = results.rangeWarnings.find(w => w.field === fieldName);
+    if (warning) {
+      return { message: warning.message, severity: warning.severity };
+    }
+    return undefined;
+  };
+
   return (
     <AccordionControllerProvider defaultOpenSection="position">
     <div className="space-y-4">
@@ -264,7 +273,8 @@ export function CalculatorForm() {
           suffix="kuud"
           min={0}
           max={24}
-          hint="Aeg täistootlikkuse saavutamiseks"
+          hint={getWarningForField('onboardingMonths') ? undefined : "Aeg täistootlikkuse saavutamiseks"}
+          warning={getWarningForField('onboardingMonths')}
         />
         <NumberInput
           label="Keskmine tootlikkus"
@@ -273,7 +283,8 @@ export function CalculatorForm() {
           suffix="%"
           min={0}
           max={100}
-          hint="Protsent täistootlikkusest sisseelamisel"
+          hint={getWarningForField('productivityPct') ? undefined : "Protsent täistootlikkusest sisseelamisel"}
+          warning={getWarningForField('productivityPct')}
         />
         <NumberInput
           label="Lisakulud"
@@ -307,7 +318,8 @@ export function CalculatorForm() {
           onChange={(v) => updateNestedInput('vacancy', 'vacancyDays', v)}
           suffix="päeva"
           min={0}
-          hint="Päevi, mil positsioon on täitmata"
+          hint={getWarningForField('vacancyDays') ? undefined : "Päevi, mil positsioon on täitmata"}
+          warning={getWarningForField('vacancyDays')}
         />
         <NumberInput
           label="Päevakulu"
