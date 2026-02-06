@@ -546,17 +546,19 @@ export function computeTotals(
     // Skip if no range defined (min and max both undefined)
     if (min === undefined && max === undefined) return;
     
-    // If value is 0/empty and section is in use, show "sisesta hinnang"
+    // Build range text helper
+    const rangeText = min !== undefined && max !== undefined
+      ? `${min}–${max}`
+      : max !== undefined
+        ? `kuni ${max}`
+        : `vähemalt ${min}`;
+    
+    // If value is 0/empty and section is in use, show advisory message
     if (value === 0 && sectionInUse) {
-      const rangeText = min !== undefined && max !== undefined
-        ? `${min}–${max}`
-        : max !== undefined
-          ? `kuni ${max}`
-          : `vähemalt ${min}`;
       rangeWarnings.push({
         field,
         label,
-        message: `Soovituslik vahemik: ${rangeText} ${unit} (sisesta hinnang)`,
+        message: `Tüüpiline vahemik: ${rangeText} ${unit}. Sisesta hinnang.`,
         severity: 'info',
         recommendedMin: min,
         recommendedMax: max,
@@ -569,12 +571,12 @@ export function computeTotals(
     // Skip further checks if value is 0
     if (value === 0) return;
     
-    // Below min
+    // Below min - advisory tone, not punitive
     if (min !== undefined && value < min) {
       rangeWarnings.push({
         field,
         label,
-        message: `Soovituslik miinimum: ${min} ${unit}`,
+        message: `See võib olla alahinnatud. Tüüpiline vahemik: ${rangeText} ${unit}.`,
         severity: 'info',
         recommendedMin: min,
         recommendedMax: max,
@@ -584,12 +586,12 @@ export function computeTotals(
       return;
     }
     
-    // Above max
+    // Above max - advisory tone suggesting optimization, not an error
     if (max !== undefined && value > max) {
       rangeWarnings.push({
         field,
         label,
-        message: `Soovituslik maksimum: ${max} ${unit}`,
+        message: `See on tavapärasest kõrgem. Kulude vähendamiseks võiks kaaluda, kas seda saab optimeerida. Tüüpiline vahemik: ${rangeText} ${unit}.`,
         severity: 'warning',
         recommendedMin: min,
         recommendedMax: max,
