@@ -30,6 +30,10 @@ export const DEFAULT_CONFIG: CalculatorConfig = {
   RECOMMENDED_PRODUCTIVITY_PCT_MIN: 20,
   RECOMMENDED_PRODUCTIVITY_PCT_MAX: 80,
   RECOMMENDED_VACANCY_DAYS_MAX: 90,
+  RECOMMENDED_HR_HOURS_MAX: 40,
+  RECOMMENDED_MANAGER_HOURS_MAX: 30,
+  RECOMMENDED_TEAM_HOURS_MAX: 20,
+  RECOMMENDED_INTERVIEW_HOURS_MAX: 50,
   
   // Text snippets
   disclaimerText: 'See kalkulaator annab ligikaudse hinnangu värbamisprotsessi kogukulule. Tegelikud kulud võivad varieeruda sõltuvalt konkreetsetest asjaoludest.',

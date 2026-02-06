@@ -182,7 +182,9 @@ function AdminPanel() {
           'BAD_HIRE_RISK_RATE', 'BAD_HIRE_PAY_MONTHS',
           'RECOMMENDED_ONBOARDING_MONTHS_MIN', 'RECOMMENDED_ONBOARDING_MONTHS_MAX',
           'RECOMMENDED_PRODUCTIVITY_PCT_MIN', 'RECOMMENDED_PRODUCTIVITY_PCT_MAX',
-          'RECOMMENDED_VACANCY_DAYS_MAX',
+          'RECOMMENDED_VACANCY_DAYS_MAX', 'RECOMMENDED_HR_HOURS_MAX',
+          'RECOMMENDED_MANAGER_HOURS_MAX', 'RECOMMENDED_TEAM_HOURS_MAX',
+          'RECOMMENDED_INTERVIEW_HOURS_MAX',
         ];
 
         for (const key of numericKeys) {
@@ -418,6 +420,30 @@ function AdminPanel() {
               label="Max vakantsi päevi"
               value={config.RECOMMENDED_VACANCY_DAYS_MAX}
               onChange={(v) => updateConfig('RECOMMENDED_VACANCY_DAYS_MAX', v)}
+            />
+            <ConfigNumberInput
+              label="Max HR tunnid kokku"
+              value={config.RECOMMENDED_HR_HOURS_MAX}
+              onChange={(v) => updateConfig('RECOMMENDED_HR_HOURS_MAX', v)}
+              hint="Hoiatus, kui HR-i kogutunnid ületavad"
+            />
+            <ConfigNumberInput
+              label="Max juhi tunnid kokku"
+              value={config.RECOMMENDED_MANAGER_HOURS_MAX}
+              onChange={(v) => updateConfig('RECOMMENDED_MANAGER_HOURS_MAX', v)}
+              hint="Hoiatus, kui juhi kogutunnid ületavad"
+            />
+            <ConfigNumberInput
+              label="Max tiimi tunnid kokku"
+              value={config.RECOMMENDED_TEAM_HOURS_MAX}
+              onChange={(v) => updateConfig('RECOMMENDED_TEAM_HOURS_MAX', v)}
+              hint="Hoiatus, kui tiimi kogutunnid ületavad"
+            />
+            <ConfigNumberInput
+              label="Max intervjuude tunnid"
+              value={config.RECOMMENDED_INTERVIEW_HOURS_MAX}
+              onChange={(v) => updateConfig('RECOMMENDED_INTERVIEW_HOURS_MAX', v)}
+              hint="Hoiatus, kui intervjuude tunnid ületavad"
             />
           </CardContent>
         </Card>

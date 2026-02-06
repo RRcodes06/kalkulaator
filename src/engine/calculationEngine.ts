@@ -531,23 +531,27 @@ export function computeTotals(
   // Range warnings
   const rangeWarnings: RangeWarning[] = [];
   
-  if (inputs.onboarding.onboardingMonths < config.RECOMMENDED_ONBOARDING_MONTHS_MIN) {
-    rangeWarnings.push({
-      field: 'onboardingMonths',
-      message: 'Sisseelamisperiood on ebatavaliselt lühike.',
-      severity: 'info',
-    });
+  // Onboarding warnings
+  if (inputs.onboarding.onboardingMonths > 0) {
+    if (inputs.onboarding.onboardingMonths < config.RECOMMENDED_ONBOARDING_MONTHS_MIN) {
+      rangeWarnings.push({
+        field: 'onboardingMonths',
+        message: 'Sisseelamisperiood on ebatavaliselt lühike.',
+        severity: 'info',
+      });
+    }
+    
+    if (inputs.onboarding.onboardingMonths > config.RECOMMENDED_ONBOARDING_MONTHS_MAX) {
+      rangeWarnings.push({
+        field: 'onboardingMonths',
+        message: 'Sisseelamisperiood on ebatavaliselt pikk.',
+        severity: 'warning',
+      });
+    }
   }
   
-  if (inputs.onboarding.onboardingMonths > config.RECOMMENDED_ONBOARDING_MONTHS_MAX) {
-    rangeWarnings.push({
-      field: 'onboardingMonths',
-      message: 'Sisseelamisperiood on ebatavaliselt pikk.',
-      severity: 'warning',
-    });
-  }
-  
-  if (inputs.onboarding.productivityPct < config.RECOMMENDED_PRODUCTIVITY_PCT_MIN) {
+  // Productivity warning
+  if (inputs.onboarding.productivityPct > 0 && inputs.onboarding.productivityPct < config.RECOMMENDED_PRODUCTIVITY_PCT_MIN) {
     rangeWarnings.push({
       field: 'productivityPct',
       message: 'Väga madal tootlikkus sisseelamisel suurendab kulusid oluliselt.',
@@ -555,6 +559,7 @@ export function computeTotals(
     });
   }
   
+  // Vacancy warning
   if (inputs.vacancy.vacancyDays > config.RECOMMENDED_VACANCY_DAYS_MAX) {
     rangeWarnings.push({
       field: 'vacancyDays',
@@ -562,6 +567,85 @@ export function computeTotals(
       severity: 'warning',
     });
   }
+  
+  // Helper to check if a block has any non-zero inputs
+  const blockHasInputs = (block: { hrHours?: number; managerHours?: number; teamHours?: number; directCosts?: number; testsCost?: number }) => {
+    return (block.hrHours ?? 0) > 0 || (block.managerHours ?? 0) > 0 || (block.teamHours ?? 0) > 0 || (block.directCosts ?? 0) > 0 || (block.testsCost ?? 0) > 0;
+  };
+  
+  // Total hours for each role across all blocks
+  const totalHrHours = 
+    inputs.strategyPrep.hrHours + 
+    inputs.adsBranding.hrHours + 
+    inputs.candidateMgmt.hrHours + 
+    inputs.interviews.hrHours + 
+    inputs.backgroundOffer.hrHours +
+    inputs.indirectCosts.hrHours;
+    
+  const totalManagerHours = 
+    inputs.strategyPrep.managerHours + 
+    inputs.adsBranding.managerHours + 
+    inputs.candidateMgmt.managerHours + 
+    inputs.interviews.managerHours + 
+    inputs.backgroundOffer.managerHours +
+    inputs.indirectCosts.managerHours;
+    
+  const totalTeamHours = 
+    inputs.strategyPrep.teamHours + 
+    inputs.adsBranding.teamHours + 
+    inputs.candidateMgmt.teamHours + 
+    inputs.interviews.teamHours + 
+    inputs.backgroundOffer.teamHours +
+    inputs.indirectCosts.teamHours;
+  
+  // Total hours warnings
+  if (totalHrHours > config.RECOMMENDED_HR_HOURS_MAX) {
+    rangeWarnings.push({
+      field: 'hrHours',
+      message: `HR-i kogu tunnid (${totalHrHours}h) ületavad soovituslikku piiri.`,
+      severity: 'info',
+    });
+  }
+  
+  if (totalManagerHours > config.RECOMMENDED_MANAGER_HOURS_MAX) {
+    rangeWarnings.push({
+      field: 'managerHours',
+      message: `Juhi kogu tunnid (${totalManagerHours}h) ületavad soovituslikku piiri.`,
+      severity: 'info',
+    });
+  }
+  
+  if (totalTeamHours > config.RECOMMENDED_TEAM_HOURS_MAX) {
+    rangeWarnings.push({
+      field: 'teamHours',
+      message: `Tiimi kogu tunnid (${totalTeamHours}h) ületavad soovituslikku piiri.`,
+      severity: 'info',
+    });
+  }
+  
+  // Total interview hours
+  const totalInterviewHours = inputs.interviews.hrHours + inputs.interviews.managerHours + inputs.interviews.teamHours;
+  if (totalInterviewHours > config.RECOMMENDED_INTERVIEW_HOURS_MAX) {
+    rangeWarnings.push({
+      field: 'interviewHours',
+      message: `Intervjuude tunnid (${totalInterviewHours}h) on ebatavaliselt kõrged.`,
+      severity: 'warning',
+    });
+  }
+  
+  // Zero-value warnings when section has other inputs
+  // Vacancy: if vacancyDays > 0 but dailyCost = 0, that's likely intentional (no cost calculation needed)
+  // But if dailyCost > 0 and vacancyDays = 0, they may have forgotten days
+  if (inputs.vacancy.dailyCost > 0 && inputs.vacancy.vacancyDays === 0) {
+    rangeWarnings.push({
+      field: 'vacancyDays',
+      message: 'Päevakulu on määratud, aga vakantsi päevi pole sisestatud.',
+      severity: 'info',
+    });
+  }
+  
+  // Onboarding: if onboardingMonths > 0 but productivityPct = 0, that means 0% productivity which is extreme
+  // This is actually valid (full loss), so we only warn if it seems unintentional
   
   return {
     normalizedHirePay,

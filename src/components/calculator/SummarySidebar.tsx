@@ -4,6 +4,7 @@ import { TrendingUp, AlertTriangle, Info } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { CostBreakdownChart } from './CostBreakdownChart';
 import { BLOCK_LABELS } from '@/config/defaults';
+import { cn } from '@/lib/utils';
 
 export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_, ref) {
   const { results, inputs, config } = useAppStore();
@@ -31,7 +32,8 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
     { label: BLOCK_LABELS.expectedRisk, value: results.expectedRiskCost },
   ].filter(item => item.value > 0);
 
-  const hasWarnings = results.rangeWarnings.length > 0 || results.missingPayWarnings.length > 0;
+  const warningsCount = results.rangeWarnings.length + results.missingPayWarnings.length;
+  const hasWarnings = warningsCount > 0;
 
   return (
     // @ts-ignore - ref forwarding
@@ -130,19 +132,32 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
         </p>
       </div>
 
-      {/* Warnings */}
+      {/* Warnings Section with Counter */}
       {hasWarnings && (
         <div className="p-4 bg-warning/10 rounded-lg border border-warning/20">
-          <div className="flex items-center gap-2 mb-2">
-            <AlertTriangle className="w-4 h-4 text-warning" />
-            <p className="text-warning text-sm font-medium">Tähelepanu</p>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-warning" />
+              <p className="text-warning text-sm font-medium">Tähelepanu</p>
+            </div>
+            <span className={cn(
+              "text-xs font-semibold px-2 py-0.5 rounded-full",
+              "bg-warning/20 text-warning"
+            )}>
+              {warningsCount}
+            </span>
           </div>
           <ul className="text-sm space-y-1 text-summary-muted">
             {results.missingPayWarnings.map((w, i) => (
               <li key={`missing-${i}`}>• {w.message}</li>
             ))}
             {results.rangeWarnings.map((w, i) => (
-              <li key={`range-${i}`}>• {w.message}</li>
+              <li key={`range-${i}`} className={cn(
+                w.severity === 'warning' && "text-warning/90",
+                w.severity === 'info' && "text-summary-muted"
+              )}>
+                • {w.message}
+              </li>
             ))}
           </ul>
         </div>

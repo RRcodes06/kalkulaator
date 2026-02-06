@@ -166,6 +166,10 @@ export interface CalculatorConfig {
   RECOMMENDED_PRODUCTIVITY_PCT_MIN: number;
   RECOMMENDED_PRODUCTIVITY_PCT_MAX: number;
   RECOMMENDED_VACANCY_DAYS_MAX: number;
+  RECOMMENDED_HR_HOURS_MAX: number;
+  RECOMMENDED_MANAGER_HOURS_MAX: number;
+  RECOMMENDED_TEAM_HOURS_MAX: number;
+  RECOMMENDED_INTERVIEW_HOURS_MAX: number;
   
   // Text snippets
   disclaimerText: string;
