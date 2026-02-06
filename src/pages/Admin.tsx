@@ -182,9 +182,24 @@ function AdminPanel() {
           'BAD_HIRE_RISK_RATE', 'BAD_HIRE_PAY_MONTHS',
           'RECOMMENDED_ONBOARDING_MONTHS_MIN', 'RECOMMENDED_ONBOARDING_MONTHS_MAX',
           'RECOMMENDED_PRODUCTIVITY_PCT_MIN', 'RECOMMENDED_PRODUCTIVITY_PCT_MAX',
-          'RECOMMENDED_VACANCY_DAYS_MAX', 'RECOMMENDED_HR_HOURS_MAX',
-          'RECOMMENDED_MANAGER_HOURS_MAX', 'RECOMMENDED_TEAM_HOURS_MAX',
-          'RECOMMENDED_INTERVIEW_HOURS_MAX',
+          'RECOMMENDED_VACANCY_DAYS_MIN', 'RECOMMENDED_VACANCY_DAYS_MAX',
+          'RECOMMENDED_STRATEGY_HR_HOURS_MIN', 'RECOMMENDED_STRATEGY_HR_HOURS_MAX',
+          'RECOMMENDED_STRATEGY_MGR_HOURS_MIN', 'RECOMMENDED_STRATEGY_MGR_HOURS_MAX',
+          'RECOMMENDED_STRATEGY_TEAM_HOURS_MIN', 'RECOMMENDED_STRATEGY_TEAM_HOURS_MAX',
+          'RECOMMENDED_ADS_HR_HOURS_MIN', 'RECOMMENDED_ADS_HR_HOURS_MAX',
+          'RECOMMENDED_ADS_MGR_HOURS_MIN', 'RECOMMENDED_ADS_MGR_HOURS_MAX',
+          'RECOMMENDED_ADS_DIRECT_COST_MIN', 'RECOMMENDED_ADS_DIRECT_COST_MAX',
+          'RECOMMENDED_CANDIDATE_HR_HOURS_MIN', 'RECOMMENDED_CANDIDATE_HR_HOURS_MAX',
+          'RECOMMENDED_CANDIDATE_MGR_HOURS_MIN', 'RECOMMENDED_CANDIDATE_MGR_HOURS_MAX',
+          'RECOMMENDED_INTERVIEW_HR_HOURS_MIN', 'RECOMMENDED_INTERVIEW_HR_HOURS_MAX',
+          'RECOMMENDED_INTERVIEW_MGR_HOURS_MIN', 'RECOMMENDED_INTERVIEW_MGR_HOURS_MAX',
+          'RECOMMENDED_INTERVIEW_TEAM_HOURS_MIN', 'RECOMMENDED_INTERVIEW_TEAM_HOURS_MAX',
+          'RECOMMENDED_INTERVIEW_DIRECT_COST_MIN', 'RECOMMENDED_INTERVIEW_DIRECT_COST_MAX',
+          'RECOMMENDED_BACKGROUND_HR_HOURS_MIN', 'RECOMMENDED_BACKGROUND_HR_HOURS_MAX',
+          'RECOMMENDED_BACKGROUND_MGR_HOURS_MIN', 'RECOMMENDED_BACKGROUND_MGR_HOURS_MAX',
+          'RECOMMENDED_INDIRECT_HR_HOURS_MIN', 'RECOMMENDED_INDIRECT_HR_HOURS_MAX',
+          'RECOMMENDED_INDIRECT_MGR_HOURS_MIN', 'RECOMMENDED_INDIRECT_MGR_HOURS_MAX',
+          'RECOMMENDED_INDIRECT_TEAM_HOURS_MIN', 'RECOMMENDED_INDIRECT_TEAM_HOURS_MAX',
         ];
 
         for (const key of numericKeys) {
@@ -393,58 +408,138 @@ function AdminPanel() {
         <Card>
           <CardHeader>
             <CardTitle>Soovituslikud vahemikud</CardTitle>
-            <CardDescription>Hoiatuste kuvamiseks</CardDescription>
+            <CardDescription>Hoiatuste kuvamiseks (ainult võrreldavad väljad)</CardDescription>
           </CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <ConfigNumberInput
-              label="Min sisseelamisperiood (kuud)"
-              value={config.RECOMMENDED_ONBOARDING_MONTHS_MIN}
-              onChange={(v) => updateConfig('RECOMMENDED_ONBOARDING_MONTHS_MIN', v)}
-            />
-            <ConfigNumberInput
-              label="Max sisseelamisperiood (kuud)"
-              value={config.RECOMMENDED_ONBOARDING_MONTHS_MAX}
-              onChange={(v) => updateConfig('RECOMMENDED_ONBOARDING_MONTHS_MAX', v)}
-            />
-            <ConfigNumberInput
-              label="Min tootlikkus sisseelamisel (%)"
-              value={config.RECOMMENDED_PRODUCTIVITY_PCT_MIN}
-              onChange={(v) => updateConfig('RECOMMENDED_PRODUCTIVITY_PCT_MIN', v)}
-            />
-            <ConfigNumberInput
-              label="Max tootlikkus sisseelamisel (%)"
-              value={config.RECOMMENDED_PRODUCTIVITY_PCT_MAX}
-              onChange={(v) => updateConfig('RECOMMENDED_PRODUCTIVITY_PCT_MAX', v)}
-            />
-            <ConfigNumberInput
-              label="Max vakantsi päevi"
-              value={config.RECOMMENDED_VACANCY_DAYS_MAX}
-              onChange={(v) => updateConfig('RECOMMENDED_VACANCY_DAYS_MAX', v)}
-            />
-            <ConfigNumberInput
-              label="Max HR tunnid kokku"
-              value={config.RECOMMENDED_HR_HOURS_MAX}
-              onChange={(v) => updateConfig('RECOMMENDED_HR_HOURS_MAX', v)}
-              hint="Hoiatus, kui HR-i kogutunnid ületavad"
-            />
-            <ConfigNumberInput
-              label="Max juhi tunnid kokku"
-              value={config.RECOMMENDED_MANAGER_HOURS_MAX}
-              onChange={(v) => updateConfig('RECOMMENDED_MANAGER_HOURS_MAX', v)}
-              hint="Hoiatus, kui juhi kogutunnid ületavad"
-            />
-            <ConfigNumberInput
-              label="Max tiimi tunnid kokku"
-              value={config.RECOMMENDED_TEAM_HOURS_MAX}
-              onChange={(v) => updateConfig('RECOMMENDED_TEAM_HOURS_MAX', v)}
-              hint="Hoiatus, kui tiimi kogutunnid ületavad"
-            />
-            <ConfigNumberInput
-              label="Max intervjuude tunnid"
-              value={config.RECOMMENDED_INTERVIEW_HOURS_MAX}
-              onChange={(v) => updateConfig('RECOMMENDED_INTERVIEW_HOURS_MAX', v)}
-              hint="Hoiatus, kui intervjuude tunnid ületavad"
-            />
+          <CardContent className="space-y-6">
+            {/* Onboarding */}
+            <div>
+              <h4 className="font-medium mb-3">Sisseelamine</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <ConfigNumberInput
+                  label="Min sisseelamisperiood (kuud)"
+                  value={config.RECOMMENDED_ONBOARDING_MONTHS_MIN}
+                  onChange={(v) => updateConfig('RECOMMENDED_ONBOARDING_MONTHS_MIN', v)}
+                />
+                <ConfigNumberInput
+                  label="Max sisseelamisperiood (kuud)"
+                  value={config.RECOMMENDED_ONBOARDING_MONTHS_MAX}
+                  onChange={(v) => updateConfig('RECOMMENDED_ONBOARDING_MONTHS_MAX', v)}
+                />
+                <ConfigNumberInput
+                  label="Min tootlikkus (%)"
+                  value={config.RECOMMENDED_PRODUCTIVITY_PCT_MIN}
+                  onChange={(v) => updateConfig('RECOMMENDED_PRODUCTIVITY_PCT_MIN', v)}
+                />
+                <ConfigNumberInput
+                  label="Max tootlikkus (%)"
+                  value={config.RECOMMENDED_PRODUCTIVITY_PCT_MAX}
+                  onChange={(v) => updateConfig('RECOMMENDED_PRODUCTIVITY_PCT_MAX', v)}
+                />
+              </div>
+            </div>
+            
+            {/* Vacancy */}
+            <div>
+              <h4 className="font-medium mb-3">Vakants</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <ConfigNumberInput
+                  label="Min vakantsi päevi"
+                  value={config.RECOMMENDED_VACANCY_DAYS_MIN}
+                  onChange={(v) => updateConfig('RECOMMENDED_VACANCY_DAYS_MIN', v)}
+                />
+                <ConfigNumberInput
+                  label="Max vakantsi päevi"
+                  value={config.RECOMMENDED_VACANCY_DAYS_MAX}
+                  onChange={(v) => updateConfig('RECOMMENDED_VACANCY_DAYS_MAX', v)}
+                />
+              </div>
+            </div>
+            
+            {/* Strategy */}
+            <div>
+              <h4 className="font-medium mb-3">Strateegia & ettevalmistus</h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <ConfigNumberInput
+                  label="HR min/max (h)"
+                  value={config.RECOMMENDED_STRATEGY_HR_HOURS_MIN}
+                  onChange={(v) => updateConfig('RECOMMENDED_STRATEGY_HR_HOURS_MIN', v)}
+                  hint={`Max: ${config.RECOMMENDED_STRATEGY_HR_HOURS_MAX}`}
+                />
+                <ConfigNumberInput
+                  label="Juht min/max (h)"
+                  value={config.RECOMMENDED_STRATEGY_MGR_HOURS_MIN}
+                  onChange={(v) => updateConfig('RECOMMENDED_STRATEGY_MGR_HOURS_MIN', v)}
+                  hint={`Max: ${config.RECOMMENDED_STRATEGY_MGR_HOURS_MAX}`}
+                />
+                <ConfigNumberInput
+                  label="Tiim min/max (h)"
+                  value={config.RECOMMENDED_STRATEGY_TEAM_HOURS_MIN}
+                  onChange={(v) => updateConfig('RECOMMENDED_STRATEGY_TEAM_HOURS_MIN', v)}
+                  hint={`Max: ${config.RECOMMENDED_STRATEGY_TEAM_HOURS_MAX}`}
+                />
+              </div>
+            </div>
+            
+            {/* Ads */}
+            <div>
+              <h4 className="font-medium mb-3">Kuulutused & bränding</h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <ConfigNumberInput
+                  label="HR min (h)"
+                  value={config.RECOMMENDED_ADS_HR_HOURS_MIN}
+                  onChange={(v) => updateConfig('RECOMMENDED_ADS_HR_HOURS_MIN', v)}
+                  hint={`Max: ${config.RECOMMENDED_ADS_HR_HOURS_MAX}`}
+                />
+                <ConfigNumberInput
+                  label="Juht min (h)"
+                  value={config.RECOMMENDED_ADS_MGR_HOURS_MIN}
+                  onChange={(v) => updateConfig('RECOMMENDED_ADS_MGR_HOURS_MIN', v)}
+                  hint={`Max: ${config.RECOMMENDED_ADS_MGR_HOURS_MAX}`}
+                />
+                <ConfigNumberInput
+                  label="Kulud (€)"
+                  value={config.RECOMMENDED_ADS_DIRECT_COST_MIN}
+                  onChange={(v) => updateConfig('RECOMMENDED_ADS_DIRECT_COST_MIN', v)}
+                  hint={`Max: ${config.RECOMMENDED_ADS_DIRECT_COST_MAX}€`}
+                />
+              </div>
+            </div>
+            
+            {/* Interviews */}
+            <div>
+              <h4 className="font-medium mb-3">Intervjuud</h4>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <ConfigNumberInput
+                  label="HR min (h)"
+                  value={config.RECOMMENDED_INTERVIEW_HR_HOURS_MIN}
+                  onChange={(v) => updateConfig('RECOMMENDED_INTERVIEW_HR_HOURS_MIN', v)}
+                  hint={`Max: ${config.RECOMMENDED_INTERVIEW_HR_HOURS_MAX}`}
+                />
+                <ConfigNumberInput
+                  label="Juht min (h)"
+                  value={config.RECOMMENDED_INTERVIEW_MGR_HOURS_MIN}
+                  onChange={(v) => updateConfig('RECOMMENDED_INTERVIEW_MGR_HOURS_MIN', v)}
+                  hint={`Max: ${config.RECOMMENDED_INTERVIEW_MGR_HOURS_MAX}`}
+                />
+                <ConfigNumberInput
+                  label="Tiim min (h)"
+                  value={config.RECOMMENDED_INTERVIEW_TEAM_HOURS_MIN}
+                  onChange={(v) => updateConfig('RECOMMENDED_INTERVIEW_TEAM_HOURS_MIN', v)}
+                  hint={`Max: ${config.RECOMMENDED_INTERVIEW_TEAM_HOURS_MAX}`}
+                />
+                <ConfigNumberInput
+                  label="Kulud (€)"
+                  value={config.RECOMMENDED_INTERVIEW_DIRECT_COST_MIN}
+                  onChange={(v) => updateConfig('RECOMMENDED_INTERVIEW_DIRECT_COST_MIN', v)}
+                  hint={`Max: ${config.RECOMMENDED_INTERVIEW_DIRECT_COST_MAX}€`}
+                />
+              </div>
+            </div>
+            
+            <p className="text-xs text-muted-foreground mt-4">
+              ℹ Väljad nagu "Muud teenused" hinnad, taustakontrolli kulud jt ei oma soovituslikke vahemikke, 
+              sest need sõltuvad teenusepakkujast.
+            </p>
           </CardContent>
         </Card>
 
