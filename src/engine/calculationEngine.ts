@@ -531,185 +531,260 @@ export function computeTotals(
   // Range warnings
   const rangeWarnings: RangeWarning[] = [];
   
-  // Onboarding warnings
-  if (inputs.onboarding.onboardingMonths > 0) {
-    if (inputs.onboarding.onboardingMonths < config.RECOMMENDED_ONBOARDING_MONTHS_MIN) {
+  // ============================================================================
+  // HELPER: Generate warning for a single field
+  // ============================================================================
+  function addFieldWarning(
+    field: string,
+    label: string,
+    value: number,
+    min: number | undefined,
+    max: number | undefined,
+    unit: string,
+    sectionInUse: boolean
+  ) {
+    // Skip if no range defined (min and max both undefined)
+    if (min === undefined && max === undefined) return;
+    
+    // If value is 0/empty and section is in use, show "sisesta hinnang"
+    if (value === 0 && sectionInUse) {
+      const rangeText = min !== undefined && max !== undefined
+        ? `${min}–${max}`
+        : max !== undefined
+          ? `kuni ${max}`
+          : `vähemalt ${min}`;
       rangeWarnings.push({
-        field: 'onboardingMonths',
-        label: 'Sisseelamisperiood',
-        message: `Soovituslik miinimum: ${config.RECOMMENDED_ONBOARDING_MONTHS_MIN} kuud`,
+        field,
+        label,
+        message: `Soovituslik vahemik: ${rangeText} ${unit} (sisesta hinnang)`,
         severity: 'info',
-        recommendedMin: config.RECOMMENDED_ONBOARDING_MONTHS_MIN,
-        recommendedMax: config.RECOMMENDED_ONBOARDING_MONTHS_MAX,
-        currentValue: inputs.onboarding.onboardingMonths,
-        unit: 'kuud',
+        recommendedMin: min,
+        recommendedMax: max,
+        currentValue: 0,
+        unit,
       });
+      return;
     }
     
-    if (inputs.onboarding.onboardingMonths > config.RECOMMENDED_ONBOARDING_MONTHS_MAX) {
+    // Skip further checks if value is 0
+    if (value === 0) return;
+    
+    // Below min
+    if (min !== undefined && value < min) {
       rangeWarnings.push({
-        field: 'onboardingMonths',
-        label: 'Sisseelamisperiood',
-        message: `Soovituslik maksimum: ${config.RECOMMENDED_ONBOARDING_MONTHS_MAX} kuud`,
+        field,
+        label,
+        message: `Soovituslik miinimum: ${min} ${unit}`,
+        severity: 'info',
+        recommendedMin: min,
+        recommendedMax: max,
+        currentValue: value,
+        unit,
+      });
+      return;
+    }
+    
+    // Above max
+    if (max !== undefined && value > max) {
+      rangeWarnings.push({
+        field,
+        label,
+        message: `Soovituslik maksimum: ${max} ${unit}`,
         severity: 'warning',
-        recommendedMin: config.RECOMMENDED_ONBOARDING_MONTHS_MIN,
-        recommendedMax: config.RECOMMENDED_ONBOARDING_MONTHS_MAX,
-        currentValue: inputs.onboarding.onboardingMonths,
-        unit: 'kuud',
+        recommendedMin: min,
+        recommendedMax: max,
+        currentValue: value,
+        unit,
       });
     }
-  } else if (inputs.onboarding.productivityPct > 0 || inputs.onboarding.extraCosts > 0) {
-    // Section is in use but onboardingMonths is 0
-    rangeWarnings.push({
-      field: 'onboardingMonths',
-      label: 'Sisseelamisperiood',
-      message: `Soovituslik: ${config.RECOMMENDED_ONBOARDING_MONTHS_MIN}–${config.RECOMMENDED_ONBOARDING_MONTHS_MAX} kuud (sisesta hinnang)`,
-      severity: 'info',
-      recommendedMin: config.RECOMMENDED_ONBOARDING_MONTHS_MIN,
-      recommendedMax: config.RECOMMENDED_ONBOARDING_MONTHS_MAX,
-      currentValue: 0,
-      unit: 'kuud',
-    });
   }
   
-  // Productivity warning
-  if (inputs.onboarding.productivityPct > 0 && inputs.onboarding.productivityPct < config.RECOMMENDED_PRODUCTIVITY_PCT_MIN) {
-    rangeWarnings.push({
-      field: 'productivityPct',
-      label: 'Keskmine tootlikkus',
-      message: `Soovituslik miinimum: ${config.RECOMMENDED_PRODUCTIVITY_PCT_MIN}%`,
-      severity: 'warning',
-      recommendedMin: config.RECOMMENDED_PRODUCTIVITY_PCT_MIN,
-      recommendedMax: config.RECOMMENDED_PRODUCTIVITY_PCT_MAX,
-      currentValue: inputs.onboarding.productivityPct,
-      unit: '%',
-    });
-  } else if (inputs.onboarding.productivityPct > config.RECOMMENDED_PRODUCTIVITY_PCT_MAX) {
-    rangeWarnings.push({
-      field: 'productivityPct',
-      label: 'Keskmine tootlikkus',
-      message: `Soovituslik maksimum: ${config.RECOMMENDED_PRODUCTIVITY_PCT_MAX}%`,
-      severity: 'info',
-      recommendedMin: config.RECOMMENDED_PRODUCTIVITY_PCT_MIN,
-      recommendedMax: config.RECOMMENDED_PRODUCTIVITY_PCT_MAX,
-      currentValue: inputs.onboarding.productivityPct,
-      unit: '%',
-    });
-  }
+  // ============================================================================
+  // STRATEGY & PREP WARNINGS
+  // ============================================================================
+  const strategyInUse = inputs.strategyPrep.hrHours > 0 || 
+                        inputs.strategyPrep.managerHours > 0 || 
+                        inputs.strategyPrep.teamHours > 0;
   
-  // Vacancy warning
-  if (inputs.vacancy.vacancyDays > config.RECOMMENDED_VACANCY_DAYS_MAX) {
-    rangeWarnings.push({
-      field: 'vacancyDays',
-      label: 'Vakantsi kestus',
-      message: `Soovituslik maksimum: ${config.RECOMMENDED_VACANCY_DAYS_MAX} päeva`,
-      severity: 'warning',
-      recommendedMin: 0,
-      recommendedMax: config.RECOMMENDED_VACANCY_DAYS_MAX,
-      currentValue: inputs.vacancy.vacancyDays,
-      unit: 'päeva',
-    });
-  }
+  addFieldWarning(
+    'strategyPrep.hrHours', 'Strateegia: HR tunnid',
+    inputs.strategyPrep.hrHours,
+    config.RECOMMENDED_STRATEGY_HR_HOURS_MIN, config.RECOMMENDED_STRATEGY_HR_HOURS_MAX,
+    'h', strategyInUse
+  );
+  addFieldWarning(
+    'strategyPrep.managerHours', 'Strateegia: Juhi tunnid',
+    inputs.strategyPrep.managerHours,
+    config.RECOMMENDED_STRATEGY_MGR_HOURS_MIN, config.RECOMMENDED_STRATEGY_MGR_HOURS_MAX,
+    'h', strategyInUse
+  );
+  addFieldWarning(
+    'strategyPrep.teamHours', 'Strateegia: Tiimi tunnid',
+    inputs.strategyPrep.teamHours,
+    config.RECOMMENDED_STRATEGY_TEAM_HOURS_MIN, config.RECOMMENDED_STRATEGY_TEAM_HOURS_MAX,
+    'h', strategyInUse
+  );
   
-  // Helper to check if a block has any non-zero inputs
-  const blockHasInputs = (block: { hrHours?: number; managerHours?: number; teamHours?: number; directCosts?: number; testsCost?: number }) => {
-    return (block.hrHours ?? 0) > 0 || (block.managerHours ?? 0) > 0 || (block.teamHours ?? 0) > 0 || (block.directCosts ?? 0) > 0 || (block.testsCost ?? 0) > 0;
-  };
+  // ============================================================================
+  // ADS & BRANDING WARNINGS
+  // ============================================================================
+  const adsInUse = inputs.adsBranding.hrHours > 0 || 
+                   inputs.adsBranding.managerHours > 0 || 
+                   inputs.adsBranding.directCosts > 0;
   
-  // Total hours for each role across all blocks
-  const totalHrHours = 
-    inputs.strategyPrep.hrHours + 
-    inputs.adsBranding.hrHours + 
-    inputs.candidateMgmt.hrHours + 
-    inputs.interviews.hrHours + 
-    inputs.backgroundOffer.hrHours +
-    inputs.indirectCosts.hrHours;
-    
-  const totalManagerHours = 
-    inputs.strategyPrep.managerHours + 
-    inputs.adsBranding.managerHours + 
-    inputs.candidateMgmt.managerHours + 
-    inputs.interviews.managerHours + 
-    inputs.backgroundOffer.managerHours +
-    inputs.indirectCosts.managerHours;
-    
-  const totalTeamHours = 
-    inputs.strategyPrep.teamHours + 
-    inputs.adsBranding.teamHours + 
-    inputs.candidateMgmt.teamHours + 
-    inputs.interviews.teamHours + 
-    inputs.backgroundOffer.teamHours +
-    inputs.indirectCosts.teamHours;
+  addFieldWarning(
+    'adsBranding.hrHours', 'Kuulutused: HR tunnid',
+    inputs.adsBranding.hrHours,
+    config.RECOMMENDED_ADS_HR_HOURS_MIN, config.RECOMMENDED_ADS_HR_HOURS_MAX,
+    'h', adsInUse
+  );
+  addFieldWarning(
+    'adsBranding.managerHours', 'Kuulutused: Juhi tunnid',
+    inputs.adsBranding.managerHours,
+    config.RECOMMENDED_ADS_MGR_HOURS_MIN, config.RECOMMENDED_ADS_MGR_HOURS_MAX,
+    'h', adsInUse
+  );
+  addFieldWarning(
+    'adsBranding.directCosts', 'Kuulutuste kulud',
+    inputs.adsBranding.directCosts,
+    config.RECOMMENDED_ADS_DIRECT_COST_MIN, config.RECOMMENDED_ADS_DIRECT_COST_MAX,
+    '€', adsInUse
+  );
   
-  // Total hours warnings
-  if (totalHrHours > config.RECOMMENDED_HR_HOURS_MAX) {
-    rangeWarnings.push({
-      field: 'totalHrHours',
-      label: 'HR kogu tunnid',
-      message: `Soovituslik maksimum: ${config.RECOMMENDED_HR_HOURS_MAX} h`,
-      severity: 'info',
-      recommendedMax: config.RECOMMENDED_HR_HOURS_MAX,
-      currentValue: totalHrHours,
-      unit: 'h',
-    });
-  }
+  // ============================================================================
+  // CANDIDATE MANAGEMENT WARNINGS
+  // ============================================================================
+  const candidateInUse = inputs.candidateMgmt.hrHours > 0 || 
+                         inputs.candidateMgmt.managerHours > 0 || 
+                         inputs.candidateMgmt.testsCost > 0;
   
-  if (totalManagerHours > config.RECOMMENDED_MANAGER_HOURS_MAX) {
-    rangeWarnings.push({
-      field: 'totalManagerHours',
-      label: 'Juhi kogu tunnid',
-      message: `Soovituslik maksimum: ${config.RECOMMENDED_MANAGER_HOURS_MAX} h`,
-      severity: 'info',
-      recommendedMax: config.RECOMMENDED_MANAGER_HOURS_MAX,
-      currentValue: totalManagerHours,
-      unit: 'h',
-    });
-  }
+  addFieldWarning(
+    'candidateMgmt.hrHours', 'Kandidaadid: HR tunnid',
+    inputs.candidateMgmt.hrHours,
+    config.RECOMMENDED_CANDIDATE_HR_HOURS_MIN, config.RECOMMENDED_CANDIDATE_HR_HOURS_MAX,
+    'h', candidateInUse
+  );
+  addFieldWarning(
+    'candidateMgmt.managerHours', 'Kandidaadid: Juhi tunnid',
+    inputs.candidateMgmt.managerHours,
+    config.RECOMMENDED_CANDIDATE_MGR_HOURS_MIN, config.RECOMMENDED_CANDIDATE_MGR_HOURS_MAX,
+    'h', candidateInUse
+  );
+  // Note: testsCost has no recommended range (variable by vendor)
   
-  if (totalTeamHours > config.RECOMMENDED_TEAM_HOURS_MAX) {
-    rangeWarnings.push({
-      field: 'totalTeamHours',
-      label: 'Tiimi kogu tunnid',
-      message: `Soovituslik maksimum: ${config.RECOMMENDED_TEAM_HOURS_MAX} h`,
-      severity: 'info',
-      recommendedMax: config.RECOMMENDED_TEAM_HOURS_MAX,
-      currentValue: totalTeamHours,
-      unit: 'h',
-    });
-  }
+  // ============================================================================
+  // INTERVIEWS WARNINGS
+  // ============================================================================
+  const interviewsInUse = inputs.interviews.hrHours > 0 || 
+                          inputs.interviews.managerHours > 0 || 
+                          inputs.interviews.teamHours > 0 ||
+                          inputs.interviews.directCosts > 0;
   
-  // Total interview hours
-  const totalInterviewHours = inputs.interviews.hrHours + inputs.interviews.managerHours + inputs.interviews.teamHours;
-  if (totalInterviewHours > config.RECOMMENDED_INTERVIEW_HOURS_MAX) {
-    rangeWarnings.push({
-      field: 'totalInterviewHours',
-      label: 'Intervjuude tunnid',
-      message: `Soovituslik maksimum: ${config.RECOMMENDED_INTERVIEW_HOURS_MAX} h`,
-      severity: 'warning',
-      recommendedMax: config.RECOMMENDED_INTERVIEW_HOURS_MAX,
-      currentValue: totalInterviewHours,
-      unit: 'h',
-    });
-  }
+  addFieldWarning(
+    'interviews.hrHours', 'Intervjuud: HR tunnid',
+    inputs.interviews.hrHours,
+    config.RECOMMENDED_INTERVIEW_HR_HOURS_MIN, config.RECOMMENDED_INTERVIEW_HR_HOURS_MAX,
+    'h', interviewsInUse
+  );
+  addFieldWarning(
+    'interviews.managerHours', 'Intervjuud: Juhi tunnid',
+    inputs.interviews.managerHours,
+    config.RECOMMENDED_INTERVIEW_MGR_HOURS_MIN, config.RECOMMENDED_INTERVIEW_MGR_HOURS_MAX,
+    'h', interviewsInUse
+  );
+  addFieldWarning(
+    'interviews.teamHours', 'Intervjuud: Tiimi tunnid',
+    inputs.interviews.teamHours,
+    config.RECOMMENDED_INTERVIEW_TEAM_HOURS_MIN, config.RECOMMENDED_INTERVIEW_TEAM_HOURS_MAX,
+    'h', interviewsInUse
+  );
+  addFieldWarning(
+    'interviews.directCosts', 'Intervjuude kulud',
+    inputs.interviews.directCosts,
+    config.RECOMMENDED_INTERVIEW_DIRECT_COST_MIN, config.RECOMMENDED_INTERVIEW_DIRECT_COST_MAX,
+    '€', interviewsInUse
+  );
   
-  // Zero-value warnings when section has other inputs
-  // Vacancy: if vacancyDays > 0 but dailyCost = 0, that's likely intentional (no cost calculation needed)
-  // But if dailyCost > 0 and vacancyDays = 0, they may have forgotten days
-  if (inputs.vacancy.dailyCost > 0 && inputs.vacancy.vacancyDays === 0) {
-    rangeWarnings.push({
-      field: 'vacancyDays',
-      label: 'Vakantsi kestus',
-      message: `Soovituslik: 10–${config.RECOMMENDED_VACANCY_DAYS_MAX} päeva (sisesta hinnang)`,
-      severity: 'info',
-      recommendedMin: 10,
-      recommendedMax: config.RECOMMENDED_VACANCY_DAYS_MAX,
-      currentValue: 0,
-      unit: 'päeva',
-    });
-  }
+  // ============================================================================
+  // BACKGROUND & OFFER WARNINGS
+  // ============================================================================
+  const backgroundInUse = inputs.backgroundOffer.hrHours > 0 || 
+                          inputs.backgroundOffer.managerHours > 0 || 
+                          inputs.backgroundOffer.directCosts > 0;
   
-  // Onboarding: if onboardingMonths > 0 but productivityPct = 0, that means 0% productivity which is extreme
-  // This is actually valid (full loss), so we only warn if it seems unintentional
+  addFieldWarning(
+    'backgroundOffer.hrHours', 'Taustakontroll: HR tunnid',
+    inputs.backgroundOffer.hrHours,
+    config.RECOMMENDED_BACKGROUND_HR_HOURS_MIN, config.RECOMMENDED_BACKGROUND_HR_HOURS_MAX,
+    'h', backgroundInUse
+  );
+  addFieldWarning(
+    'backgroundOffer.managerHours', 'Taustakontroll: Juhi tunnid',
+    inputs.backgroundOffer.managerHours,
+    config.RECOMMENDED_BACKGROUND_MGR_HOURS_MIN, config.RECOMMENDED_BACKGROUND_MGR_HOURS_MAX,
+    'h', backgroundInUse
+  );
+  // Note: backgroundOffer.directCosts has no recommended range (variable by service)
+  
+  // ============================================================================
+  // INDIRECT COSTS WARNINGS
+  // ============================================================================
+  const indirectInUse = inputs.indirectCosts.hrHours > 0 || 
+                        inputs.indirectCosts.managerHours > 0 || 
+                        inputs.indirectCosts.teamHours > 0;
+  
+  addFieldWarning(
+    'indirectCosts.hrHours', 'Kaudsed: HR tunnid',
+    inputs.indirectCosts.hrHours,
+    config.RECOMMENDED_INDIRECT_HR_HOURS_MIN, config.RECOMMENDED_INDIRECT_HR_HOURS_MAX,
+    'h', indirectInUse
+  );
+  addFieldWarning(
+    'indirectCosts.managerHours', 'Kaudsed: Juhi tunnid',
+    inputs.indirectCosts.managerHours,
+    config.RECOMMENDED_INDIRECT_MGR_HOURS_MIN, config.RECOMMENDED_INDIRECT_MGR_HOURS_MAX,
+    'h', indirectInUse
+  );
+  addFieldWarning(
+    'indirectCosts.teamHours', 'Kaudsed: Tiimi tunnid',
+    inputs.indirectCosts.teamHours,
+    config.RECOMMENDED_INDIRECT_TEAM_HOURS_MIN, config.RECOMMENDED_INDIRECT_TEAM_HOURS_MAX,
+    'h', indirectInUse
+  );
+  
+  // ============================================================================
+  // ONBOARDING WARNINGS
+  // ============================================================================
+  const onboardingInUse = inputs.onboarding.onboardingMonths > 0 || 
+                          inputs.onboarding.productivityPct > 0 || 
+                          inputs.onboarding.extraCosts > 0;
+  
+  addFieldWarning(
+    'onboardingMonths', 'Sisseelamisperiood',
+    inputs.onboarding.onboardingMonths,
+    config.RECOMMENDED_ONBOARDING_MONTHS_MIN, config.RECOMMENDED_ONBOARDING_MONTHS_MAX,
+    'kuud', onboardingInUse
+  );
+  addFieldWarning(
+    'productivityPct', 'Keskmine tootlikkus',
+    inputs.onboarding.productivityPct,
+    config.RECOMMENDED_PRODUCTIVITY_PCT_MIN, config.RECOMMENDED_PRODUCTIVITY_PCT_MAX,
+    '%', onboardingInUse
+  );
+  // Note: extraCosts has no recommended range (variable)
+  
+  // ============================================================================
+  // VACANCY WARNINGS
+  // ============================================================================
+  const vacancyInUse = inputs.vacancy.vacancyDays > 0 || inputs.vacancy.dailyCost > 0;
+  
+  addFieldWarning(
+    'vacancyDays', 'Vakantsi kestus',
+    inputs.vacancy.vacancyDays,
+    config.RECOMMENDED_VACANCY_DAYS_MIN, config.RECOMMENDED_VACANCY_DAYS_MAX,
+    'päeva', vacancyInUse
+  );
+  // Note: dailyCost has no recommended range (depends on role/business)
   
   return {
     normalizedHirePay,

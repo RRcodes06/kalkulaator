@@ -88,18 +88,21 @@ export function CalculatorForm() {
           value={inputs.strategyPrep.hrHours}
           onChange={(v) => updateNestedInput('strategyPrep', 'hrHours', v)}
           suffix="h"
+          warning={getWarningForField('strategyPrep.hrHours')}
         />
         <NumberInput
           label="Juhi tunnid"
           value={inputs.strategyPrep.managerHours}
           onChange={(v) => updateNestedInput('strategyPrep', 'managerHours', v)}
           suffix="h"
+          warning={getWarningForField('strategyPrep.managerHours')}
         />
         <NumberInput
           label="Tiimi tunnid"
           value={inputs.strategyPrep.teamHours}
           onChange={(v) => updateNestedInput('strategyPrep', 'teamHours', v)}
           suffix="h"
+          warning={getWarningForField('strategyPrep.teamHours')}
         />
       </CalculatorSection>
 
@@ -116,19 +119,22 @@ export function CalculatorForm() {
           value={inputs.adsBranding.hrHours}
           onChange={(v) => updateNestedInput('adsBranding', 'hrHours', v)}
           suffix="h"
+          warning={getWarningForField('adsBranding.hrHours')}
         />
         <NumberInput
           label="Juhi tunnid"
           value={inputs.adsBranding.managerHours}
           onChange={(v) => updateNestedInput('adsBranding', 'managerHours', v)}
           suffix="h"
+          warning={getWarningForField('adsBranding.managerHours')}
         />
         <NumberInput
           label="Kuulutuste ja brändingu kulud"
           value={inputs.adsBranding.directCosts}
           onChange={(v) => updateNestedInput('adsBranding', 'directCosts', v)}
           suffix="€"
-          hint="CV-Online, LinkedIn, materjalid"
+          hint={getWarningForField('adsBranding.directCosts') ? undefined : "CV-Online, LinkedIn, materjalid"}
+          warning={getWarningForField('adsBranding.directCosts')}
         />
       </CalculatorSection>
 
@@ -145,12 +151,14 @@ export function CalculatorForm() {
           value={inputs.candidateMgmt.hrHours}
           onChange={(v) => updateNestedInput('candidateMgmt', 'hrHours', v)}
           suffix="h"
+          warning={getWarningForField('candidateMgmt.hrHours')}
         />
         <NumberInput
           label="Juhi tunnid"
           value={inputs.candidateMgmt.managerHours}
           onChange={(v) => updateNestedInput('candidateMgmt', 'managerHours', v)}
           suffix="h"
+          warning={getWarningForField('candidateMgmt.managerHours')}
         />
         <NumberInput
           label="Hindamistestide kulud"
@@ -174,26 +182,30 @@ export function CalculatorForm() {
           value={inputs.interviews.hrHours}
           onChange={(v) => updateNestedInput('interviews', 'hrHours', v)}
           suffix="h"
+          warning={getWarningForField('interviews.hrHours')}
         />
         <NumberInput
           label="Juhi tunnid"
           value={inputs.interviews.managerHours}
           onChange={(v) => updateNestedInput('interviews', 'managerHours', v)}
           suffix="h"
+          warning={getWarningForField('interviews.managerHours')}
         />
         <NumberInput
           label="Tiimi tunnid"
           value={inputs.interviews.teamHours}
           onChange={(v) => updateNestedInput('interviews', 'teamHours', v)}
           suffix="h"
-          hint="Tiimikaaslaste kaasamine intervjuudele"
+          hint={getWarningForField('interviews.teamHours') ? undefined : "Tiimikaaslaste kaasamine intervjuudele"}
+          warning={getWarningForField('interviews.teamHours')}
         />
         <NumberInput
           label="Otsesed kulud"
           value={inputs.interviews.directCosts}
           onChange={(v) => updateNestedInput('interviews', 'directCosts', v)}
           suffix="€"
-          hint="Reisikulud, ruumid"
+          hint={getWarningForField('interviews.directCosts') ? undefined : "Reisikulud, ruumid"}
+          warning={getWarningForField('interviews.directCosts')}
         />
       </CalculatorSection>
 
@@ -210,19 +222,21 @@ export function CalculatorForm() {
           value={inputs.backgroundOffer.hrHours}
           onChange={(v) => updateNestedInput('backgroundOffer', 'hrHours', v)}
           suffix="h"
+          warning={getWarningForField('backgroundOffer.hrHours')}
         />
         <NumberInput
           label="Juhi tunnid"
           value={inputs.backgroundOffer.managerHours}
           onChange={(v) => updateNestedInput('backgroundOffer', 'managerHours', v)}
           suffix="h"
+          warning={getWarningForField('backgroundOffer.managerHours')}
         />
         <NumberInput
           label="Otsesed kulud"
           value={inputs.backgroundOffer.directCosts}
           onChange={(v) => updateNestedInput('backgroundOffer', 'directCosts', v)}
           suffix="€"
-          hint="Taustakontroll, juriidilised tasud"
+          hint="Taustakontroll, juriidilised tasud (varieeruv)"
         />
       </CalculatorSection>
 
@@ -357,21 +371,24 @@ export function CalculatorForm() {
           value={inputs.indirectCosts.hrHours}
           onChange={(v) => updateNestedInput('indirectCosts', 'hrHours', v)}
           suffix="h"
-          hint="Admin koordineerimine, aruandlus"
+          hint={getWarningForField('indirectCosts.hrHours') ? undefined : "Admin koordineerimine, aruandlus"}
+          warning={getWarningForField('indirectCosts.hrHours')}
         />
         <NumberInput
           label="Juhi tunnid"
           value={inputs.indirectCosts.managerHours}
           onChange={(v) => updateNestedInput('indirectCosts', 'managerHours', v)}
           suffix="h"
-          hint="Tähelepanu hajumine, prioriteetide ümberseadmine"
+          hint={getWarningForField('indirectCosts.managerHours') ? undefined : "Tähelepanu hajumine, prioriteetide ümberseadmine"}
+          warning={getWarningForField('indirectCosts.managerHours')}
         />
         <NumberInput
           label="Tiimi tunnid"
           value={inputs.indirectCosts.teamHours}
           onChange={(v) => updateNestedInput('indirectCosts', 'teamHours', v)}
           suffix="h"
-          hint="Ülekoormus, ülesannete ümberjagamine"
+          hint={getWarningForField('indirectCosts.teamHours') ? undefined : "Ülekoormus, ülesannete ümberjagamine"}
+          warning={getWarningForField('indirectCosts.teamHours')}
         />
       </CalculatorSection>
 
