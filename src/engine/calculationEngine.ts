@@ -695,11 +695,13 @@ export function createDefaultInputs(): CalculatorInputs {
 
 /**
  * Create a new service row with default values.
+ * @param id - Unique identifier for the row
+ * @param name - Optional prefilled name for the service
  */
-export function createServiceRow(id: string): ServiceRow {
+export function createServiceRow(id: string, name: string = ''): ServiceRow {
   return {
     id,
-    name: '',
+    name,
     details: {
       serviceType: 'outsourced',
       billingType: 'oneOff',

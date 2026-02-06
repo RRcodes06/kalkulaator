@@ -21,7 +21,7 @@ interface AppState {
   resetInputs: () => void;
   
   // Service row actions
-  addServiceRow: () => void;
+  addServiceRow: (prefilledName?: string) => void;
   updateServiceRow: (id: string, updates: Partial<ServiceRow>) => void;
   removeServiceRow: (id: string) => void;
   
@@ -107,9 +107,9 @@ export const useAppStore = create<AppState>((set, get) => {
       });
     },
     
-    addServiceRow: () => {
+    addServiceRow: (prefilledName?: string) => {
       set((state) => {
-        const newRow = createServiceRow(`service-${++serviceRowCounter}`);
+        const newRow = createServiceRow(`service-${++serviceRowCounter}`, prefilledName);
         const newServices = [...state.inputs.otherServices, newRow];
         const newInputs = { ...state.inputs, otherServices: newServices };
         return {
