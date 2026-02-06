@@ -1,15 +1,16 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppStore } from '@/store/appStore';
 import { useAdminAuthStore } from '@/store/adminAuthStore';
-import { DEFAULT_CONFIG, STORAGE_KEYS } from '@/config/defaults';
-import type { CalculatorConfig } from '@/types/calculator';
+import { DEFAULT_CONFIG, STORAGE_KEYS, DEFAULT_RECOMMENDED_RANGES, RANGE_LABELS } from '@/config/defaults';
+import type { CalculatorConfig, RecommendedRanges, RecommendedRange } from '@/types/calculator';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, RotateCcw, Save, Download, Upload, LogOut, Lock } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { ArrowLeft, RotateCcw, Save, Download, Upload, LogOut, Lock, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 // ============================================================================
@@ -128,6 +129,218 @@ function ConfigTextInput({
 }
 
 // ============================================================================
+// RANGES TABLE COMPONENT
+// ============================================================================
+
+interface RangeRowState {
+  min: number;
+  max: number;
+  error: string | null;
+}
+
+function RecommendedRangesTable({
+  ranges,
+  onUpdate,
+  onRestoreDefaults,
+}: {
+  ranges: RecommendedRanges;
+  onUpdate: (key: string, range: RecommendedRange) => void;
+  onRestoreDefaults: () => void;
+}) {
+  // Local state for editing (to enable validation before save)
+  const [localRanges, setLocalRanges] = useState<Record<string, RangeRowState>>(() => {
+    const initial: Record<string, RangeRowState> = {};
+    for (const key of Object.keys(DEFAULT_RECOMMENDED_RANGES)) {
+      const range = ranges[key] ?? DEFAULT_RECOMMENDED_RANGES[key];
+      initial[key] = { min: range.min, max: range.max, error: null };
+    }
+    return initial;
+  });
+
+  // Validate a single row
+  const validateRow = (min: number, max: number): string | null => {
+    if (!Number.isFinite(min) || !Number.isFinite(max)) {
+      return 'Min ja max peavad olema numbrid';
+    }
+    if (max < min) {
+      return 'Max peab olema >= min';
+    }
+    if (min < 0 || max < 0) {
+      return 'Väärtused peavad olema >= 0';
+    }
+    return null;
+  };
+
+  // Check if any row has errors
+  const hasErrors = useMemo(() => {
+    return Object.values(localRanges).some(row => row.error !== null);
+  }, [localRanges]);
+
+  // Handle min/max change
+  const handleChange = (key: string, field: 'min' | 'max', value: number) => {
+    setLocalRanges(prev => {
+      const newRow = { ...prev[key], [field]: value };
+      newRow.error = validateRow(newRow.min, newRow.max);
+      return { ...prev, [key]: newRow };
+    });
+  };
+
+  // Save all changes
+  const handleSave = () => {
+    if (hasErrors) {
+      toast.error('Paranda vead enne salvestamist');
+      return;
+    }
+    
+    for (const key of Object.keys(localRanges)) {
+      const row = localRanges[key];
+      const originalRange = ranges[key] ?? DEFAULT_RECOMMENDED_RANGES[key];
+      if (row.min !== originalRange.min || row.max !== originalRange.max) {
+        onUpdate(key, { ...originalRange, min: row.min, max: row.max });
+      }
+    }
+    toast.success('Vahemikud salvestatud');
+  };
+
+  // Restore defaults
+  const handleRestoreDefaults = () => {
+    if (window.confirm('Kas oled kindel, et soovid taastada soovituslike vahemike vaikeväärtused?')) {
+      const resetRanges: Record<string, RangeRowState> = {};
+      for (const key of Object.keys(DEFAULT_RECOMMENDED_RANGES)) {
+        const range = DEFAULT_RECOMMENDED_RANGES[key];
+        resetRanges[key] = { min: range.min, max: range.max, error: null };
+      }
+      setLocalRanges(resetRanges);
+      onRestoreDefaults();
+      toast.success('Vahemikud lähtestatud');
+    }
+  };
+
+  // Group ranges by section
+  const sections = useMemo(() => {
+    const groups: Record<string, string[]> = {
+      'Strateegia & ettevalmistus': [],
+      'Kuulutused & bränding': [],
+      'Kandidaatide haldus': [],
+      'Intervjuud': [],
+      'Taustakontroll': [],
+      'Kaudsed kulud': [],
+      'Sisseelamine': [],
+      'Vakants': [],
+    };
+
+    for (const key of Object.keys(DEFAULT_RECOMMENDED_RANGES)) {
+      if (key.startsWith('strategyPrep')) groups['Strateegia & ettevalmistus'].push(key);
+      else if (key.startsWith('adsBranding')) groups['Kuulutused & bränding'].push(key);
+      else if (key.startsWith('candidateMgmt')) groups['Kandidaatide haldus'].push(key);
+      else if (key.startsWith('interviews')) groups['Intervjuud'].push(key);
+      else if (key.startsWith('backgroundOffer')) groups['Taustakontroll'].push(key);
+      else if (key.startsWith('indirectCosts')) groups['Kaudsed kulud'].push(key);
+      else if (key.startsWith('onboarding')) groups['Sisseelamine'].push(key);
+      else if (key.startsWith('vacancy')) groups['Vakants'].push(key);
+    }
+
+    return groups;
+  }, []);
+
+  return (
+    <div className="space-y-4">
+      {/* Action buttons */}
+      <div className="flex gap-2">
+        <Button onClick={handleSave} disabled={hasErrors} className="gap-2">
+          <Save className="w-4 h-4" />
+          Salvesta vahemikud
+        </Button>
+        <Button variant="outline" onClick={handleRestoreDefaults} className="gap-2">
+          <RotateCcw className="w-4 h-4" />
+          Taasta vaikeväärtused
+        </Button>
+      </div>
+
+      {hasErrors && (
+        <div className="flex items-center gap-2 text-destructive text-sm">
+          <AlertCircle className="w-4 h-4" />
+          <span>Paranda vead enne salvestamist</span>
+        </div>
+      )}
+
+      {/* Compact table */}
+      <div className="border rounded-lg overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-muted/50">
+              <TableHead className="w-[300px]">Väli</TableHead>
+              <TableHead className="w-[100px]">Min</TableHead>
+              <TableHead className="w-[100px]">Max</TableHead>
+              <TableHead className="w-[60px]">Ühik</TableHead>
+              <TableHead className="w-[200px]">Viga</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {Object.entries(sections).map(([sectionName, keys]) => (
+              keys.length > 0 && (
+                <>
+                  <TableRow key={sectionName} className="bg-muted/30">
+                    <TableCell colSpan={5} className="font-medium text-sm py-2">
+                      {sectionName}
+                    </TableCell>
+                  </TableRow>
+                  {keys.map(key => {
+                    const row = localRanges[key];
+                    const range = DEFAULT_RECOMMENDED_RANGES[key];
+                    const label = RANGE_LABELS[key] || key;
+                    
+                    return (
+                      <TableRow key={key} className={row?.error ? 'bg-destructive/5' : ''}>
+                        <TableCell className="py-1.5">
+                          <span className="text-sm">{label}</span>
+                          <span className="text-xs text-muted-foreground ml-2 hidden lg:inline">
+                            ({key})
+                          </span>
+                        </TableCell>
+                        <TableCell className="py-1.5">
+                          <Input
+                            type="number"
+                            className="h-8 w-20"
+                            value={row?.min ?? range.min}
+                            onChange={(e) => handleChange(key, 'min', parseFloat(e.target.value) || 0)}
+                          />
+                        </TableCell>
+                        <TableCell className="py-1.5">
+                          <Input
+                            type="number"
+                            className="h-8 w-20"
+                            value={row?.max ?? range.max}
+                            onChange={(e) => handleChange(key, 'max', parseFloat(e.target.value) || 0)}
+                          />
+                        </TableCell>
+                        <TableCell className="py-1.5 text-muted-foreground text-sm">
+                          {range.unit}
+                        </TableCell>
+                        <TableCell className="py-1.5">
+                          {row?.error && (
+                            <span className="text-xs text-destructive">{row.error}</span>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </>
+              )
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      <p className="text-xs text-muted-foreground">
+        ℹ Väljad nagu "Muud teenused" hinnad, taustakontrolli kulud jt ei oma soovituslikke vahemikke, 
+        sest need sõltuvad teenusepakkujast.
+      </p>
+    </div>
+  );
+}
+
+// ============================================================================
 // ADMIN PANEL COMPONENT
 // ============================================================================
 
@@ -142,7 +355,7 @@ function AdminPanel() {
   };
 
   const handleResetConfig = () => {
-    if (window.confirm('Kas oled kindel, et soovid taastada vaikeväärtused?')) {
+    if (window.confirm('Kas oled kindel, et soovid taastada kõik vaikeväärtused?')) {
       resetConfig();
       toast.success('Seaded lähtestatud vaikeväärtustele');
     }
@@ -173,6 +386,11 @@ function AdminPanel() {
         const validatedConfig: CalculatorConfig = {
           ...DEFAULT_CONFIG,
           ...imported,
+          // Ensure recommendedRanges is properly merged
+          recommendedRanges: {
+            ...DEFAULT_RECOMMENDED_RANGES,
+            ...(imported.recommendedRanges || {}),
+          },
         };
 
         // Validate numeric fields
@@ -180,26 +398,6 @@ function AdminPanel() {
           'HOURS_PER_MONTH', 'EST_AVG_GROSS_WAGE', 'SOCIAL_TAX_RATE', 'EMPLOYER_UI_RATE',
           'EMPLOYEE_UI_RATE', 'INCOME_TAX_RATE', 'PILLAR_II_RATE', 'TAX_FREE_ALLOWANCE',
           'BAD_HIRE_RISK_RATE', 'BAD_HIRE_PAY_MONTHS',
-          'RECOMMENDED_ONBOARDING_MONTHS_MIN', 'RECOMMENDED_ONBOARDING_MONTHS_MAX',
-          'RECOMMENDED_PRODUCTIVITY_PCT_MIN', 'RECOMMENDED_PRODUCTIVITY_PCT_MAX',
-          'RECOMMENDED_VACANCY_DAYS_MIN', 'RECOMMENDED_VACANCY_DAYS_MAX',
-          'RECOMMENDED_STRATEGY_HR_HOURS_MIN', 'RECOMMENDED_STRATEGY_HR_HOURS_MAX',
-          'RECOMMENDED_STRATEGY_MGR_HOURS_MIN', 'RECOMMENDED_STRATEGY_MGR_HOURS_MAX',
-          'RECOMMENDED_STRATEGY_TEAM_HOURS_MIN', 'RECOMMENDED_STRATEGY_TEAM_HOURS_MAX',
-          'RECOMMENDED_ADS_HR_HOURS_MIN', 'RECOMMENDED_ADS_HR_HOURS_MAX',
-          'RECOMMENDED_ADS_MGR_HOURS_MIN', 'RECOMMENDED_ADS_MGR_HOURS_MAX',
-          'RECOMMENDED_ADS_DIRECT_COST_MIN', 'RECOMMENDED_ADS_DIRECT_COST_MAX',
-          'RECOMMENDED_CANDIDATE_HR_HOURS_MIN', 'RECOMMENDED_CANDIDATE_HR_HOURS_MAX',
-          'RECOMMENDED_CANDIDATE_MGR_HOURS_MIN', 'RECOMMENDED_CANDIDATE_MGR_HOURS_MAX',
-          'RECOMMENDED_INTERVIEW_HR_HOURS_MIN', 'RECOMMENDED_INTERVIEW_HR_HOURS_MAX',
-          'RECOMMENDED_INTERVIEW_MGR_HOURS_MIN', 'RECOMMENDED_INTERVIEW_MGR_HOURS_MAX',
-          'RECOMMENDED_INTERVIEW_TEAM_HOURS_MIN', 'RECOMMENDED_INTERVIEW_TEAM_HOURS_MAX',
-          'RECOMMENDED_INTERVIEW_DIRECT_COST_MIN', 'RECOMMENDED_INTERVIEW_DIRECT_COST_MAX',
-          'RECOMMENDED_BACKGROUND_HR_HOURS_MIN', 'RECOMMENDED_BACKGROUND_HR_HOURS_MAX',
-          'RECOMMENDED_BACKGROUND_MGR_HOURS_MIN', 'RECOMMENDED_BACKGROUND_MGR_HOURS_MAX',
-          'RECOMMENDED_INDIRECT_HR_HOURS_MIN', 'RECOMMENDED_INDIRECT_HR_HOURS_MAX',
-          'RECOMMENDED_INDIRECT_MGR_HOURS_MIN', 'RECOMMENDED_INDIRECT_MGR_HOURS_MAX',
-          'RECOMMENDED_INDIRECT_TEAM_HOURS_MIN', 'RECOMMENDED_INDIRECT_TEAM_HOURS_MAX',
         ];
 
         for (const key of numericKeys) {
@@ -243,11 +441,25 @@ function AdminPanel() {
     logout();
   };
 
+  // Handle range updates
+  const handleRangeUpdate = (key: string, range: RecommendedRange) => {
+    const newRanges = {
+      ...config.recommendedRanges,
+      [key]: range,
+    };
+    updateConfig('recommendedRanges', newRanges);
+  };
+
+  // Handle restore defaults for ranges only
+  const handleRestoreRangeDefaults = () => {
+    updateConfig('recommendedRanges', DEFAULT_RECOMMENDED_RANGES);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container max-w-4xl mx-auto px-6 py-4">
+        <div className="container max-w-5xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link to="/">
@@ -270,7 +482,7 @@ function AdminPanel() {
       </header>
 
       {/* Content */}
-      <main className="container max-w-4xl mx-auto px-6 py-8 space-y-6">
+      <main className="container max-w-5xl mx-auto px-6 py-8 space-y-6">
         {/* Action buttons */}
         <div className="flex flex-wrap gap-2">
           <Button onClick={handleSave} className="gap-2">
@@ -279,7 +491,7 @@ function AdminPanel() {
           </Button>
           <Button variant="outline" onClick={handleResetConfig} className="gap-2">
             <RotateCcw className="w-4 h-4" />
-            Taasta vaikeväärtused
+            Taasta kõik vaikeväärtused
           </Button>
           <Button variant="outline" onClick={handleExport} className="gap-2">
             <Download className="w-4 h-4" />
@@ -404,142 +616,20 @@ function AdminPanel() {
           </CardContent>
         </Card>
 
-        {/* Recommended Ranges */}
+        {/* Recommended Ranges - New Compact Table */}
         <Card>
           <CardHeader>
             <CardTitle>Soovituslikud vahemikud</CardTitle>
-            <CardDescription>Hoiatuste kuvamiseks (ainult võrreldavad väljad)</CardDescription>
+            <CardDescription>
+              Hoiatuste kuvamiseks kalkulaatoris. Mõlemad Min ja Max on muudetavad.
+            </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Onboarding */}
-            <div>
-              <h4 className="font-medium mb-3">Sisseelamine</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <ConfigNumberInput
-                  label="Min sisseelamisperiood (kuud)"
-                  value={config.RECOMMENDED_ONBOARDING_MONTHS_MIN}
-                  onChange={(v) => updateConfig('RECOMMENDED_ONBOARDING_MONTHS_MIN', v)}
-                />
-                <ConfigNumberInput
-                  label="Max sisseelamisperiood (kuud)"
-                  value={config.RECOMMENDED_ONBOARDING_MONTHS_MAX}
-                  onChange={(v) => updateConfig('RECOMMENDED_ONBOARDING_MONTHS_MAX', v)}
-                />
-                <ConfigNumberInput
-                  label="Min tootlikkus (%)"
-                  value={config.RECOMMENDED_PRODUCTIVITY_PCT_MIN}
-                  onChange={(v) => updateConfig('RECOMMENDED_PRODUCTIVITY_PCT_MIN', v)}
-                />
-                <ConfigNumberInput
-                  label="Max tootlikkus (%)"
-                  value={config.RECOMMENDED_PRODUCTIVITY_PCT_MAX}
-                  onChange={(v) => updateConfig('RECOMMENDED_PRODUCTIVITY_PCT_MAX', v)}
-                />
-              </div>
-            </div>
-            
-            {/* Vacancy */}
-            <div>
-              <h4 className="font-medium mb-3">Vakants</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <ConfigNumberInput
-                  label="Min vakantsi päevi"
-                  value={config.RECOMMENDED_VACANCY_DAYS_MIN}
-                  onChange={(v) => updateConfig('RECOMMENDED_VACANCY_DAYS_MIN', v)}
-                />
-                <ConfigNumberInput
-                  label="Max vakantsi päevi"
-                  value={config.RECOMMENDED_VACANCY_DAYS_MAX}
-                  onChange={(v) => updateConfig('RECOMMENDED_VACANCY_DAYS_MAX', v)}
-                />
-              </div>
-            </div>
-            
-            {/* Strategy */}
-            <div>
-              <h4 className="font-medium mb-3">Strateegia & ettevalmistus</h4>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <ConfigNumberInput
-                  label="HR min/max (h)"
-                  value={config.RECOMMENDED_STRATEGY_HR_HOURS_MIN}
-                  onChange={(v) => updateConfig('RECOMMENDED_STRATEGY_HR_HOURS_MIN', v)}
-                  hint={`Max: ${config.RECOMMENDED_STRATEGY_HR_HOURS_MAX}`}
-                />
-                <ConfigNumberInput
-                  label="Juht min/max (h)"
-                  value={config.RECOMMENDED_STRATEGY_MGR_HOURS_MIN}
-                  onChange={(v) => updateConfig('RECOMMENDED_STRATEGY_MGR_HOURS_MIN', v)}
-                  hint={`Max: ${config.RECOMMENDED_STRATEGY_MGR_HOURS_MAX}`}
-                />
-                <ConfigNumberInput
-                  label="Tiim min/max (h)"
-                  value={config.RECOMMENDED_STRATEGY_TEAM_HOURS_MIN}
-                  onChange={(v) => updateConfig('RECOMMENDED_STRATEGY_TEAM_HOURS_MIN', v)}
-                  hint={`Max: ${config.RECOMMENDED_STRATEGY_TEAM_HOURS_MAX}`}
-                />
-              </div>
-            </div>
-            
-            {/* Ads */}
-            <div>
-              <h4 className="font-medium mb-3">Kuulutused & bränding</h4>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <ConfigNumberInput
-                  label="HR min (h)"
-                  value={config.RECOMMENDED_ADS_HR_HOURS_MIN}
-                  onChange={(v) => updateConfig('RECOMMENDED_ADS_HR_HOURS_MIN', v)}
-                  hint={`Max: ${config.RECOMMENDED_ADS_HR_HOURS_MAX}`}
-                />
-                <ConfigNumberInput
-                  label="Juht min (h)"
-                  value={config.RECOMMENDED_ADS_MGR_HOURS_MIN}
-                  onChange={(v) => updateConfig('RECOMMENDED_ADS_MGR_HOURS_MIN', v)}
-                  hint={`Max: ${config.RECOMMENDED_ADS_MGR_HOURS_MAX}`}
-                />
-                <ConfigNumberInput
-                  label="Kulud (€)"
-                  value={config.RECOMMENDED_ADS_DIRECT_COST_MIN}
-                  onChange={(v) => updateConfig('RECOMMENDED_ADS_DIRECT_COST_MIN', v)}
-                  hint={`Max: ${config.RECOMMENDED_ADS_DIRECT_COST_MAX}€`}
-                />
-              </div>
-            </div>
-            
-            {/* Interviews */}
-            <div>
-              <h4 className="font-medium mb-3">Intervjuud</h4>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <ConfigNumberInput
-                  label="HR min (h)"
-                  value={config.RECOMMENDED_INTERVIEW_HR_HOURS_MIN}
-                  onChange={(v) => updateConfig('RECOMMENDED_INTERVIEW_HR_HOURS_MIN', v)}
-                  hint={`Max: ${config.RECOMMENDED_INTERVIEW_HR_HOURS_MAX}`}
-                />
-                <ConfigNumberInput
-                  label="Juht min (h)"
-                  value={config.RECOMMENDED_INTERVIEW_MGR_HOURS_MIN}
-                  onChange={(v) => updateConfig('RECOMMENDED_INTERVIEW_MGR_HOURS_MIN', v)}
-                  hint={`Max: ${config.RECOMMENDED_INTERVIEW_MGR_HOURS_MAX}`}
-                />
-                <ConfigNumberInput
-                  label="Tiim min (h)"
-                  value={config.RECOMMENDED_INTERVIEW_TEAM_HOURS_MIN}
-                  onChange={(v) => updateConfig('RECOMMENDED_INTERVIEW_TEAM_HOURS_MIN', v)}
-                  hint={`Max: ${config.RECOMMENDED_INTERVIEW_TEAM_HOURS_MAX}`}
-                />
-                <ConfigNumberInput
-                  label="Kulud (€)"
-                  value={config.RECOMMENDED_INTERVIEW_DIRECT_COST_MIN}
-                  onChange={(v) => updateConfig('RECOMMENDED_INTERVIEW_DIRECT_COST_MIN', v)}
-                  hint={`Max: ${config.RECOMMENDED_INTERVIEW_DIRECT_COST_MAX}€`}
-                />
-              </div>
-            </div>
-            
-            <p className="text-xs text-muted-foreground mt-4">
-              ℹ Väljad nagu "Muud teenused" hinnad, taustakontrolli kulud jt ei oma soovituslikke vahemikke, 
-              sest need sõltuvad teenusepakkujast.
-            </p>
+          <CardContent>
+            <RecommendedRangesTable
+              ranges={config.recommendedRanges || DEFAULT_RECOMMENDED_RANGES}
+              onUpdate={handleRangeUpdate}
+              onRestoreDefaults={handleRestoreRangeDefaults}
+            />
           </CardContent>
         </Card>
 

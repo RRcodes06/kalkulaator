@@ -142,6 +142,16 @@ export interface CalculatorInputs {
 // CONFIG TYPES
 // ============================================================================
 
+export type RangeUnit = 'h' | '€' | 'päeva' | 'kuud' | '%';
+
+export interface RecommendedRange {
+  min: number;
+  max: number;
+  unit: RangeUnit;
+}
+
+export type RecommendedRanges = Record<string, RecommendedRange>;
+
 export interface CalculatorConfig {
   HOURS_PER_MONTH: number;
   EST_AVG_GROSS_WAGE: number;
@@ -160,66 +170,8 @@ export interface CalculatorConfig {
   BAD_HIRE_RISK_RATE: number;
   BAD_HIRE_PAY_MONTHS: number;
   
-  // ============================================
-  // RECOMMENDED RANGES - only for benchmarkable fields
-  // ============================================
-  
-  // Per-section hour ranges (min-max per role per section)
-  // Strategy & Prep
-  RECOMMENDED_STRATEGY_HR_HOURS_MIN: number;
-  RECOMMENDED_STRATEGY_HR_HOURS_MAX: number;
-  RECOMMENDED_STRATEGY_MGR_HOURS_MIN: number;
-  RECOMMENDED_STRATEGY_MGR_HOURS_MAX: number;
-  RECOMMENDED_STRATEGY_TEAM_HOURS_MIN: number;
-  RECOMMENDED_STRATEGY_TEAM_HOURS_MAX: number;
-  
-  // Ads & Branding
-  RECOMMENDED_ADS_HR_HOURS_MIN: number;
-  RECOMMENDED_ADS_HR_HOURS_MAX: number;
-  RECOMMENDED_ADS_MGR_HOURS_MIN: number;
-  RECOMMENDED_ADS_MGR_HOURS_MAX: number;
-  RECOMMENDED_ADS_DIRECT_COST_MIN: number;
-  RECOMMENDED_ADS_DIRECT_COST_MAX: number;
-  
-  // Candidate Management
-  RECOMMENDED_CANDIDATE_HR_HOURS_MIN: number;
-  RECOMMENDED_CANDIDATE_HR_HOURS_MAX: number;
-  RECOMMENDED_CANDIDATE_MGR_HOURS_MIN: number;
-  RECOMMENDED_CANDIDATE_MGR_HOURS_MAX: number;
-  
-  // Interviews
-  RECOMMENDED_INTERVIEW_HR_HOURS_MIN: number;
-  RECOMMENDED_INTERVIEW_HR_HOURS_MAX: number;
-  RECOMMENDED_INTERVIEW_MGR_HOURS_MIN: number;
-  RECOMMENDED_INTERVIEW_MGR_HOURS_MAX: number;
-  RECOMMENDED_INTERVIEW_TEAM_HOURS_MIN: number;
-  RECOMMENDED_INTERVIEW_TEAM_HOURS_MAX: number;
-  RECOMMENDED_INTERVIEW_DIRECT_COST_MIN: number;
-  RECOMMENDED_INTERVIEW_DIRECT_COST_MAX: number;
-  
-  // Background & Offer
-  RECOMMENDED_BACKGROUND_HR_HOURS_MIN: number;
-  RECOMMENDED_BACKGROUND_HR_HOURS_MAX: number;
-  RECOMMENDED_BACKGROUND_MGR_HOURS_MIN: number;
-  RECOMMENDED_BACKGROUND_MGR_HOURS_MAX: number;
-  
-  // Indirect Costs
-  RECOMMENDED_INDIRECT_HR_HOURS_MIN: number;
-  RECOMMENDED_INDIRECT_HR_HOURS_MAX: number;
-  RECOMMENDED_INDIRECT_MGR_HOURS_MIN: number;
-  RECOMMENDED_INDIRECT_MGR_HOURS_MAX: number;
-  RECOMMENDED_INDIRECT_TEAM_HOURS_MIN: number;
-  RECOMMENDED_INDIRECT_TEAM_HOURS_MAX: number;
-  
-  // Onboarding
-  RECOMMENDED_ONBOARDING_MONTHS_MIN: number;
-  RECOMMENDED_ONBOARDING_MONTHS_MAX: number;
-  RECOMMENDED_PRODUCTIVITY_PCT_MIN: number;
-  RECOMMENDED_PRODUCTIVITY_PCT_MAX: number;
-  
-  // Vacancy
-  RECOMMENDED_VACANCY_DAYS_MIN: number;
-  RECOMMENDED_VACANCY_DAYS_MAX: number;
+  // Recommended ranges - single source of truth for benchmarkable fields
+  recommendedRanges: RecommendedRanges;
   
   // Text snippets
   disclaimerText: string;

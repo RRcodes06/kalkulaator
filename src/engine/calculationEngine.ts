@@ -532,26 +532,24 @@ export function computeTotals(
   const rangeWarnings: RangeWarning[] = [];
   
   // ============================================================================
-  // HELPER: Generate warning for a single field
+  // HELPER: Generate warning for a single field using recommendedRanges
   // ============================================================================
   function addFieldWarning(
     field: string,
     label: string,
     value: number,
-    min: number | undefined,
-    max: number | undefined,
-    unit: string,
     sectionInUse: boolean
   ) {
-    // Skip if no range defined (min and max both undefined)
-    if (min === undefined && max === undefined) return;
+    // Get range from config.recommendedRanges
+    const range = config.recommendedRanges?.[field];
+    
+    // Skip if no range defined for this field
+    if (!range) return;
+    
+    const { min, max, unit } = range;
     
     // Build range text helper
-    const rangeText = min !== undefined && max !== undefined
-      ? `${min}–${max}`
-      : max !== undefined
-        ? `kuni ${max}`
-        : `vähemalt ${min}`;
+    const rangeText = `${min}–${max}`;
     
     // If value is 0/empty and section is in use, show advisory message
     if (value === 0 && sectionInUse) {
@@ -572,7 +570,7 @@ export function computeTotals(
     if (value === 0) return;
     
     // Below min - advisory tone, not punitive
-    if (min !== undefined && value < min) {
+    if (value < min) {
       rangeWarnings.push({
         field,
         label,
@@ -587,7 +585,7 @@ export function computeTotals(
     }
     
     // Above max - advisory tone suggesting optimization, not an error
-    if (max !== undefined && value > max) {
+    if (value > max) {
       rangeWarnings.push({
         field,
         label,
@@ -608,24 +606,9 @@ export function computeTotals(
                         inputs.strategyPrep.managerHours > 0 || 
                         inputs.strategyPrep.teamHours > 0;
   
-  addFieldWarning(
-    'strategyPrep.hrHours', 'Strateegia: HR tunnid',
-    inputs.strategyPrep.hrHours,
-    config.RECOMMENDED_STRATEGY_HR_HOURS_MIN, config.RECOMMENDED_STRATEGY_HR_HOURS_MAX,
-    'h', strategyInUse
-  );
-  addFieldWarning(
-    'strategyPrep.managerHours', 'Strateegia: Juhi tunnid',
-    inputs.strategyPrep.managerHours,
-    config.RECOMMENDED_STRATEGY_MGR_HOURS_MIN, config.RECOMMENDED_STRATEGY_MGR_HOURS_MAX,
-    'h', strategyInUse
-  );
-  addFieldWarning(
-    'strategyPrep.teamHours', 'Strateegia: Tiimi tunnid',
-    inputs.strategyPrep.teamHours,
-    config.RECOMMENDED_STRATEGY_TEAM_HOURS_MIN, config.RECOMMENDED_STRATEGY_TEAM_HOURS_MAX,
-    'h', strategyInUse
-  );
+  addFieldWarning('strategyPrep.hrHours', 'Strateegia: HR tunnid', inputs.strategyPrep.hrHours, strategyInUse);
+  addFieldWarning('strategyPrep.managerHours', 'Strateegia: Juhi tunnid', inputs.strategyPrep.managerHours, strategyInUse);
+  addFieldWarning('strategyPrep.teamHours', 'Strateegia: Tiimi tunnid', inputs.strategyPrep.teamHours, strategyInUse);
   
   // ============================================================================
   // ADS & BRANDING WARNINGS
@@ -634,24 +617,9 @@ export function computeTotals(
                    inputs.adsBranding.managerHours > 0 || 
                    inputs.adsBranding.directCosts > 0;
   
-  addFieldWarning(
-    'adsBranding.hrHours', 'Kuulutused: HR tunnid',
-    inputs.adsBranding.hrHours,
-    config.RECOMMENDED_ADS_HR_HOURS_MIN, config.RECOMMENDED_ADS_HR_HOURS_MAX,
-    'h', adsInUse
-  );
-  addFieldWarning(
-    'adsBranding.managerHours', 'Kuulutused: Juhi tunnid',
-    inputs.adsBranding.managerHours,
-    config.RECOMMENDED_ADS_MGR_HOURS_MIN, config.RECOMMENDED_ADS_MGR_HOURS_MAX,
-    'h', adsInUse
-  );
-  addFieldWarning(
-    'adsBranding.directCosts', 'Kuulutuste kulud',
-    inputs.adsBranding.directCosts,
-    config.RECOMMENDED_ADS_DIRECT_COST_MIN, config.RECOMMENDED_ADS_DIRECT_COST_MAX,
-    '€', adsInUse
-  );
+  addFieldWarning('adsBranding.hrHours', 'Kuulutused: HR tunnid', inputs.adsBranding.hrHours, adsInUse);
+  addFieldWarning('adsBranding.managerHours', 'Kuulutused: Juhi tunnid', inputs.adsBranding.managerHours, adsInUse);
+  addFieldWarning('adsBranding.directCosts', 'Kuulutuste kulud', inputs.adsBranding.directCosts, adsInUse);
   
   // ============================================================================
   // CANDIDATE MANAGEMENT WARNINGS
@@ -660,18 +628,8 @@ export function computeTotals(
                          inputs.candidateMgmt.managerHours > 0 || 
                          inputs.candidateMgmt.testsCost > 0;
   
-  addFieldWarning(
-    'candidateMgmt.hrHours', 'Kandidaadid: HR tunnid',
-    inputs.candidateMgmt.hrHours,
-    config.RECOMMENDED_CANDIDATE_HR_HOURS_MIN, config.RECOMMENDED_CANDIDATE_HR_HOURS_MAX,
-    'h', candidateInUse
-  );
-  addFieldWarning(
-    'candidateMgmt.managerHours', 'Kandidaadid: Juhi tunnid',
-    inputs.candidateMgmt.managerHours,
-    config.RECOMMENDED_CANDIDATE_MGR_HOURS_MIN, config.RECOMMENDED_CANDIDATE_MGR_HOURS_MAX,
-    'h', candidateInUse
-  );
+  addFieldWarning('candidateMgmt.hrHours', 'Kandidaadid: HR tunnid', inputs.candidateMgmt.hrHours, candidateInUse);
+  addFieldWarning('candidateMgmt.managerHours', 'Kandidaadid: Juhi tunnid', inputs.candidateMgmt.managerHours, candidateInUse);
   // Note: testsCost has no recommended range (variable by vendor)
   
   // ============================================================================
@@ -682,30 +640,10 @@ export function computeTotals(
                           inputs.interviews.teamHours > 0 ||
                           inputs.interviews.directCosts > 0;
   
-  addFieldWarning(
-    'interviews.hrHours', 'Intervjuud: HR tunnid',
-    inputs.interviews.hrHours,
-    config.RECOMMENDED_INTERVIEW_HR_HOURS_MIN, config.RECOMMENDED_INTERVIEW_HR_HOURS_MAX,
-    'h', interviewsInUse
-  );
-  addFieldWarning(
-    'interviews.managerHours', 'Intervjuud: Juhi tunnid',
-    inputs.interviews.managerHours,
-    config.RECOMMENDED_INTERVIEW_MGR_HOURS_MIN, config.RECOMMENDED_INTERVIEW_MGR_HOURS_MAX,
-    'h', interviewsInUse
-  );
-  addFieldWarning(
-    'interviews.teamHours', 'Intervjuud: Tiimi tunnid',
-    inputs.interviews.teamHours,
-    config.RECOMMENDED_INTERVIEW_TEAM_HOURS_MIN, config.RECOMMENDED_INTERVIEW_TEAM_HOURS_MAX,
-    'h', interviewsInUse
-  );
-  addFieldWarning(
-    'interviews.directCosts', 'Intervjuude kulud',
-    inputs.interviews.directCosts,
-    config.RECOMMENDED_INTERVIEW_DIRECT_COST_MIN, config.RECOMMENDED_INTERVIEW_DIRECT_COST_MAX,
-    '€', interviewsInUse
-  );
+  addFieldWarning('interviews.hrHours', 'Intervjuud: HR tunnid', inputs.interviews.hrHours, interviewsInUse);
+  addFieldWarning('interviews.managerHours', 'Intervjuud: Juhi tunnid', inputs.interviews.managerHours, interviewsInUse);
+  addFieldWarning('interviews.teamHours', 'Intervjuud: Tiimi tunnid', inputs.interviews.teamHours, interviewsInUse);
+  addFieldWarning('interviews.directCosts', 'Intervjuude kulud', inputs.interviews.directCosts, interviewsInUse);
   
   // ============================================================================
   // BACKGROUND & OFFER WARNINGS
@@ -714,18 +652,8 @@ export function computeTotals(
                           inputs.backgroundOffer.managerHours > 0 || 
                           inputs.backgroundOffer.directCosts > 0;
   
-  addFieldWarning(
-    'backgroundOffer.hrHours', 'Taustakontroll: HR tunnid',
-    inputs.backgroundOffer.hrHours,
-    config.RECOMMENDED_BACKGROUND_HR_HOURS_MIN, config.RECOMMENDED_BACKGROUND_HR_HOURS_MAX,
-    'h', backgroundInUse
-  );
-  addFieldWarning(
-    'backgroundOffer.managerHours', 'Taustakontroll: Juhi tunnid',
-    inputs.backgroundOffer.managerHours,
-    config.RECOMMENDED_BACKGROUND_MGR_HOURS_MIN, config.RECOMMENDED_BACKGROUND_MGR_HOURS_MAX,
-    'h', backgroundInUse
-  );
+  addFieldWarning('backgroundOffer.hrHours', 'Taustakontroll: HR tunnid', inputs.backgroundOffer.hrHours, backgroundInUse);
+  addFieldWarning('backgroundOffer.managerHours', 'Taustakontroll: Juhi tunnid', inputs.backgroundOffer.managerHours, backgroundInUse);
   // Note: backgroundOffer.directCosts has no recommended range (variable by service)
   
   // ============================================================================
@@ -735,24 +663,9 @@ export function computeTotals(
                         inputs.indirectCosts.managerHours > 0 || 
                         inputs.indirectCosts.teamHours > 0;
   
-  addFieldWarning(
-    'indirectCosts.hrHours', 'Kaudsed: HR tunnid',
-    inputs.indirectCosts.hrHours,
-    config.RECOMMENDED_INDIRECT_HR_HOURS_MIN, config.RECOMMENDED_INDIRECT_HR_HOURS_MAX,
-    'h', indirectInUse
-  );
-  addFieldWarning(
-    'indirectCosts.managerHours', 'Kaudsed: Juhi tunnid',
-    inputs.indirectCosts.managerHours,
-    config.RECOMMENDED_INDIRECT_MGR_HOURS_MIN, config.RECOMMENDED_INDIRECT_MGR_HOURS_MAX,
-    'h', indirectInUse
-  );
-  addFieldWarning(
-    'indirectCosts.teamHours', 'Kaudsed: Tiimi tunnid',
-    inputs.indirectCosts.teamHours,
-    config.RECOMMENDED_INDIRECT_TEAM_HOURS_MIN, config.RECOMMENDED_INDIRECT_TEAM_HOURS_MAX,
-    'h', indirectInUse
-  );
+  addFieldWarning('indirectCosts.hrHours', 'Kaudsed: HR tunnid', inputs.indirectCosts.hrHours, indirectInUse);
+  addFieldWarning('indirectCosts.managerHours', 'Kaudsed: Juhi tunnid', inputs.indirectCosts.managerHours, indirectInUse);
+  addFieldWarning('indirectCosts.teamHours', 'Kaudsed: Tiimi tunnid', inputs.indirectCosts.teamHours, indirectInUse);
   
   // ============================================================================
   // ONBOARDING WARNINGS
@@ -761,18 +674,8 @@ export function computeTotals(
                           inputs.onboarding.productivityPct > 0 || 
                           inputs.onboarding.extraCosts > 0;
   
-  addFieldWarning(
-    'onboardingMonths', 'Sisseelamisperiood',
-    inputs.onboarding.onboardingMonths,
-    config.RECOMMENDED_ONBOARDING_MONTHS_MIN, config.RECOMMENDED_ONBOARDING_MONTHS_MAX,
-    'kuud', onboardingInUse
-  );
-  addFieldWarning(
-    'productivityPct', 'Keskmine tootlikkus',
-    inputs.onboarding.productivityPct,
-    config.RECOMMENDED_PRODUCTIVITY_PCT_MIN, config.RECOMMENDED_PRODUCTIVITY_PCT_MAX,
-    '%', onboardingInUse
-  );
+  addFieldWarning('onboarding.onboardingMonths', 'Sisseelamisperiood', inputs.onboarding.onboardingMonths, onboardingInUse);
+  addFieldWarning('onboarding.productivityPct', 'Keskmine tootlikkus', inputs.onboarding.productivityPct, onboardingInUse);
   // Note: extraCosts has no recommended range (variable)
   
   // ============================================================================
@@ -780,12 +683,7 @@ export function computeTotals(
   // ============================================================================
   const vacancyInUse = inputs.vacancy.vacancyDays > 0 || inputs.vacancy.dailyCost > 0;
   
-  addFieldWarning(
-    'vacancyDays', 'Vakantsi kestus',
-    inputs.vacancy.vacancyDays,
-    config.RECOMMENDED_VACANCY_DAYS_MIN, config.RECOMMENDED_VACANCY_DAYS_MAX,
-    'päeva', vacancyInUse
-  );
+  addFieldWarning('vacancy.vacancyDays', 'Vakantsi kestus', inputs.vacancy.vacancyDays, vacancyInUse);
   // Note: dailyCost has no recommended range (depends on role/business)
   
   return {
