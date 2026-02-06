@@ -328,33 +328,39 @@ export function CalculatorForm() {
       <CalculatorSection
         id="indirect"
         title="Kaudsed kulud"
-        subtitle="Administratiivne aeg (ilma tööandja maksudeta)"
+        subtitle="Fookuse kadu ja lisatöö, mis ei kajastu otsestes arvetes"
         icon={<Users className="w-5 h-5" />}
         subtotal={results.blockCosts.indirectCosts.total}
       >
+        <div className="md:col-span-3 p-4 bg-muted/50 rounded-lg border border-border space-y-2">
+          <p className="text-sm text-muted-foreground">
+            Kaudsed kulud näitavad värbamisega seotud <strong>fookuse kadu ja lisatööd</strong> (nt tiimi ülekoormus, juhi tähelepanu hajumine), mis ei kajastu otsestes arvetes.
+          </p>
+          <p className="text-xs text-muted-foreground">
+            ℹ Kaudsete tundide hind arvestatakse <strong>ainult brutotunnipalgaga</strong> (ilma tööandja maksudeta).
+          </p>
+        </div>
         <NumberInput
           label="Personalitöötaja tunnid"
           value={inputs.indirectCosts.hrHours}
           onChange={(v) => updateNestedInput('indirectCosts', 'hrHours', v)}
           suffix="h"
+          hint="Admin koordineerimine, aruandlus"
         />
         <NumberInput
           label="Juhi tunnid"
           value={inputs.indirectCosts.managerHours}
           onChange={(v) => updateNestedInput('indirectCosts', 'managerHours', v)}
           suffix="h"
+          hint="Tähelepanu hajumine, prioriteetide ümberseadmine"
         />
         <NumberInput
           label="Tiimi tunnid"
           value={inputs.indirectCosts.teamHours}
           onChange={(v) => updateNestedInput('indirectCosts', 'teamHours', v)}
           suffix="h"
+          hint="Ülekoormus, ülesannete ümberjagamine"
         />
-        <div className="p-4 bg-muted rounded-lg md:col-span-3">
-          <p className="text-xs text-muted-foreground">
-            ℹ Kaudsete kulude puhul arvestatakse ainult brutotunnipalka, ilma tööandja maksudeta.
-          </p>
-        </div>
       </CalculatorSection>
 
       {/* Risk Summary Section */}

@@ -6,11 +6,28 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Briefcase, Plus, Trash2 } from 'lucide-react';
+import { Briefcase, Plus, Trash2, Scale, Monitor, Palette } from 'lucide-react';
 import type { ServiceType, BillingType, PayType, ServiceDetails } from '@/types/calculator';
+
+interface QuickAddPreset {
+  name: string;
+  label: string;
+  icon: React.ReactNode;
+}
+
+const QUICK_ADD_PRESETS: QuickAddPreset[] = [
+  { name: 'Jurist', label: 'Lisa jurist', icon: <Scale className="w-4 h-4" /> },
+  { name: 'IT tugi', label: 'Lisa IT', icon: <Monitor className="w-4 h-4" /> },
+  { name: 'Turundus/bränding', label: 'Lisa turundus', icon: <Palette className="w-4 h-4" /> },
+  { name: '', label: 'Lisa muu', icon: <Plus className="w-4 h-4" /> },
+];
 
 export function OtherServicesSection() {
   const { inputs, results, addServiceRow, updateServiceRow, removeServiceRow } = useAppStore();
+
+  const handleQuickAdd = (preset: QuickAddPreset) => {
+    addServiceRow(preset.name);
+  };
 
   return (
     <CalculatorSection
@@ -21,9 +38,25 @@ export function OtherServicesSection() {
       subtotal={results.blockCosts.otherServices.total}
     >
       <div className="md:col-span-3 space-y-4">
+        {/* Quick-add buttons */}
+        <div className="flex flex-wrap gap-2">
+          {QUICK_ADD_PRESETS.map((preset) => (
+            <Button
+              key={preset.label}
+              variant="outline"
+              size="sm"
+              onClick={() => handleQuickAdd(preset)}
+              className="gap-2"
+            >
+              {preset.icon}
+              {preset.label}
+            </Button>
+          ))}
+        </div>
+
         {inputs.otherServices.length === 0 && (
           <p className="text-sm text-muted-foreground py-4 text-center">
-            Muud teenused puuduvad. Lisa teenus alloleva nupuga.
+            Muud teenused puuduvad. Lisa teenus ülalolevate nuppudega.
           </p>
         )}
 
@@ -35,16 +68,6 @@ export function OtherServicesSection() {
             onRemove={() => removeServiceRow(row.id)}
           />
         ))}
-
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={addServiceRow}
-          className="gap-2"
-        >
-          <Plus className="w-4 h-4" />
-          Lisa teenus
-        </Button>
       </div>
     </CalculatorSection>
   );
