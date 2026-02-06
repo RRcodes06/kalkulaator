@@ -24,7 +24,6 @@ export function RolePaySection() {
       title="Kaasatud rollide palgad"
       subtitle="Määra värbamisega seotud töötajate palgad"
       icon={<Users className="w-5 h-5" />}
-      defaultOpen={false}
     >
       {/* HR Role */}
       <div className="space-y-4 p-4 bg-muted/30 rounded-lg">

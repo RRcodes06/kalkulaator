@@ -5,6 +5,7 @@ import { PayInputGroup } from './PayInputGroup';
 import { RolePaySection } from './RolePaySection';
 import { OtherServicesSection } from './OtherServicesSection';
 import { RiskSummarySection } from './RiskSummarySection';
+import { AccordionControllerProvider } from '@/hooks/useAccordionController';
 import { 
   Briefcase, 
   Users, 
@@ -30,6 +31,7 @@ export function CalculatorForm() {
   };
 
   return (
+    <AccordionControllerProvider defaultOpenSection="position">
     <div className="space-y-4">
       {/* Position & Hire Pay */}
       <CalculatorSection
@@ -358,5 +360,6 @@ export function CalculatorForm() {
       {/* Risk Summary Section */}
       <RiskSummarySection />
     </div>
+    </AccordionControllerProvider>
   );
 }
