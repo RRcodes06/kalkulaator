@@ -2,6 +2,8 @@ import { forwardRef } from 'react';
 import { useAppStore } from '@/store/appStore';
 import { TrendingUp, AlertTriangle, Info } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { CostBreakdownChart } from './CostBreakdownChart';
+import { BLOCK_LABELS } from '@/config/defaults';
 
 export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_, ref) {
   const { results, inputs, config } = useAppStore();
@@ -16,24 +18,24 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
   };
 
   const costBreakdown = [
-    { label: 'Strateegia ja ettevalmistus', value: results.blockCosts.strategyPrep.total },
-    { label: 'Kuulutused ja bränding', value: results.blockCosts.adsBranding.total },
-    { label: 'Kandidaatide haldus', value: results.blockCosts.candidateMgmt.total },
-    { label: 'Intervjuud', value: results.blockCosts.interviews.total },
-    { label: 'Taustakontroll ja pakkumine', value: results.blockCosts.backgroundOffer.total },
-    { label: 'Muud teenused', value: results.blockCosts.otherServices.total },
-    { label: 'Ettevalmistus', value: results.blockCosts.preboarding.total },
-    { label: 'Sisseelamine', value: results.blockCosts.onboarding.total },
-    { label: 'Vakantsi kulu', value: results.blockCosts.vacancy.total },
-    { label: 'Kaudsed kulud', value: results.blockCosts.indirectCosts.total },
-    { label: 'Oodatav riskikulu', value: results.expectedRiskCost },
+    { label: BLOCK_LABELS.strategyPrep, value: results.blockCosts.strategyPrep.total },
+    { label: BLOCK_LABELS.adsBranding, value: results.blockCosts.adsBranding.total },
+    { label: BLOCK_LABELS.candidateMgmt, value: results.blockCosts.candidateMgmt.total },
+    { label: BLOCK_LABELS.interviews, value: results.blockCosts.interviews.total },
+    { label: BLOCK_LABELS.backgroundOffer, value: results.blockCosts.backgroundOffer.total },
+    { label: BLOCK_LABELS.otherServices, value: results.blockCosts.otherServices.total },
+    { label: BLOCK_LABELS.preboarding, value: results.blockCosts.preboarding.total },
+    { label: BLOCK_LABELS.onboarding, value: results.blockCosts.onboarding.total },
+    { label: BLOCK_LABELS.vacancy, value: results.blockCosts.vacancy.total },
+    { label: BLOCK_LABELS.indirectCosts, value: results.blockCosts.indirectCosts.total },
+    { label: BLOCK_LABELS.expectedRisk, value: results.expectedRiskCost },
   ].filter(item => item.value > 0);
 
   const hasWarnings = results.rangeWarnings.length > 0 || results.missingPayWarnings.length > 0;
 
   return (
     // @ts-ignore - ref forwarding
-    <aside className="w-80 bg-summary text-summary-foreground rounded-xl shadow-summary p-6 sticky top-6 max-h-[calc(100vh-3rem)] overflow-y-auto summary-scrollbar">
+    <aside ref={ref} className="w-80 bg-summary text-summary-foreground rounded-xl shadow-summary p-6 sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto summary-scrollbar">
       {/* Position title */}
       <div className="mb-6">
         <p className="text-summary-muted text-sm uppercase tracking-wider mb-1">Ametikoht</p>
@@ -63,7 +65,10 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
         <div className="mt-3 pt-3 border-t border-summary-accent/20 flex items-center gap-2">
           <TrendingUp className="w-4 h-4 text-summary-accent" />
           <span className="text-sm">
-            {(results.totalCost / results.normalizedHirePay.monthlyGross).toFixed(1)}× kuupalk
+            {results.normalizedHirePay.monthlyGross > 0 
+              ? `${(results.totalCost / results.normalizedHirePay.monthlyGross).toFixed(1)}× kuupalk`
+              : '—'
+            }
           </span>
         </div>
       </div>
@@ -85,14 +90,20 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
         </div>
       )}
 
-      {/* Cost breakdown */}
+      {/* Chart */}
       <div className="mb-6">
         <p className="text-summary-muted text-xs uppercase tracking-wider mb-3">Kulude jaotus</p>
+        <CostBreakdownChart blockCosts={results.blockCosts} totalCost={results.totalCost} />
+      </div>
+
+      {/* Cost breakdown table */}
+      <div className="mb-6">
+        <p className="text-summary-muted text-xs uppercase tracking-wider mb-3">Detailne jaotus</p>
         <div className="space-y-2">
           {costBreakdown.map((item) => (
             <div key={item.label} className="flex justify-between text-sm">
-              <span className="text-summary-muted">{item.label}</span>
-              <span className="font-medium">{formatCurrency(item.value)}</span>
+              <span className="text-summary-muted truncate mr-2">{item.label}</span>
+              <span className="font-medium flex-shrink-0">{formatCurrency(item.value)}</span>
             </div>
           ))}
         </div>

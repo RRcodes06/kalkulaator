@@ -2,8 +2,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 
-interface NumberInputProps {
-  label: string;
+export interface NumberInputProps {
+  label?: string;
   value: number;
   onChange: (value: number) => void;
   suffix?: string;
@@ -31,14 +31,16 @@ export function NumberInput({
 }: NumberInputProps) {
   return (
     <div className={cn('space-y-1.5', className)}>
-      <div className="flex items-center justify-between">
-        <Label className="text-sm font-medium text-foreground">{label}</Label>
-        {showDefaultIndicator && (
-          <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-            vaikeväärtus
-          </span>
-        )}
-      </div>
+      {(label || showDefaultIndicator) && (
+        <div className="flex items-center justify-between">
+          {label && <Label className="text-sm font-medium text-foreground">{label}</Label>}
+          {showDefaultIndicator && (
+            <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+              vaikeväärtus
+            </span>
+          )}
+        </div>
+      )}
       <div className="relative">
         {prefix && (
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
