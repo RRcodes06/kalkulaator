@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useRef, type ReactNode } from 'react';
 import { useAppStore } from '@/store/appStore';
 import type { CalculatorInputs } from '@/types/calculator';
 
@@ -18,7 +18,123 @@ export interface SectionStateInfo {
 // ============================================================================
 
 /**
- * Determine if a block has any non-zero/non-empty inputs.
+ * Check if a section has meaningful (non-default) inputs by comparing to initial state.
+ */
+function hasMeaningfulInputs(
+  currentInputs: CalculatorInputs,
+  initialInputs: CalculatorInputs,
+  sectionId: string
+): boolean {
+  switch (sectionId) {
+    case 'position':
+      return (
+        currentInputs.positionTitle !== initialInputs.positionTitle ||
+        currentInputs.hirePay.payType !== initialInputs.hirePay.payType ||
+        currentInputs.hirePay.payAmount !== initialInputs.hirePay.payAmount
+      );
+    
+    case 'roles': {
+      const currHr = currentInputs.roles.hr;
+      const initHr = initialInputs.roles.hr;
+      const currMgr = currentInputs.roles.manager;
+      const initMgr = initialInputs.roles.manager;
+      const currTeam = currentInputs.roles.team;
+      const initTeam = initialInputs.roles.team;
+      return (
+        currHr.enabled !== initHr.enabled ||
+        currHr.payType !== initHr.payType ||
+        currHr.payAmount !== initHr.payAmount ||
+        currMgr.enabled !== initMgr.enabled ||
+        currMgr.payType !== initMgr.payType ||
+        currMgr.payAmount !== initMgr.payAmount ||
+        currTeam.enabled !== initTeam.enabled ||
+        currTeam.payType !== initTeam.payType ||
+        currTeam.payAmount !== initTeam.payAmount
+      );
+    }
+    
+    case 'strategy':
+      return (
+        currentInputs.strategyPrep.hrHours !== initialInputs.strategyPrep.hrHours ||
+        currentInputs.strategyPrep.managerHours !== initialInputs.strategyPrep.managerHours ||
+        currentInputs.strategyPrep.teamHours !== initialInputs.strategyPrep.teamHours
+      );
+    
+    case 'ads':
+      return (
+        currentInputs.adsBranding.hrHours !== initialInputs.adsBranding.hrHours ||
+        currentInputs.adsBranding.managerHours !== initialInputs.adsBranding.managerHours ||
+        currentInputs.adsBranding.teamHours !== initialInputs.adsBranding.teamHours ||
+        currentInputs.adsBranding.directCosts !== initialInputs.adsBranding.directCosts
+      );
+    
+    case 'candidate':
+      return (
+        currentInputs.candidateMgmt.hrHours !== initialInputs.candidateMgmt.hrHours ||
+        currentInputs.candidateMgmt.managerHours !== initialInputs.candidateMgmt.managerHours ||
+        currentInputs.candidateMgmt.teamHours !== initialInputs.candidateMgmt.teamHours ||
+        currentInputs.candidateMgmt.testsCost !== initialInputs.candidateMgmt.testsCost
+      );
+    
+    case 'interviews':
+      return (
+        currentInputs.interviews.hrHours !== initialInputs.interviews.hrHours ||
+        currentInputs.interviews.managerHours !== initialInputs.interviews.managerHours ||
+        currentInputs.interviews.teamHours !== initialInputs.interviews.teamHours ||
+        currentInputs.interviews.directCosts !== initialInputs.interviews.directCosts
+      );
+    
+    case 'background':
+      return (
+        currentInputs.backgroundOffer.hrHours !== initialInputs.backgroundOffer.hrHours ||
+        currentInputs.backgroundOffer.managerHours !== initialInputs.backgroundOffer.managerHours ||
+        currentInputs.backgroundOffer.teamHours !== initialInputs.backgroundOffer.teamHours ||
+        currentInputs.backgroundOffer.directCosts !== initialInputs.backgroundOffer.directCosts
+      );
+    
+    case 'other-services':
+      return currentInputs.otherServices.length !== initialInputs.otherServices.length ||
+        JSON.stringify(currentInputs.otherServices) !== JSON.stringify(initialInputs.otherServices);
+    
+    case 'preboarding':
+      return (
+        currentInputs.preboarding.devicesCost !== initialInputs.preboarding.devicesCost ||
+        currentInputs.preboarding.itSetupHours !== initialInputs.preboarding.itSetupHours ||
+        currentInputs.preboarding.prepHours !== initialInputs.preboarding.prepHours
+      );
+    
+    case 'onboarding':
+      return (
+        currentInputs.onboarding.onboardingMonths !== initialInputs.onboarding.onboardingMonths ||
+        currentInputs.onboarding.productivityPct !== initialInputs.onboarding.productivityPct ||
+        currentInputs.onboarding.extraCosts !== initialInputs.onboarding.extraCosts
+      );
+    
+    case 'vacancy':
+      return (
+        currentInputs.vacancy.vacancyDays !== initialInputs.vacancy.vacancyDays ||
+        currentInputs.vacancy.dailyCost !== initialInputs.vacancy.dailyCost
+      );
+    
+    case 'indirect':
+      return (
+        currentInputs.indirectCosts.hrHours !== initialInputs.indirectCosts.hrHours ||
+        currentInputs.indirectCosts.managerHours !== initialInputs.indirectCosts.managerHours ||
+        currentInputs.indirectCosts.teamHours !== initialInputs.indirectCosts.teamHours
+      );
+    
+    case 'risk':
+      // Risk section uses config values, not inputs - consider it completed if visited
+      // since it has pre-filled defaults that users can review
+      return true;
+    
+    default:
+      return false;
+  }
+}
+
+/**
+ * Legacy check for any non-zero/non-empty inputs (used for hasNonZeroInputs).
  */
 function hasBlockInputs(inputs: CalculatorInputs, sectionId: string): boolean {
   switch (sectionId) {
@@ -106,29 +222,11 @@ function hasBlockInputs(inputs: CalculatorInputs, sectionId: string): boolean {
       );
     
     case 'risk':
-      return true; // Risk section is always considered started since it has defaults
+      return true;
     
     default:
       return false;
   }
-}
-
-/**
- * Determine section state based on inputs.
- * - not-started: all values are 0/empty/default
- * - in-progress: some values set but section may be incomplete
- * - completed: has meaningful inputs (simplified - we just check for any inputs)
- */
-function getSectionState(inputs: CalculatorInputs, sectionId: string): SectionState {
-  const hasInputs = hasBlockInputs(inputs, sectionId);
-  
-  if (!hasInputs) {
-    return 'not-started';
-  }
-  
-  // For now, any section with inputs is considered completed
-  // More sophisticated logic could check for "required" fields
-  return 'completed';
 }
 
 // ============================================================================
@@ -140,6 +238,7 @@ interface AccordionControllerContextType {
   setOpenSection: (sectionId: string | null) => void;
   getSectionState: (sectionId: string) => SectionState;
   hasNonZeroInputs: (sectionId: string) => boolean;
+  isVisited: (sectionId: string) => boolean;
 }
 
 const AccordionControllerContext = createContext<AccordionControllerContextType | null>(null);
@@ -157,14 +256,61 @@ export function AccordionControllerProvider({
   children,
   defaultOpenSection = 'position',
 }: AccordionControllerProviderProps) {
-  const [openSection, setOpenSection] = useState<string | null>(defaultOpenSection);
+  const [openSection, setOpenSectionState] = useState<string | null>(defaultOpenSection);
+  const [visitedSections, setVisitedSections] = useState<Set<string>>(
+    () => new Set(defaultOpenSection ? [defaultOpenSection] : [])
+  );
   const { inputs } = useAppStore();
+  
+  // Store initial inputs snapshot on first render
+  const initialInputsRef = useRef<CalculatorInputs | null>(null);
+  if (initialInputsRef.current === null) {
+    initialInputsRef.current = JSON.parse(JSON.stringify(inputs));
+  }
+
+  const setOpenSection = useCallback((sectionId: string | null) => {
+    setOpenSectionState(sectionId);
+    if (sectionId !== null) {
+      setVisitedSections((prev) => {
+        if (prev.has(sectionId)) return prev;
+        const next = new Set(prev);
+        next.add(sectionId);
+        return next;
+      });
+    }
+  }, []);
+
+  const isVisited = useCallback(
+    (sectionId: string): boolean => {
+      return visitedSections.has(sectionId);
+    },
+    [visitedSections]
+  );
 
   const getSectionStateCallback = useCallback(
     (sectionId: string): SectionState => {
-      return getSectionState(inputs, sectionId);
+      const visited = visitedSections.has(sectionId);
+      
+      // Not visited → always "not-started"
+      if (!visited) {
+        return 'not-started';
+      }
+      
+      // Visited → check if there are meaningful changes from initial state
+      const hasMeaningful = hasMeaningfulInputs(
+        inputs,
+        initialInputsRef.current!,
+        sectionId
+      );
+      
+      if (hasMeaningful) {
+        return 'completed';
+      }
+      
+      // Visited but no meaningful inputs → in-progress
+      return 'in-progress';
     },
-    [inputs]
+    [inputs, visitedSections]
   );
 
   const hasNonZeroInputsCallback = useCallback(
@@ -181,6 +327,7 @@ export function AccordionControllerProvider({
         setOpenSection,
         getSectionState: getSectionStateCallback,
         hasNonZeroInputs: hasNonZeroInputsCallback,
+        isVisited,
       }}
     >
       {children}
