@@ -150,6 +150,12 @@ export interface CalculatorConfig {
   SOCIAL_TAX_RATE: number;
   EMPLOYER_UI_RATE: number;
   
+  // Employee taxes (for future net/gross support)
+  EMPLOYEE_UI_RATE: number;
+  INCOME_TAX_RATE: number;
+  PILLAR_II_RATE: number;
+  TAX_FREE_ALLOWANCE: number;
+  
   // Risk parameters
   BAD_HIRE_RISK_RATE: number;
   BAD_HIRE_PAY_MONTHS: number;
@@ -164,6 +170,11 @@ export interface CalculatorConfig {
   // Text snippets
   disclaimerText: string;
   riskExplanationText: string;
+  indirectExplanationText: string;
+  finalQuestionText: string;
+  ctaPlaceholderText: string;
+  resetConfirmText: string;
+  defaultUsedText: string;
   privacyNotice: string;
 }
 
