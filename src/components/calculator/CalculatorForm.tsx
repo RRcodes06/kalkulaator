@@ -1,6 +1,10 @@
 import { useAppStore } from '@/store/appStore';
 import { CalculatorSection } from './CalculatorSection';
 import { NumberInput } from './NumberInput';
+import { PayInputGroup } from './PayInputGroup';
+import { RolePaySection } from './RolePaySection';
+import { OtherServicesSection } from './OtherServicesSection';
+import { RiskSummarySection } from './RiskSummarySection';
 import { 
   Briefcase, 
   Users, 
@@ -14,8 +18,6 @@ import {
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import type { PayType } from '@/types/calculator';
 
 export function CalculatorForm() {
   const { inputs, results, updateInput, updateNestedInput } = useAppStore();
@@ -47,67 +49,20 @@ export function CalculatorForm() {
           />
         </div>
         
-        <div className="space-y-1.5">
-          <Label className="text-sm font-medium">Palga tüüp</Label>
-          <Select
-            value={inputs.hirePay.payType}
-            onValueChange={(v) => updateInput('hirePay', { ...inputs.hirePay, payType: v as PayType })}
-          >
-            <SelectTrigger className="bg-card">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="unset">Määramata (kasuta keskmist)</SelectItem>
-              <SelectItem value="monthly">Kuupalk</SelectItem>
-              <SelectItem value="hourly">Tunnipalk</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {inputs.hirePay.payType !== 'unset' && (
-          <NumberInput
-            label={inputs.hirePay.payType === 'monthly' ? 'Brutopalk' : 'Tunnipalk'}
-            value={inputs.hirePay.payAmount}
-            onChange={(v) => updateInput('hirePay', { ...inputs.hirePay, payAmount: v })}
-            suffix={inputs.hirePay.payType === 'monthly' ? '€/kuu' : '€/h'}
-            min={0}
-            step={inputs.hirePay.payType === 'monthly' ? 100 : 1}
+        <div className="md:col-span-2">
+          <PayInputGroup
+            label="Värbatava töötaja palk"
+            value={inputs.hirePay}
+            onChange={(pay) => updateInput('hirePay', pay)}
+            normalizedPay={results.normalizedHirePay}
+            showCostBreakdown
+            isDefaultUsed={results.defaultsUsed.hirePay}
           />
-        )}
-
-        {inputs.hirePay.payType === 'hourly' && (
-          <NumberInput
-            label="Töötunde kuus"
-            value={inputs.hirePay.hoursPerMonth ?? 168}
-            onChange={(v) => updateInput('hirePay', { ...inputs.hirePay, hoursPerMonth: v })}
-            suffix="h/kuu"
-            min={1}
-          />
-        )}
-
-        <div className="p-4 bg-muted rounded-lg">
-          <p className="text-sm text-muted-foreground mb-2">Tööandja kulud</p>
-          <div className="space-y-1 text-sm">
-            <div className="flex justify-between">
-              <span>Brutopalk</span>
-              <span className="font-medium">{formatCurrency(results.normalizedHirePay.monthlyGross)} €</span>
-            </div>
-            <div className="flex justify-between">
-              <span>+ maksud (33.8%)</span>
-              <span className="font-medium">
-                {formatCurrency(results.normalizedHirePay.employerMonthlyCost - results.normalizedHirePay.monthlyGross)} €
-              </span>
-            </div>
-            <div className="flex justify-between font-semibold pt-1 border-t border-border">
-              <span>Kokku tööjõukulu</span>
-              <span>{formatCurrency(results.normalizedHirePay.employerMonthlyCost)} €/kuu</span>
-            </div>
-          </div>
-          {results.defaultsUsed.hirePay && (
-            <p className="text-xs text-warning mt-2">⚠ Kasutatakse Eesti keskmist palka</p>
-          )}
         </div>
       </CalculatorSection>
+
+      {/* Role Pay Rates */}
+      <RolePaySection />
 
       {/* Strategy & Prep */}
       <CalculatorSection
@@ -260,6 +215,9 @@ export function CalculatorForm() {
         />
       </CalculatorSection>
 
+      {/* Other Services */}
+      <OtherServicesSection />
+
       {/* Preboarding */}
       <CalculatorSection
         id="preboarding"
@@ -396,6 +354,9 @@ export function CalculatorForm() {
           </p>
         </div>
       </CalculatorSection>
+
+      {/* Risk Summary Section */}
+      <RiskSummarySection />
     </div>
   );
 }
