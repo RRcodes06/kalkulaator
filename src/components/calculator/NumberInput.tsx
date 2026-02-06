@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { AlertTriangle, Info } from 'lucide-react';
+import { useExcelInputBehavior } from '@/hooks/useExcelInputBehavior';
 
 export interface NumberInputWarning {
   message: string;
@@ -38,34 +38,7 @@ export function NumberInput({
   showDefaultIndicator,
   className,
 }: NumberInputProps) {
-  // Local display state - allows empty string while editing
-  const [displayValue, setDisplayValue] = useState<string>(value.toString());
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  // Sync display value when external value changes (but not during editing)
-  useEffect(() => {
-    // Only update if the input is not focused
-    if (document.activeElement !== inputRef.current) {
-      setDisplayValue(value === 0 ? '' : value.toString());
-    }
-  }, [value]);
-
-  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    // Always select all on focus - Excel-like behavior
-    // First keystroke will replace the entire value
-    e.target.select();
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const rawValue = e.target.value;
-    setDisplayValue(rawValue);
-    
-    // Parse and propagate to parent - empty string becomes 0
-    const numericValue = rawValue === '' ? 0 : parseFloat(rawValue);
-    if (!isNaN(numericValue)) {
-      onChange(numericValue);
-    }
-  };
+  const { inputRef, displayValue, handleFocus, handleChange } = useExcelInputBehavior(value);
 
   return (
     <div className={cn('space-y-1.5', className)}>
@@ -89,7 +62,7 @@ export function NumberInput({
           ref={inputRef}
           type="number"
           value={displayValue}
-          onChange={handleChange}
+          onChange={(e) => handleChange(e, onChange)}
           onFocus={handleFocus}
           min={min}
           max={max}

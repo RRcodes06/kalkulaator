@@ -78,6 +78,8 @@ function PasswordGate({ onSuccess }: { onSuccess: () => void }) {
 // CONFIG INPUT COMPONENTS
 // ============================================================================
 
+import { useExcelInputBehavior } from '@/hooks/useExcelInputBehavior';
+
 function ConfigNumberInput({
   label,
   value,
@@ -91,14 +93,18 @@ function ConfigNumberInput({
   step?: number;
   hint?: string;
 }) {
+  const { inputRef, displayValue, handleFocus, handleChange } = useExcelInputBehavior(value);
+
   return (
     <div className="space-y-2">
       <Label>{label}</Label>
       <Input
+        ref={inputRef}
         type="number"
         step={step}
-        value={value}
-        onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
+        value={displayValue}
+        onChange={(e) => handleChange(e, onChange)}
+        onFocus={handleFocus}
       />
       {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
     </div>
@@ -131,6 +137,28 @@ function ConfigTextInput({
 // ============================================================================
 // RANGES TABLE COMPONENT
 // ============================================================================
+
+// Small input component for table cells with Excel-like behavior
+function RangeTableInput({
+  value,
+  onChange,
+}: {
+  value: number;
+  onChange: (value: number) => void;
+}) {
+  const { inputRef, displayValue, handleFocus, handleChange } = useExcelInputBehavior(value);
+
+  return (
+    <Input
+      ref={inputRef}
+      type="number"
+      className="h-8 w-20"
+      value={displayValue}
+      onChange={(e) => handleChange(e, onChange)}
+      onFocus={handleFocus}
+    />
+  );
+}
 
 interface RangeRowState {
   min: number;
@@ -299,19 +327,15 @@ function RecommendedRangesTable({
                           </span>
                         </TableCell>
                         <TableCell className="py-1.5">
-                          <Input
-                            type="number"
-                            className="h-8 w-20"
+                          <RangeTableInput
                             value={row?.min ?? range.min}
-                            onChange={(e) => handleChange(key, 'min', parseFloat(e.target.value) || 0)}
+                            onChange={(v) => handleChange(key, 'min', v)}
                           />
                         </TableCell>
                         <TableCell className="py-1.5">
-                          <Input
-                            type="number"
-                            className="h-8 w-20"
+                          <RangeTableInput
                             value={row?.max ?? range.max}
-                            onChange={(e) => handleChange(key, 'max', parseFloat(e.target.value) || 0)}
+                            onChange={(v) => handleChange(key, 'max', v)}
                           />
                         </TableCell>
                         <TableCell className="py-1.5 text-muted-foreground text-sm">
