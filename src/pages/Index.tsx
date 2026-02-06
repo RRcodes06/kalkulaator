@@ -7,10 +7,34 @@ import { Button } from '@/components/ui/button';
 import { Printer, Settings } from 'lucide-react';
 import { useAppStore } from '@/store/appStore';
 
+const PRINT_SNAPSHOT_KEY = 'recruitment-calc-print-snapshot';
+
 const Index = () => {
   const disclaimer = useAppStore((s) => s.config.disclaimerText);
+  const inputs = useAppStore((s) => s.inputs);
+  const results = useAppStore((s) => s.results);
+  const config = useAppStore((s) => s.config);
 
   const handlePrint = () => {
+    // Serialize snapshot to sessionStorage
+    const snapshot = {
+      inputs,
+      results,
+      config: {
+        disclaimerText: config.disclaimerText,
+        riskExplanationText: config.riskExplanationText,
+        indirectExplanationText: config.indirectExplanationText,
+        finalQuestionText: config.finalQuestionText,
+        ctaPlaceholderText: config.ctaPlaceholderText,
+        BAD_HIRE_RISK_RATE: config.BAD_HIRE_RISK_RATE,
+        BAD_HIRE_PAY_MONTHS: config.BAD_HIRE_PAY_MONTHS,
+        HOURS_PER_MONTH: config.HOURS_PER_MONTH,
+        EST_AVG_GROSS_WAGE: config.EST_AVG_GROSS_WAGE,
+      },
+      generatedAt: new Date().toISOString(),
+    };
+    
+    sessionStorage.setItem(PRINT_SNAPSHOT_KEY, JSON.stringify(snapshot));
     window.open('/print', '_blank');
   };
 
@@ -37,7 +61,7 @@ const Index = () => {
               </Link>
               <Button variant="outline" size="sm" onClick={handlePrint} className="gap-2">
                 <Printer className="w-4 h-4" />
-                Prindi PDF
+                Prindi aruanne (PDF)
               </Button>
               <ResetModal />
             </div>
@@ -79,3 +103,5 @@ const Index = () => {
 };
 
 export default Index;
+
+export { PRINT_SNAPSHOT_KEY };
