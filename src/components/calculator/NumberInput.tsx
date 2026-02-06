@@ -51,10 +51,9 @@ export function NumberInput({
   }, [value]);
 
   const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    // If value is 0, select all so typing replaces it
-    if (value === 0) {
-      e.target.select();
-    }
+    // Always select all on focus - Excel-like behavior
+    // First keystroke will replace the entire value
+    e.target.select();
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
