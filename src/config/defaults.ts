@@ -1,10 +1,77 @@
-import type { CalculatorConfig } from '@/types/calculator';
+import type { CalculatorConfig, RecommendedRanges } from '@/types/calculator';
 
 // Admin password - change this in production
 export const ADMIN_PASSWORD = 'CHANGE_ME';
 
 // Config storage version for migrations
-export const CONFIG_VERSION = 'v1';
+export const CONFIG_VERSION = 'v2';
+
+// ============================================================================
+// DEFAULT RECOMMENDED RANGES
+// Keys map to input fields; labels shown in Admin UI
+// ============================================================================
+
+export const DEFAULT_RECOMMENDED_RANGES: RecommendedRanges = {
+  // Strategy & Prep
+  'strategyPrep.hrHours': { min: 2, max: 8, unit: 'h' },
+  'strategyPrep.managerHours': { min: 1, max: 6, unit: 'h' },
+  'strategyPrep.teamHours': { min: 0, max: 4, unit: 'h' },
+  
+  // Ads & Branding
+  'adsBranding.hrHours': { min: 2, max: 8, unit: 'h' },
+  'adsBranding.managerHours': { min: 0, max: 4, unit: 'h' },
+  'adsBranding.directCosts': { min: 100, max: 2000, unit: '€' },
+  
+  // Candidate Management
+  'candidateMgmt.hrHours': { min: 4, max: 25, unit: 'h' },
+  'candidateMgmt.managerHours': { min: 1, max: 10, unit: 'h' },
+  
+  // Interviews
+  'interviews.hrHours': { min: 3, max: 15, unit: 'h' },
+  'interviews.managerHours': { min: 3, max: 20, unit: 'h' },
+  'interviews.teamHours': { min: 0, max: 12, unit: 'h' },
+  'interviews.directCosts': { min: 0, max: 500, unit: '€' },
+  
+  // Background & Offer
+  'backgroundOffer.hrHours': { min: 1, max: 6, unit: 'h' },
+  'backgroundOffer.managerHours': { min: 0, max: 4, unit: 'h' },
+  
+  // Indirect Costs
+  'indirectCosts.hrHours': { min: 2, max: 12, unit: 'h' },
+  'indirectCosts.managerHours': { min: 1, max: 10, unit: 'h' },
+  'indirectCosts.teamHours': { min: 0, max: 8, unit: 'h' },
+  
+  // Onboarding
+  'onboarding.onboardingMonths': { min: 1, max: 12, unit: 'kuud' },
+  'onboarding.productivityPct': { min: 20, max: 80, unit: '%' },
+  
+  // Vacancy
+  'vacancy.vacancyDays': { min: 10, max: 90, unit: 'päeva' },
+};
+
+// Labels for recommended ranges (shown in Admin UI)
+export const RANGE_LABELS: Record<string, string> = {
+  'strategyPrep.hrHours': 'Strateegia: HR tunnid',
+  'strategyPrep.managerHours': 'Strateegia: Juhi tunnid',
+  'strategyPrep.teamHours': 'Strateegia: Tiimi tunnid',
+  'adsBranding.hrHours': 'Kuulutused: HR tunnid',
+  'adsBranding.managerHours': 'Kuulutused: Juhi tunnid',
+  'adsBranding.directCosts': 'Kuulutuste kulud',
+  'candidateMgmt.hrHours': 'Kandidaadid: HR tunnid',
+  'candidateMgmt.managerHours': 'Kandidaadid: Juhi tunnid',
+  'interviews.hrHours': 'Intervjuud: HR tunnid',
+  'interviews.managerHours': 'Intervjuud: Juhi tunnid',
+  'interviews.teamHours': 'Intervjuud: Tiimi tunnid',
+  'interviews.directCosts': 'Intervjuude kulud',
+  'backgroundOffer.hrHours': 'Taustakontroll: HR tunnid',
+  'backgroundOffer.managerHours': 'Taustakontroll: Juhi tunnid',
+  'indirectCosts.hrHours': 'Kaudsed: HR tunnid',
+  'indirectCosts.managerHours': 'Kaudsed: Juhi tunnid',
+  'indirectCosts.teamHours': 'Kaudsed: Tiimi tunnid',
+  'onboarding.onboardingMonths': 'Sisseelamisperiood',
+  'onboarding.productivityPct': 'Keskmine tootlikkus',
+  'vacancy.vacancyDays': 'Vakantsi kestus',
+};
 
 export const DEFAULT_CONFIG: CalculatorConfig = {
   HOURS_PER_MONTH: 168,
@@ -24,65 +91,8 @@ export const DEFAULT_CONFIG: CalculatorConfig = {
   BAD_HIRE_RISK_RATE: 0.15,
   BAD_HIRE_PAY_MONTHS: 2,
   
-  // ============================================
-  // RECOMMENDED RANGES - only for benchmarkable fields
-  // ============================================
-  
-  // Strategy & Prep (typical: HR 2-6h, Mgr 1-4h, Team 0-2h)
-  RECOMMENDED_STRATEGY_HR_HOURS_MIN: 2,
-  RECOMMENDED_STRATEGY_HR_HOURS_MAX: 8,
-  RECOMMENDED_STRATEGY_MGR_HOURS_MIN: 1,
-  RECOMMENDED_STRATEGY_MGR_HOURS_MAX: 6,
-  RECOMMENDED_STRATEGY_TEAM_HOURS_MIN: 0,
-  RECOMMENDED_STRATEGY_TEAM_HOURS_MAX: 4,
-  
-  // Ads & Branding (typical: HR 2-6h, Mgr 1-3h, €200-1500)
-  RECOMMENDED_ADS_HR_HOURS_MIN: 2,
-  RECOMMENDED_ADS_HR_HOURS_MAX: 8,
-  RECOMMENDED_ADS_MGR_HOURS_MIN: 0,
-  RECOMMENDED_ADS_MGR_HOURS_MAX: 4,
-  RECOMMENDED_ADS_DIRECT_COST_MIN: 100,
-  RECOMMENDED_ADS_DIRECT_COST_MAX: 2000,
-  
-  // Candidate Management (typical: HR 5-20h, Mgr 2-8h)
-  RECOMMENDED_CANDIDATE_HR_HOURS_MIN: 4,
-  RECOMMENDED_CANDIDATE_HR_HOURS_MAX: 25,
-  RECOMMENDED_CANDIDATE_MGR_HOURS_MIN: 1,
-  RECOMMENDED_CANDIDATE_MGR_HOURS_MAX: 10,
-  
-  // Interviews (typical: HR 4-12h, Mgr 4-16h, Team 2-8h, €0-500)
-  RECOMMENDED_INTERVIEW_HR_HOURS_MIN: 3,
-  RECOMMENDED_INTERVIEW_HR_HOURS_MAX: 15,
-  RECOMMENDED_INTERVIEW_MGR_HOURS_MIN: 3,
-  RECOMMENDED_INTERVIEW_MGR_HOURS_MAX: 20,
-  RECOMMENDED_INTERVIEW_TEAM_HOURS_MIN: 0,
-  RECOMMENDED_INTERVIEW_TEAM_HOURS_MAX: 12,
-  RECOMMENDED_INTERVIEW_DIRECT_COST_MIN: 0,
-  RECOMMENDED_INTERVIEW_DIRECT_COST_MAX: 500,
-  
-  // Background & Offer (typical: HR 2-5h, Mgr 1-3h)
-  RECOMMENDED_BACKGROUND_HR_HOURS_MIN: 1,
-  RECOMMENDED_BACKGROUND_HR_HOURS_MAX: 6,
-  RECOMMENDED_BACKGROUND_MGR_HOURS_MIN: 0,
-  RECOMMENDED_BACKGROUND_MGR_HOURS_MAX: 4,
-  
-  // Indirect Costs (typical: HR 2-10h, Mgr 2-8h, Team 1-5h)
-  RECOMMENDED_INDIRECT_HR_HOURS_MIN: 2,
-  RECOMMENDED_INDIRECT_HR_HOURS_MAX: 12,
-  RECOMMENDED_INDIRECT_MGR_HOURS_MIN: 1,
-  RECOMMENDED_INDIRECT_MGR_HOURS_MAX: 10,
-  RECOMMENDED_INDIRECT_TEAM_HOURS_MIN: 0,
-  RECOMMENDED_INDIRECT_TEAM_HOURS_MAX: 8,
-  
-  // Onboarding (typical: 1-12 months, 20-80% productivity)
-  RECOMMENDED_ONBOARDING_MONTHS_MIN: 1,
-  RECOMMENDED_ONBOARDING_MONTHS_MAX: 12,
-  RECOMMENDED_PRODUCTIVITY_PCT_MIN: 20,
-  RECOMMENDED_PRODUCTIVITY_PCT_MAX: 80,
-  
-  // Vacancy (typical: 10-90 days)
-  RECOMMENDED_VACANCY_DAYS_MIN: 10,
-  RECOMMENDED_VACANCY_DAYS_MAX: 90,
+  // Recommended ranges - single source of truth
+  recommendedRanges: DEFAULT_RECOMMENDED_RANGES,
   
   // Text snippets
   disclaimerText: 'See kalkulaator annab ligikaudse hinnangu värbamisprotsessi kogukulule. Tegelikud kulud võivad varieeruda sõltuvalt konkreetsetest asjaoludest.',
