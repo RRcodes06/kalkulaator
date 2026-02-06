@@ -2,6 +2,12 @@ import { useState, useRef, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import { AlertTriangle, Info } from 'lucide-react';
+
+export interface NumberInputWarning {
+  message: string;
+  severity: 'info' | 'warning' | 'error';
+}
 
 export interface NumberInputProps {
   label?: string;
@@ -13,6 +19,7 @@ export interface NumberInputProps {
   max?: number;
   step?: number;
   hint?: string;
+  warning?: NumberInputWarning;
   showDefaultIndicator?: boolean;
   className?: string;
 }
@@ -27,6 +34,7 @@ export function NumberInput({
   max,
   step = 1,
   hint,
+  warning,
   showDefaultIndicator,
   className,
 }: NumberInputProps) {
@@ -90,7 +98,9 @@ export function NumberInput({
           className={cn(
             'h-10 text-right pr-3 bg-card',
             prefix && 'pl-8',
-            suffix && 'pr-12'
+            suffix && 'pr-12',
+            warning && warning.severity === 'warning' && 'border-warning focus-visible:ring-warning',
+            warning && warning.severity === 'info' && 'border-muted-foreground/50'
           )}
         />
         {suffix && (
@@ -99,8 +109,23 @@ export function NumberInput({
           </span>
         )}
       </div>
-      {hint && (
+      {hint && !warning && (
         <p className="text-xs text-muted-foreground">{hint}</p>
+      )}
+      {warning && (
+        <div className={cn(
+          "flex items-start gap-1.5 text-xs",
+          warning.severity === 'warning' && "text-warning",
+          warning.severity === 'info' && "text-muted-foreground",
+          warning.severity === 'error' && "text-destructive"
+        )}>
+          {warning.severity === 'warning' ? (
+            <AlertTriangle className="w-3 h-3 mt-0.5 flex-shrink-0" />
+          ) : (
+            <Info className="w-3 h-3 mt-0.5 flex-shrink-0" />
+          )}
+          <span>{warning.message}</span>
+        </div>
       )}
     </div>
   );

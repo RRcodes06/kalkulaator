@@ -536,26 +536,64 @@ export function computeTotals(
     if (inputs.onboarding.onboardingMonths < config.RECOMMENDED_ONBOARDING_MONTHS_MIN) {
       rangeWarnings.push({
         field: 'onboardingMonths',
-        message: 'Sisseelamisperiood on ebatavaliselt lühike.',
+        label: 'Sisseelamisperiood',
+        message: `Soovituslik miinimum: ${config.RECOMMENDED_ONBOARDING_MONTHS_MIN} kuud`,
         severity: 'info',
+        recommendedMin: config.RECOMMENDED_ONBOARDING_MONTHS_MIN,
+        recommendedMax: config.RECOMMENDED_ONBOARDING_MONTHS_MAX,
+        currentValue: inputs.onboarding.onboardingMonths,
+        unit: 'kuud',
       });
     }
     
     if (inputs.onboarding.onboardingMonths > config.RECOMMENDED_ONBOARDING_MONTHS_MAX) {
       rangeWarnings.push({
         field: 'onboardingMonths',
-        message: 'Sisseelamisperiood on ebatavaliselt pikk.',
+        label: 'Sisseelamisperiood',
+        message: `Soovituslik maksimum: ${config.RECOMMENDED_ONBOARDING_MONTHS_MAX} kuud`,
         severity: 'warning',
+        recommendedMin: config.RECOMMENDED_ONBOARDING_MONTHS_MIN,
+        recommendedMax: config.RECOMMENDED_ONBOARDING_MONTHS_MAX,
+        currentValue: inputs.onboarding.onboardingMonths,
+        unit: 'kuud',
       });
     }
+  } else if (inputs.onboarding.productivityPct > 0 || inputs.onboarding.extraCosts > 0) {
+    // Section is in use but onboardingMonths is 0
+    rangeWarnings.push({
+      field: 'onboardingMonths',
+      label: 'Sisseelamisperiood',
+      message: `Soovituslik: ${config.RECOMMENDED_ONBOARDING_MONTHS_MIN}–${config.RECOMMENDED_ONBOARDING_MONTHS_MAX} kuud (sisesta hinnang)`,
+      severity: 'info',
+      recommendedMin: config.RECOMMENDED_ONBOARDING_MONTHS_MIN,
+      recommendedMax: config.RECOMMENDED_ONBOARDING_MONTHS_MAX,
+      currentValue: 0,
+      unit: 'kuud',
+    });
   }
   
   // Productivity warning
   if (inputs.onboarding.productivityPct > 0 && inputs.onboarding.productivityPct < config.RECOMMENDED_PRODUCTIVITY_PCT_MIN) {
     rangeWarnings.push({
       field: 'productivityPct',
-      message: 'Väga madal tootlikkus sisseelamisel suurendab kulusid oluliselt.',
+      label: 'Keskmine tootlikkus',
+      message: `Soovituslik miinimum: ${config.RECOMMENDED_PRODUCTIVITY_PCT_MIN}%`,
       severity: 'warning',
+      recommendedMin: config.RECOMMENDED_PRODUCTIVITY_PCT_MIN,
+      recommendedMax: config.RECOMMENDED_PRODUCTIVITY_PCT_MAX,
+      currentValue: inputs.onboarding.productivityPct,
+      unit: '%',
+    });
+  } else if (inputs.onboarding.productivityPct > config.RECOMMENDED_PRODUCTIVITY_PCT_MAX) {
+    rangeWarnings.push({
+      field: 'productivityPct',
+      label: 'Keskmine tootlikkus',
+      message: `Soovituslik maksimum: ${config.RECOMMENDED_PRODUCTIVITY_PCT_MAX}%`,
+      severity: 'info',
+      recommendedMin: config.RECOMMENDED_PRODUCTIVITY_PCT_MIN,
+      recommendedMax: config.RECOMMENDED_PRODUCTIVITY_PCT_MAX,
+      currentValue: inputs.onboarding.productivityPct,
+      unit: '%',
     });
   }
   
@@ -563,8 +601,13 @@ export function computeTotals(
   if (inputs.vacancy.vacancyDays > config.RECOMMENDED_VACANCY_DAYS_MAX) {
     rangeWarnings.push({
       field: 'vacancyDays',
-      message: 'Pikk vakantsi periood suurendab oluliselt kogukulusid.',
+      label: 'Vakantsi kestus',
+      message: `Soovituslik maksimum: ${config.RECOMMENDED_VACANCY_DAYS_MAX} päeva`,
       severity: 'warning',
+      recommendedMin: 0,
+      recommendedMax: config.RECOMMENDED_VACANCY_DAYS_MAX,
+      currentValue: inputs.vacancy.vacancyDays,
+      unit: 'päeva',
     });
   }
   
@@ -601,25 +644,37 @@ export function computeTotals(
   // Total hours warnings
   if (totalHrHours > config.RECOMMENDED_HR_HOURS_MAX) {
     rangeWarnings.push({
-      field: 'hrHours',
-      message: `HR-i kogu tunnid (${totalHrHours}h) ületavad soovituslikku piiri.`,
+      field: 'totalHrHours',
+      label: 'HR kogu tunnid',
+      message: `Soovituslik maksimum: ${config.RECOMMENDED_HR_HOURS_MAX} h`,
       severity: 'info',
+      recommendedMax: config.RECOMMENDED_HR_HOURS_MAX,
+      currentValue: totalHrHours,
+      unit: 'h',
     });
   }
   
   if (totalManagerHours > config.RECOMMENDED_MANAGER_HOURS_MAX) {
     rangeWarnings.push({
-      field: 'managerHours',
-      message: `Juhi kogu tunnid (${totalManagerHours}h) ületavad soovituslikku piiri.`,
+      field: 'totalManagerHours',
+      label: 'Juhi kogu tunnid',
+      message: `Soovituslik maksimum: ${config.RECOMMENDED_MANAGER_HOURS_MAX} h`,
       severity: 'info',
+      recommendedMax: config.RECOMMENDED_MANAGER_HOURS_MAX,
+      currentValue: totalManagerHours,
+      unit: 'h',
     });
   }
   
   if (totalTeamHours > config.RECOMMENDED_TEAM_HOURS_MAX) {
     rangeWarnings.push({
-      field: 'teamHours',
-      message: `Tiimi kogu tunnid (${totalTeamHours}h) ületavad soovituslikku piiri.`,
+      field: 'totalTeamHours',
+      label: 'Tiimi kogu tunnid',
+      message: `Soovituslik maksimum: ${config.RECOMMENDED_TEAM_HOURS_MAX} h`,
       severity: 'info',
+      recommendedMax: config.RECOMMENDED_TEAM_HOURS_MAX,
+      currentValue: totalTeamHours,
+      unit: 'h',
     });
   }
   
@@ -627,9 +682,13 @@ export function computeTotals(
   const totalInterviewHours = inputs.interviews.hrHours + inputs.interviews.managerHours + inputs.interviews.teamHours;
   if (totalInterviewHours > config.RECOMMENDED_INTERVIEW_HOURS_MAX) {
     rangeWarnings.push({
-      field: 'interviewHours',
-      message: `Intervjuude tunnid (${totalInterviewHours}h) on ebatavaliselt kõrged.`,
+      field: 'totalInterviewHours',
+      label: 'Intervjuude tunnid',
+      message: `Soovituslik maksimum: ${config.RECOMMENDED_INTERVIEW_HOURS_MAX} h`,
       severity: 'warning',
+      recommendedMax: config.RECOMMENDED_INTERVIEW_HOURS_MAX,
+      currentValue: totalInterviewHours,
+      unit: 'h',
     });
   }
   
@@ -639,8 +698,13 @@ export function computeTotals(
   if (inputs.vacancy.dailyCost > 0 && inputs.vacancy.vacancyDays === 0) {
     rangeWarnings.push({
       field: 'vacancyDays',
-      message: 'Päevakulu on määratud, aga vakantsi päevi pole sisestatud.',
+      label: 'Vakantsi kestus',
+      message: `Soovituslik: 10–${config.RECOMMENDED_VACANCY_DAYS_MAX} päeva (sisesta hinnang)`,
       severity: 'info',
+      recommendedMin: 10,
+      recommendedMax: config.RECOMMENDED_VACANCY_DAYS_MAX,
+      currentValue: 0,
+      unit: 'päeva',
     });
   }
   

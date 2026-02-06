@@ -244,8 +244,13 @@ export interface MissingPayWarning {
 
 export interface RangeWarning {
   field: string;
+  label: string;
   message: string;
   severity: 'info' | 'warning' | 'error';
+  recommendedMin?: number;
+  recommendedMax?: number;
+  currentValue?: number;
+  unit?: string;
 }
 
 export interface ComputedResult {
