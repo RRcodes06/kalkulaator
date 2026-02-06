@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
@@ -29,6 +30,36 @@ export function NumberInput({
   showDefaultIndicator,
   className,
 }: NumberInputProps) {
+  // Local display state - allows empty string while editing
+  const [displayValue, setDisplayValue] = useState<string>(value.toString());
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Sync display value when external value changes (but not during editing)
+  useEffect(() => {
+    // Only update if the input is not focused
+    if (document.activeElement !== inputRef.current) {
+      setDisplayValue(value === 0 ? '' : value.toString());
+    }
+  }, [value]);
+
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    // If value is 0, select all so typing replaces it
+    if (value === 0) {
+      e.target.select();
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value;
+    setDisplayValue(rawValue);
+    
+    // Parse and propagate to parent - empty string becomes 0
+    const numericValue = rawValue === '' ? 0 : parseFloat(rawValue);
+    if (!isNaN(numericValue)) {
+      onChange(numericValue);
+    }
+  };
+
   return (
     <div className={cn('space-y-1.5', className)}>
       {(label || showDefaultIndicator) && (
@@ -48,9 +79,11 @@ export function NumberInput({
           </span>
         )}
         <Input
+          ref={inputRef}
           type="number"
-          value={value}
-          onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
+          value={displayValue}
+          onChange={handleChange}
+          onFocus={handleFocus}
           min={min}
           max={max}
           step={step}

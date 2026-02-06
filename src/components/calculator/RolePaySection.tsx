@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Users } from 'lucide-react';
 
 export function RolePaySection() {
-  const { inputs, results, updateInput } = useAppStore();
+  const { inputs, results, config, updateInput } = useAppStore();
 
   const updateRole = (
     role: 'hr' | 'manager' | 'team',
@@ -121,7 +121,7 @@ export function RolePaySection() {
 
       <div className="md:col-span-3 p-4 bg-muted rounded-lg">
         <p className="text-xs text-muted-foreground">
-          ℹ Kui palk on määramata, kasutatakse Eesti keskmist brutokuupalka ({inputs.roles.hr.payAmount === 0 ? '2075' : inputs.roles.hr.payAmount} €). 
+          ℹ Kui palk on määramata, kasutatakse Eesti keskmist brutokuupalka ({config.EST_AVG_GROSS_WAGE} €). 
           Tööandja kulud sisaldavad sotsiaalmaksu (33%) ja töötuskindlustusmakset (0.8%).
         </p>
       </div>
