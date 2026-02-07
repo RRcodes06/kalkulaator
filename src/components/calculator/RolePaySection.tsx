@@ -4,9 +4,10 @@ import { PayInputGroup } from './PayInputGroup';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Users } from 'lucide-react';
+import { ROLE_DEFAULT_SALARIES, ROLE_SALARY_LABELS } from '@/config/defaults';
 
 export function RolePaySection() {
-  const { inputs, results, config, updateInput } = useAppStore();
+  const { inputs, results, updateInput } = useAppStore();
 
   const updateRole = (
     role: 'hr' | 'manager' | 'team',
@@ -52,6 +53,7 @@ export function RolePaySection() {
             }
             normalizedPay={results.normalizedRoles.hr}
             isDefaultUsed={results.defaultsUsed.hrPay}
+            defaultSalaryHint={`Kasutab ${ROLE_SALARY_LABELS.hr}: ${ROLE_DEFAULT_SALARIES.hr} €`}
             compact
           />
         )}
@@ -83,6 +85,7 @@ export function RolePaySection() {
             }
             normalizedPay={results.normalizedRoles.manager}
             isDefaultUsed={results.defaultsUsed.managerPay}
+            defaultSalaryHint={`Kasutab ${ROLE_SALARY_LABELS.manager}: ${ROLE_DEFAULT_SALARIES.manager} €`}
             compact
           />
         )}
@@ -114,16 +117,24 @@ export function RolePaySection() {
             }
             normalizedPay={results.normalizedRoles.team}
             isDefaultUsed={results.defaultsUsed.teamPay}
+            defaultSalaryHint={`Kasutab ${ROLE_SALARY_LABELS.team}: ${ROLE_DEFAULT_SALARIES.team} €`}
             compact
           />
         )}
       </div>
 
-      <div className="md:col-span-3 p-4 bg-muted rounded-lg">
+      <div className="md:col-span-3 p-4 bg-muted rounded-lg space-y-2">
         <p className="text-xs text-muted-foreground">
-          ℹ Kui palk on määramata, kasutatakse Eesti keskmist brutokuupalka ({config.EST_AVG_GROSS_WAGE} €). 
-          Tööandja kulud sisaldavad sotsiaalmaksu (33%) ja töötuskindlustusmakset (0.8%).
+          ℹ Tööandja kulud sisaldavad sotsiaalmaksu (33%) ja töötuskindlustusmakset (0.8%).
         </p>
+        <div className="text-xs text-muted-foreground space-y-1">
+          <p className="font-medium">Vaikimisi kasutatavad palgad:</p>
+          <ul className="list-disc list-inside pl-2 space-y-0.5">
+            <li>Tiimiliige: {ROLE_DEFAULT_SALARIES.team} € ({ROLE_SALARY_LABELS.team})</li>
+            <li>HR: {ROLE_DEFAULT_SALARIES.hr} € ({ROLE_SALARY_LABELS.hr})</li>
+            <li>Värbav juht: {ROLE_DEFAULT_SALARIES.manager} € ({ROLE_SALARY_LABELS.manager})</li>
+          </ul>
+        </div>
       </div>
     </CalculatorSection>
   );

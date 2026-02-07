@@ -60,7 +60,10 @@
     --summary-foreground: 210 40% 98%;
     --summary-muted: 220 20% 70%;
     --summary-accent: 38 92% 55%;
-
+    
+    /* Total cost highlight - golden emphasis */
+    --total-highlight: 38 95% 52%;
+    --total-glow: 38 100% 60%;
     /* Sidebar tokens */
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;

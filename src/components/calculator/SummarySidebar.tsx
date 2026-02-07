@@ -43,41 +43,41 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
   return (
     // @ts-ignore - ref forwarding
     <aside ref={ref} className="w-80 bg-summary text-summary-foreground rounded-xl shadow-summary p-6 sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto summary-scrollbar">
-      {/* Position title */}
-      <div className="mb-6">
-        <p className="text-summary-muted text-sm uppercase tracking-wider mb-1">Ametikoht</p>
-        <h3 className="text-xl font-semibold">
-          {inputs.positionTitle || 'Määramata'}
-        </h3>
-      </div>
-
-      {/* Monthly salary context */}
-      <div className="mb-6 p-4 bg-white/5 rounded-lg">
-        <p className="text-summary-muted text-sm mb-1">Igakuine tööjõukulu</p>
-        <p className="text-2xl font-bold">{formatCurrency(results.normalizedHirePay.employerMonthlyCost)}</p>
-        <p className="text-sm text-summary-muted mt-1">
-          (brutopalk {formatCurrency(results.normalizedHirePay.monthlyGross)} + maksud)
-        </p>
-        {results.defaultsUsed.hirePay && (
-          <p className="text-xs text-summary-accent mt-2">⚠ Kasutab Eesti keskmist</p>
-        )}
-      </div>
-
-      {/* Grand total */}
-      <div className="mb-6 p-5 bg-gradient-to-br from-summary-accent/20 to-summary-accent/5 rounded-lg border border-summary-accent/20">
-        <p className="text-summary-muted text-sm uppercase tracking-wider mb-2">Värbamise kogukulu</p>
-        <p className="text-4xl font-bold text-summary-accent animate-pulse-subtle">
+      {/* GRAND TOTAL - PRIMARY VISUAL ELEMENT */}
+      <div className="mb-6 p-6 rounded-xl border-2 border-[hsl(var(--total-highlight))] bg-gradient-to-br from-[hsl(var(--total-highlight)/0.15)] via-[hsl(var(--total-highlight)/0.08)] to-transparent shadow-[0_0_30px_-5px_hsl(var(--total-glow)/0.4)]">
+        <p className="text-summary-muted text-xs uppercase tracking-widest mb-3 font-medium">Värbamise kogukulu</p>
+        <p className="text-5xl font-bold text-[hsl(var(--total-highlight))] animate-pulse-subtle tracking-tight">
           {formatCurrency(results.totalCost)}
         </p>
-        <div className="mt-3 pt-3 border-t border-summary-accent/20 flex items-center gap-2">
-          <TrendingUp className="w-4 h-4 text-summary-accent" />
-          <span className="text-sm">
+        <div className="mt-4 pt-4 border-t border-[hsl(var(--total-highlight)/0.3)] flex items-center gap-2">
+          <TrendingUp className="w-4 h-4 text-[hsl(var(--total-highlight))]" />
+          <span className="text-sm font-medium">
             {results.normalizedHirePay.monthlyGross > 0 
               ? `${(results.totalCost / results.normalizedHirePay.monthlyGross).toFixed(1)}× kuupalk`
               : '—'
             }
           </span>
         </div>
+      </div>
+
+      {/* Position title */}
+      <div className="mb-5">
+        <p className="text-summary-muted text-xs uppercase tracking-wider mb-1">Ametikoht</p>
+        <h3 className="text-lg font-semibold">
+          {inputs.positionTitle || 'Määramata'}
+        </h3>
+      </div>
+
+      {/* Monthly salary context */}
+      <div className="mb-5 p-3 bg-white/5 rounded-lg">
+        <p className="text-summary-muted text-xs mb-1">Igakuine tööjõukulu</p>
+        <p className="text-xl font-bold">{formatCurrency(results.normalizedHirePay.employerMonthlyCost)}</p>
+        <p className="text-xs text-summary-muted mt-1">
+          (brutopalk {formatCurrency(results.normalizedHirePay.monthlyGross)} + maksud)
+        </p>
+        {results.defaultsUsed.hirePay && (
+          <p className="text-xs text-summary-accent mt-2">⚠ Kasutab Eesti keskmist</p>
+        )}
       </div>
 
       {/* Top drivers with insights */}
@@ -131,19 +131,19 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
         </div>
       </div>
 
-      {/* Bad hire scenario */}
-      <div className="mb-6 p-4 bg-white/5 rounded-lg">
-        <div className="flex items-center gap-2 mb-2">
-          <Info className="w-4 h-4 text-summary-muted" />
-          <p className="text-summary-muted text-sm font-medium">Halva värbamise stsenaarium</p>
+      {/* Bad hire scenario - TERTIARY, reduced emphasis */}
+      <div className="mb-5 p-3 bg-white/[0.03] rounded-lg border border-white/5">
+        <div className="flex items-center gap-2 mb-1.5">
+          <Info className="w-3.5 h-3.5 text-summary-muted/70" />
+          <p className="text-summary-muted/80 text-xs font-medium">Halva värbamise stsenaarium</p>
         </div>
-        <p className="text-sm">
+        <p className="text-sm text-summary-muted">
           Kui värbamine ebaõnnestub, on lisakulu{' '}
-          <span className="font-semibold text-summary-accent">
+          <span className="font-medium text-summary-foreground">
             {formatCurrency(results.badHireExtraIfHappens)}
           </span>
         </p>
-        <p className="text-xs text-summary-muted mt-1">
+        <p className="text-xs text-summary-muted/70 mt-1">
           Tõenäosus: {(config.BAD_HIRE_RISK_RATE * 100).toFixed(0)}%
         </p>
       </div>
