@@ -341,21 +341,6 @@ export function CalculatorForm() {
           suffix="€"
           hint="Koolitused, sertifikaadid"
         />
-        <div className="p-4 bg-muted rounded-lg">
-          <p className="text-sm text-muted-foreground mb-2">Tootlikkuse kadu</p>
-          {hasCalculated ? (
-            <>
-              <p className="text-sm">
-                {inputs.onboarding.onboardingMonths} kuud × {formatCurrency(results.normalizedHirePay.employerMonthlyCost)} € × {100 - inputs.onboarding.productivityPct}% kadu
-              </p>
-              <p className="font-semibold mt-2">
-                = {formatCurrency(results.blockCosts.onboarding.total - inputs.onboarding.extraCosts)} €
-              </p>
-            </>
-          ) : (
-            <p className="text-sm text-muted-foreground">Vajuta ARVUTA, et näha tulemust</p>
-          )}
-        </div>
       </CalculatorSection>
 
       {/* Vacancy Cost */}
@@ -383,16 +368,6 @@ export function CalculatorForm() {
           suffix="€/päev"
           hint="Kaotatud tulu või tootlikkus päevas"
         />
-        <div className="p-4 bg-muted rounded-lg">
-          <p className="text-sm text-muted-foreground mb-2">Vakantsi kogukulu</p>
-          {hasCalculated ? (
-            <p className="font-semibold">
-              {inputs.vacancy.vacancyDays} päeva × {inputs.vacancy.dailyCost} €/päev = {formatCurrency(results.blockCosts.vacancy.total)} €
-            </p>
-          ) : (
-            <p className="text-sm text-muted-foreground">Vajuta ARVUTA, et näha tulemust</p>
-          )}
-        </div>
       </CalculatorSection>
 
       {/* Indirect Costs */}

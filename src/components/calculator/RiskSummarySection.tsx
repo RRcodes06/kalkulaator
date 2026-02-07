@@ -1,13 +1,30 @@
-import { useState } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useAppStore } from '@/store/appStore';
 import { AlertTriangle, Info, TrendingDown, HelpCircle, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { SECTION_INFO } from '@/config/sectionInfo';
 import { cn } from '@/lib/utils';
+import { CalculatingOverlay } from './CalculatingOverlay';
 
 export function RiskSummarySection() {
   const { results, config, hasCalculated, triggerCalculation } = useAppStore();
   const [showInfo, setShowInfo] = useState(false);
+  const [isCalculating, setIsCalculating] = useState(false);
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  const handleCalculate = useCallback(() => {
+    setIsCalculating(true);
+    // Actual calculation happens immediately but we show overlay
+    triggerCalculation();
+  }, [triggerCalculation]);
+
+  const handleCalculationComplete = useCallback(() => {
+    setIsCalculating(false);
+    // Scroll to results after overlay closes
+    setTimeout(() => {
+      resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }, []);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('et-EE', {
@@ -23,11 +40,18 @@ export function RiskSummarySection() {
 
   return (
     <div className="mt-8 space-y-6">
+      {/* Calculating Overlay */}
+      <CalculatingOverlay 
+        isVisible={isCalculating} 
+        onComplete={handleCalculationComplete} 
+      />
+
       {/* ARVUTA Button - Always visible */}
       <div className="flex justify-center">
         <button
-          onClick={triggerCalculation}
-          className="px-8 py-4 bg-primary text-primary-foreground font-bold text-lg rounded-lg shadow-lg hover:bg-primary/90 transition-colors"
+          onClick={handleCalculate}
+          disabled={isCalculating}
+          className="px-8 py-4 bg-primary text-primary-foreground font-bold text-lg rounded-lg shadow-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           ARVUTA
         </button>
@@ -55,7 +79,8 @@ export function RiskSummarySection() {
       )}
 
       {/* Risk Explanation - only show after calculation */}
-      {hasCalculated && (
+      {hasCalculated && !isCalculating && (
+        <div ref={resultsRef}>
         <Card className="border-warning/30 bg-warning/5">
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2 text-lg">
@@ -147,10 +172,11 @@ export function RiskSummarySection() {
             </div>
           </CardContent>
         </Card>
+      </div>
       )}
 
       {/* Final Summary - PRIMARY VISUAL ELEMENT - only show after calculation */}
-      {hasCalculated && (
+      {hasCalculated && !isCalculating && (
         <Card className="border-2 border-[hsl(var(--total-highlight))] bg-gradient-to-br from-[hsl(var(--total-highlight)/0.12)] via-[hsl(var(--total-highlight)/0.06)] to-background shadow-[0_0_40px_-8px_hsl(var(--total-glow)/0.35)]">
           <CardContent className="py-10">
             <div className="text-center space-y-5">
