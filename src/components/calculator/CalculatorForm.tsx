@@ -58,6 +58,7 @@ export function CalculatorForm() {
         subtitle="Värbatava positsiooni põhiandmed"
         icon={<Briefcase className="w-5 h-5" />}
         subtotal={results.normalizedHirePay.employerMonthlyCost}
+        infoKey="position"
       >
         <div className="space-y-1.5">
           <Label className="text-sm font-medium">Ametikoha nimetus</Label>
@@ -91,6 +92,7 @@ export function CalculatorForm() {
         subtitle="Ametiprofiili koostamine, nõuete määramine"
         icon={<Users className="w-5 h-5" />}
         subtotal={results.blockCosts.strategyPrep.total}
+        infoKey="strategy"
       >
         <NumberInput
           label="Personalitöötaja tunnid"
@@ -125,6 +127,7 @@ export function CalculatorForm() {
         subtitle="Töökuulutused, tööandja brändi materjalid"
         icon={<Megaphone className="w-5 h-5" />}
         subtotal={results.blockCosts.adsBranding.total}
+        infoKey="ads"
       >
         <NumberInput
           label="Personalitöötaja tunnid"
@@ -160,6 +163,7 @@ export function CalculatorForm() {
         subtitle="CV-de läbivaatus, testid, suhtlus"
         icon={<UserCheck className="w-5 h-5" />}
         subtotal={results.blockCosts.candidateMgmt.total}
+        infoKey="candidate"
       >
         <NumberInput
           label="Personalitöötaja tunnid"
@@ -193,6 +197,7 @@ export function CalculatorForm() {
         subtitle="Intervjuude läbiviimine ja koordineerimine"
         icon={<Clock className="w-5 h-5" />}
         subtotal={results.blockCosts.interviews.total}
+        infoKey="interviews"
       >
         <NumberInput
           label="Personalitöötaja tunnid"
@@ -237,6 +242,7 @@ export function CalculatorForm() {
         subtitle="Taustakontroll, lepingu koostamine"
         icon={<Package className="w-5 h-5" />}
         subtotal={results.blockCosts.backgroundOffer.total}
+        infoKey="background"
       >
         <NumberInput
           label="Personalitöötaja tunnid"
@@ -259,7 +265,7 @@ export function CalculatorForm() {
           value={inputs.backgroundOffer.directCosts}
           onChange={(v) => updateNestedInput('backgroundOffer', 'directCosts', v)}
           suffix="€"
-          hint="Taustakontroll, juriidilised tasud (varieeruv)"
+          hint="Taustakontroll, juriidilised tasud"
         />
       </CalculatorSection>
 
@@ -273,6 +279,7 @@ export function CalculatorForm() {
         subtitle="Töökoha ettevalmistus, varustus"
         icon={<Wrench className="w-5 h-5" />}
         subtotal={results.blockCosts.preboarding.total}
+        infoKey="preboarding"
       >
         <NumberInput
           label="Seadmete kulu"
@@ -286,12 +293,14 @@ export function CalculatorForm() {
           value={inputs.preboarding.itSetupHours}
           onChange={(v) => updateNestedInput('preboarding', 'itSetupHours', v)}
           suffix="h"
+          hint="Kontode loomine, tarkvara paigaldus"
         />
         <NumberInput
           label="HR ettevalmistuse tunnid"
           value={inputs.preboarding.prepHours}
           onChange={(v) => updateNestedInput('preboarding', 'prepHours', v)}
           suffix="h"
+          hint="Dokumentide ettevalmistus"
         />
       </CalculatorSection>
 
@@ -302,6 +311,7 @@ export function CalculatorForm() {
         subtitle="Tootlikkuse kadu uue töötaja sisseelamisel"
         icon={<GraduationCap className="w-5 h-5" />}
         subtotal={results.blockCosts.onboarding.total}
+        infoKey="onboarding"
       >
         <NumberInput
           label="Sisseelamisperiood"
@@ -310,7 +320,6 @@ export function CalculatorForm() {
           suffix="kuud"
           min={0}
           max={24}
-          hint="Aeg täistootlikkuse saavutamiseks"
           warning={getWarningForField('onboarding.onboardingMonths')}
           rangeHint={getRangeHintForField('onboarding.onboardingMonths')}
         />
@@ -321,7 +330,7 @@ export function CalculatorForm() {
           suffix="%"
           min={0}
           max={100}
-          hint="Protsent täistootlikkusest sisseelamisel"
+          hint="Protsent täistootlikkusest"
           warning={getWarningForField('onboarding.productivityPct')}
           rangeHint={getRangeHintForField('onboarding.productivityPct')}
         />
@@ -350,6 +359,7 @@ export function CalculatorForm() {
         subtitle="Kaotatud tootlikkus täitmata positsiooni tõttu"
         icon={<TrendingDown className="w-5 h-5" />}
         subtotal={results.blockCosts.vacancy.total}
+        infoKey="vacancy"
       >
         <NumberInput
           label="Vakantsi kestus"
@@ -357,7 +367,6 @@ export function CalculatorForm() {
           onChange={(v) => updateNestedInput('vacancy', 'vacancyDays', v)}
           suffix="päeva"
           min={0}
-          hint="Päevi, mil positsioon on täitmata"
           warning={getWarningForField('vacancy.vacancyDays')}
           rangeHint={getRangeHintForField('vacancy.vacancyDays')}
         />
@@ -366,7 +375,7 @@ export function CalculatorForm() {
           value={inputs.vacancy.dailyCost}
           onChange={(v) => updateNestedInput('vacancy', 'dailyCost', v)}
           suffix="€/päev"
-          hint="Hinnanguline kaotatud tulu või tootlikkus"
+          hint="Kaotatud tulu või tootlikkus päevas"
         />
         <div className="p-4 bg-muted rounded-lg">
           <p className="text-sm text-muted-foreground mb-2">Vakantsi kogukulu</p>
@@ -383,13 +392,14 @@ export function CalculatorForm() {
         subtitle="Fookuse kadu ja lisatöö, mis ei kajastu otsestes arvetes"
         icon={<Users className="w-5 h-5" />}
         subtotal={results.blockCosts.indirectCosts.total}
+        infoKey="indirect"
       >
         <div className="md:col-span-3 p-4 bg-muted/50 rounded-lg border border-border space-y-2">
           <p className="text-sm text-muted-foreground">
-            Kaudsed kulud näitavad värbamisega seotud <strong>fookuse kadu ja lisatööd</strong> (nt tiimi ülekoormus, juhi tähelepanu hajumine), mis ei kajastu otsestes arvetes.
+            Kaudsed kulud näitavad värbamisega seotud <strong>fookuse kadu ja lisatööd</strong>, mis ei kajastu otsestes arvetes.
           </p>
           <p className="text-xs text-muted-foreground">
-            ℹ Kaudsete tundide hind arvestatakse <strong>ainult brutotunnipalgaga</strong> (ilma tööandja maksudeta).
+            ℹ Arvestatakse <strong>ainult brutotunnipalgaga</strong> (ilma tööandja maksudeta).
           </p>
         </div>
         <NumberInput
@@ -397,7 +407,7 @@ export function CalculatorForm() {
           value={inputs.indirectCosts.hrHours}
           onChange={(v) => updateNestedInput('indirectCosts', 'hrHours', v)}
           suffix="h"
-          hint="Admin koordineerimine, aruandlus"
+          hint="Koordineerimine, aruandlus"
           warning={getWarningForField('indirectCosts.hrHours')}
           rangeHint={getRangeHintForField('indirectCosts.hrHours')}
         />
@@ -406,7 +416,7 @@ export function CalculatorForm() {
           value={inputs.indirectCosts.managerHours}
           onChange={(v) => updateNestedInput('indirectCosts', 'managerHours', v)}
           suffix="h"
-          hint="Tähelepanu hajumine, prioriteetide ümberseadmine"
+          hint="Prioriteetide ümberjagamine"
           warning={getWarningForField('indirectCosts.managerHours')}
           rangeHint={getRangeHintForField('indirectCosts.managerHours')}
         />
@@ -415,7 +425,7 @@ export function CalculatorForm() {
           value={inputs.indirectCosts.teamHours}
           onChange={(v) => updateNestedInput('indirectCosts', 'teamHours', v)}
           suffix="h"
-          hint="Ülekoormus, ülesannete ümberjagamine"
+          hint="Ülekoormus, ülesannete jagamine"
           warning={getWarningForField('indirectCosts.teamHours')}
           rangeHint={getRangeHintForField('indirectCosts.teamHours')}
         />

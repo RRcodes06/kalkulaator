@@ -36,6 +36,7 @@ export function OtherServicesSection() {
       subtitle="Värbamisagentuurid, peatöövõtjad, konsultandid"
       icon={<Briefcase className="w-5 h-5" />}
       subtotal={results.blockCosts.otherServices.total}
+      infoKey="other"
     >
       <div className="md:col-span-3 space-y-4">
         {/* Quick-add buttons */}

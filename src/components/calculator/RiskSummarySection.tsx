@@ -1,9 +1,13 @@
+import { useState } from 'react';
 import { useAppStore } from '@/store/appStore';
-import { AlertTriangle, Info, TrendingDown } from 'lucide-react';
+import { AlertTriangle, Info, TrendingDown, HelpCircle, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { SECTION_INFO } from '@/config/sectionInfo';
+import { cn } from '@/lib/utils';
 
 export function RiskSummarySection() {
   const { results, config } = useAppStore();
+  const [showInfo, setShowInfo] = useState(false);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('et-EE', {
@@ -15,6 +19,7 @@ export function RiskSummarySection() {
   };
 
   const riskPercentage = (config.BAD_HIRE_RISK_RATE * 100).toFixed(0);
+  const riskInfo = SECTION_INFO['risk'];
 
   return (
     <div className="mt-8 space-y-6">
@@ -24,9 +29,40 @@ export function RiskSummarySection() {
           <CardTitle className="flex items-center gap-2 text-lg">
             <AlertTriangle className="w-5 h-5 text-warning" />
             Halva värbamise riskikulu
+            {riskInfo && (
+              <button
+                onClick={() => setShowInfo(!showInfo)}
+                className={cn(
+                  "p-0.5 rounded-full transition-colors ml-1",
+                  showInfo 
+                    ? "bg-primary/10 text-primary" 
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                )}
+                aria-label="Näita infot"
+              >
+                <HelpCircle className="w-4 h-4" />
+              </button>
+            )}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          {showInfo && riskInfo && (
+            <div className="p-4 bg-muted/50 rounded-lg border border-border animate-fade-in">
+              <div className="flex items-start justify-between gap-3">
+                <div className="space-y-1 flex-1">
+                  <p className="text-sm text-foreground">{riskInfo.description}</p>
+                  <p className="text-xs text-muted-foreground">{riskInfo.guidance}</p>
+                </div>
+                <button
+                  onClick={() => setShowInfo(false)}
+                  className="p-1 rounded hover:bg-muted transition-colors flex-shrink-0"
+                  aria-label="Sulge info"
+                >
+                  <X className="w-4 h-4 text-muted-foreground" />
+                </button>
+              </div>
+            </div>
+          )}
           <p className="text-sm text-muted-foreground">
             {config.riskExplanationText}
           </p>

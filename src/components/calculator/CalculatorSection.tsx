@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Accordion,
   AccordionContent,
@@ -5,9 +6,10 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { cn } from '@/lib/utils';
-import { Check, Circle } from 'lucide-react';
+import { Check, Circle, HelpCircle, X } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useAccordionController, type SectionState } from '@/hooks/useAccordionController';
+import { SECTION_INFO } from '@/config/sectionInfo';
 
 interface CalculatorSectionProps {
   id: string;
@@ -16,6 +18,7 @@ interface CalculatorSectionProps {
   icon: ReactNode;
   children: ReactNode;
   subtotal?: number;
+  infoKey?: string; // key to look up in SECTION_INFO
 }
 
 function StateIndicator({ state }: { state: SectionState }) {
@@ -42,6 +45,29 @@ function StateIndicator({ state }: { state: SectionState }) {
   }
 }
 
+function SectionInfoBox({ infoKey, onClose }: { infoKey: string; onClose: () => void }) {
+  const info = SECTION_INFO[infoKey];
+  if (!info) return null;
+
+  return (
+    <div className="mb-4 p-4 bg-muted/50 rounded-lg border border-border animate-fade-in">
+      <div className="flex items-start justify-between gap-3">
+        <div className="space-y-1 flex-1">
+          <p className="text-sm text-foreground">{info.description}</p>
+          <p className="text-xs text-muted-foreground">{info.guidance}</p>
+        </div>
+        <button
+          onClick={onClose}
+          className="p-1 rounded hover:bg-muted transition-colors flex-shrink-0"
+          aria-label="Sulge info"
+        >
+          <X className="w-4 h-4 text-muted-foreground" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export function CalculatorSection({
   id,
   title,
@@ -49,9 +75,15 @@ export function CalculatorSection({
   icon,
   children,
   subtotal,
+  infoKey,
 }: CalculatorSectionProps) {
   const { openSection, setOpenSection, getSectionState } = useAccordionController();
   const sectionState = getSectionState(id);
+  const [showInfo, setShowInfo] = useState(false);
+  
+  // Use provided infoKey or derive from id
+  const resolvedInfoKey = infoKey || id;
+  const hasInfo = Boolean(SECTION_INFO[resolvedInfoKey]);
   
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('et-EE', {
@@ -63,9 +95,12 @@ export function CalculatorSection({
   };
 
   const handleValueChange = (value: string) => {
-    // If value is empty (accordion closing), allow it
-    // If value matches our id (opening), set it
     setOpenSection(value === id ? id : value === '' ? null : value);
+  };
+
+  const handleInfoClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowInfo(!showInfo);
   };
 
   return (
@@ -97,6 +132,20 @@ export function CalculatorSection({
                   <div className="flex items-center gap-2">
                     <h3 className="font-semibold text-foreground">{title}</h3>
                     <StateIndicator state={sectionState} />
+                    {hasInfo && (
+                      <button
+                        onClick={handleInfoClick}
+                        className={cn(
+                          "p-0.5 rounded-full transition-colors",
+                          showInfo 
+                            ? "bg-primary/10 text-primary" 
+                            : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                        )}
+                        aria-label="Näita infot"
+                      >
+                        <HelpCircle className="w-4 h-4" />
+                      </button>
+                    )}
                   </div>
                   {subtitle && (
                     <p className="text-sm text-muted-foreground">{subtitle}</p>
@@ -111,6 +160,12 @@ export function CalculatorSection({
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-6 pb-6 pt-2">
+            {showInfo && hasInfo && (
+              <SectionInfoBox 
+                infoKey={resolvedInfoKey} 
+                onClose={() => setShowInfo(false)} 
+              />
+            )}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {children}
             </div>
