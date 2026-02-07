@@ -6,6 +6,7 @@ import { PrivacyNotice } from '@/components/calculator/PrivacyNotice';
 import { Button } from '@/components/ui/button';
 import { Printer, Settings } from 'lucide-react';
 import { useAppStore } from '@/store/appStore';
+import { AccordionControllerProvider } from '@/hooks/useAccordionController';
 
 const PRINT_SNAPSHOT_KEY = 'recruitment-calc-print-snapshot';
 
@@ -71,25 +72,27 @@ const Index = () => {
 
       {/* Main Content */}
       <main className="container max-w-7xl mx-auto px-6 py-8">
-        <div className="flex gap-8">
-          {/* Calculator Form */}
-          <div className="flex-1 min-w-0">
-            <PrivacyNotice />
-            <div className="mt-6">
-              <CalculatorForm />
+        <AccordionControllerProvider>
+          <div className="flex gap-8">
+            {/* Calculator Form */}
+            <div className="flex-1 min-w-0">
+              <PrivacyNotice />
+              <div className="mt-6">
+                <CalculatorForm />
+              </div>
+            </div>
+
+            {/* Sticky Sidebar */}
+            <div className="hidden lg:block flex-shrink-0">
+              <SummarySidebar />
             </div>
           </div>
 
-          {/* Sticky Sidebar */}
-          <div className="hidden lg:block flex-shrink-0">
+          {/* Mobile Summary (shown below on smaller screens) */}
+          <div className="lg:hidden mt-8">
             <SummarySidebar />
           </div>
-        </div>
-
-        {/* Mobile Summary (shown below on smaller screens) */}
-        <div className="lg:hidden mt-8">
-          <SummarySidebar />
-        </div>
+        </AccordionControllerProvider>
       </main>
 
       {/* Footer */}
