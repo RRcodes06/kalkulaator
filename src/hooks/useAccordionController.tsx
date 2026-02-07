@@ -296,21 +296,11 @@ export function AccordionControllerProvider({
         return 'not-started';
       }
       
-      // Visited → check if there are meaningful changes from initial state
-      const hasMeaningful = hasMeaningfulInputs(
-        inputs,
-        initialInputsRef.current!,
-        sectionId
-      );
-      
-      if (hasMeaningful) {
-        return 'completed';
-      }
-      
-      // Visited but no meaningful inputs → in-progress
-      return 'in-progress';
+      // Visited → mark as completed (reviewed)
+      // User opening a section counts as reviewing it
+      return 'completed';
     },
-    [inputs, visitedSections]
+    [visitedSections]
   );
 
   const hasNonZeroInputsCallback = useCallback(
