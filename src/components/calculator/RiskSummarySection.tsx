@@ -142,13 +142,17 @@ export function RiskSummarySection() {
                 Võta meiega ühendust, et arutada, kuidas värbamiskulusid optimeerida.
               </p>
               <a
-                href="https://www.manpower.ee/et/vaerbamisteenused#kontakt"
+                href="https://www.manpower.ee/et/vaerbamisteenused"
                 target="_blank"
                 rel="noopener noreferrer"
+                referrerPolicy="no-referrer"
                 className="inline-flex items-center justify-center gap-2 rounded-md bg-[hsl(var(--total-highlight))] px-6 py-3 text-sm font-semibold text-white shadow-lg hover:bg-[hsl(var(--total-highlight)/0.9)] transition-colors"
               >
                 Võta ühendust →
               </a>
+              <p className="text-xs text-muted-foreground/70">
+                Kontaktvorm asub lehe lõpus.
+              </p>
             </div>
           </div>
         </CardContent>
