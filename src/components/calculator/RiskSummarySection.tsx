@@ -116,30 +116,30 @@ export function RiskSummarySection() {
         </CardContent>
       </Card>
 
-      {/* Final Summary */}
-      <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10">
-        <CardContent className="py-8">
-          <div className="text-center space-y-4">
+      {/* Final Summary - PRIMARY VISUAL ELEMENT */}
+      <Card className="border-2 border-[hsl(var(--total-highlight))] bg-gradient-to-br from-[hsl(var(--total-highlight)/0.12)] via-[hsl(var(--total-highlight)/0.06)] to-background shadow-[0_0_40px_-8px_hsl(var(--total-glow)/0.35)]">
+        <CardContent className="py-10">
+          <div className="text-center space-y-5">
             <div className="flex items-center justify-center gap-2">
-              <TrendingDown className="w-6 h-6 text-primary" />
-              <h2 className="text-xl font-semibold">Värbamise kogukulu</h2>
+              <TrendingDown className="w-7 h-7 text-[hsl(var(--total-highlight))]" />
+              <h2 className="text-2xl font-bold text-[hsl(var(--total-highlight))]">Värbamise kogukulu</h2>
             </div>
             
-            <p className="text-5xl font-bold text-primary animate-pulse-subtle">
+            <p className="text-6xl font-bold text-[hsl(var(--total-highlight))] animate-pulse-subtle tracking-tight">
               {formatCurrency(results.totalCost)}
             </p>
             
-            <p className="text-muted-foreground max-w-lg mx-auto">
+            <p className="text-muted-foreground max-w-lg mx-auto leading-relaxed">
               See on hinnanguline kogukulu ühe töötaja värbamiseks, arvestades nii otseseid 
               kulusid, ajakulu kui ka oodatavat riskikulu.
             </p>
 
-            <div className="pt-4 border-t border-border inline-block">
-              <p className="text-lg font-medium text-primary">
+            <div className="pt-6 mt-2 border-t-2 border-[hsl(var(--total-highlight)/0.3)] max-w-md mx-auto">
+              <p className="text-xl font-semibold text-foreground">
                 Kas see number üllatas sind?
               </p>
-              <p className="text-sm text-muted-foreground mt-2 max-w-md mx-auto">
-                {config.disclaimerText}
+              <p className="text-sm text-muted-foreground mt-3 leading-relaxed">
+                {config.finalQuestionText || config.disclaimerText}
               </p>
             </div>
           </div>
