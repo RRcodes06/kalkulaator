@@ -11,6 +11,7 @@ interface PayInputGroupProps {
   showCostBreakdown?: boolean;
   isDefaultUsed?: boolean;
   compact?: boolean;
+  defaultSalaryHint?: string; // e.g., "Kasutab Eesti värbaja keskmist brutopalka: 2860 €"
 }
 
 export function PayInputGroup({
@@ -21,6 +22,7 @@ export function PayInputGroup({
   showCostBreakdown = false,
   isDefaultUsed = false,
   compact = false,
+  defaultSalaryHint,
 }: PayInputGroupProps) {
   const formatCurrency = (val: number) => {
     return new Intl.NumberFormat('et-EE', {
@@ -50,16 +52,21 @@ export function PayInputGroup({
       <div className="space-y-3">
         <Label className="text-sm font-medium">{label}</Label>
         <div className="grid grid-cols-2 gap-2">
-          <Select value={value.payType} onValueChange={handlePayTypeChange}>
-            <SelectTrigger className="bg-card">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="unset">Vaikimisi</SelectItem>
-              <SelectItem value="monthly">Kuupalk</SelectItem>
-              <SelectItem value="hourly">Tunnipalk</SelectItem>
-            </SelectContent>
-          </Select>
+          <div>
+            <Select value={value.payType} onValueChange={handlePayTypeChange}>
+              <SelectTrigger className="bg-card">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="unset">Vaikimisi</SelectItem>
+                <SelectItem value="monthly">Kuupalk</SelectItem>
+                <SelectItem value="hourly">Tunnipalk</SelectItem>
+              </SelectContent>
+            </Select>
+            {isDefaultUsed && defaultSalaryHint && (
+              <p className="text-xs text-warning mt-1.5">⚠ {defaultSalaryHint}</p>
+            )}
+          </div>
 
           {value.payType !== 'unset' && (
             <NumberInput
@@ -80,10 +87,6 @@ export function PayInputGroup({
             suffix="h/kuu"
             min={1}
           />
-        )}
-
-        {isDefaultUsed && (
-          <p className="text-xs text-warning">⚠ Kasutatakse vaikimisi väärtust</p>
         )}
       </div>
     );

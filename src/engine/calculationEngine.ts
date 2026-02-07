@@ -164,12 +164,13 @@ export function normalizeHirePay(
 }
 
 /**
- * Normalize role pay input, falling back to default rates based on role.
+ * Normalize role pay input, falling back to role-specific Estonian averages.
  */
 export function normalizeRolePay(
   roleInput: RolePayInput,
   roleType: 'hr' | 'manager' | 'team',
-  config: Pick<CalculatorConfig, 'HOURS_PER_MONTH' | 'EST_AVG_GROSS_WAGE' | 'SOCIAL_TAX_RATE' | 'EMPLOYER_UI_RATE'>
+  config: Pick<CalculatorConfig, 'HOURS_PER_MONTH' | 'EST_AVG_GROSS_WAGE' | 'SOCIAL_TAX_RATE' | 'EMPLOYER_UI_RATE'>,
+  roleDefaults?: { team: number; hr: number; manager: number }
 ): NormalizedPay {
   if (!roleInput.enabled) {
     return {
@@ -183,11 +184,11 @@ export function normalizeRolePay(
   
   const isDefault = roleInput.payType === 'unset' || roleInput.payAmount <= 0;
   
-  // Default multipliers for different roles
-  const roleMultipliers: Record<string, number> = {
-    hr: 1.0,
-    manager: 1.5,
-    team: 1.0,
+  // Role-specific default salaries (Estonian averages)
+  const defaultSalaries = roleDefaults ?? {
+    team: 2075,      // Estonian average gross salary
+    hr: 2860,        // Estonian recruiter average
+    manager: 3566,   // Estonian HR manager average
   };
   
   let effectivePayType: PayType;
@@ -196,7 +197,7 @@ export function normalizeRolePay(
   
   if (isDefault) {
     effectivePayType = 'monthly';
-    effectivePayAmount = config.EST_AVG_GROSS_WAGE * (roleMultipliers[roleType] || 1.0);
+    effectivePayAmount = defaultSalaries[roleType];
     effectiveHoursPerMonth = config.HOURS_PER_MONTH;
   } else {
     effectivePayType = roleInput.payType;

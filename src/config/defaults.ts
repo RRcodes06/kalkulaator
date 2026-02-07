@@ -7,6 +7,22 @@ export const ADMIN_PASSWORD = 'CHANGE_ME';
 export const CONFIG_VERSION = 'v2';
 
 // ============================================================================
+// ROLE-SPECIFIC DEFAULT SALARIES (Estonian averages, gross)
+// ============================================================================
+
+export const ROLE_DEFAULT_SALARIES = {
+  team: 2075,      // Estonian average gross salary
+  hr: 2860,        // Estonian recruiter average gross salary  
+  manager: 3566,   // Estonian HR manager average gross salary
+} as const;
+
+export const ROLE_SALARY_LABELS = {
+  team: 'Eesti keskmist brutopalka',
+  hr: 'Eesti värbaja keskmist brutopalka',
+  manager: 'Eesti personalijuhi keskmist brutopalka',
+} as const;
+
+// ============================================================================
 // DEFAULT RECOMMENDED RANGES
 // Keys map to input fields; labels shown in Admin UI
 // ============================================================================
