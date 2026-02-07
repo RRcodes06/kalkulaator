@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { Check, Circle, HelpCircle, X } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useAccordionController, type SectionState } from '@/hooks/useAccordionController';
+import { useAppStore } from '@/store/appStore';
 import { SECTION_INFO } from '@/config/sectionInfo';
 
 interface CalculatorSectionProps {
@@ -78,6 +79,7 @@ export function CalculatorSection({
   infoKey,
 }: CalculatorSectionProps) {
   const { openSection, setOpenSection, getSectionState } = useAccordionController();
+  const { hasCalculated } = useAppStore();
   const sectionState = getSectionState(id);
   const [showInfo, setShowInfo] = useState(false);
   
@@ -152,9 +154,14 @@ export function CalculatorSection({
                   )}
                 </div>
               </div>
-              {subtotal !== undefined && subtotal > 0 && (
+              {subtotal !== undefined && subtotal > 0 && hasCalculated && (
                 <span className="text-lg font-semibold text-primary">
                   {formatCurrency(subtotal)}
+                </span>
+              )}
+              {subtotal !== undefined && subtotal > 0 && !hasCalculated && (
+                <span className="text-lg font-semibold text-muted-foreground">
+                  —
                 </span>
               )}
             </div>
