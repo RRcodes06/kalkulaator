@@ -255,6 +255,13 @@ export interface RangeWarning {
   unit?: string;
 }
 
+export interface RangeHint {
+  field: string;
+  min: number;
+  max: number;
+  unit: string;
+}
+
 export interface ComputedResult {
   // Normalized pay rates
   normalizedHirePay: NormalizedPay;
@@ -286,4 +293,5 @@ export interface ComputedResult {
   defaultsUsed: DefaultsUsed;
   missingPayWarnings: MissingPayWarning[];
   rangeWarnings: RangeWarning[];
+  rangeHints: RangeHint[];
 }

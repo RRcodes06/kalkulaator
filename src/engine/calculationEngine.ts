@@ -27,6 +27,7 @@ import type {
   DefaultsUsed,
   MissingPayWarning,
   RangeWarning,
+  RangeHint,
   ComputedResult,
 } from '@/types/calculator';
 import { BLOCK_LABELS } from '@/config/defaults';
@@ -686,6 +687,19 @@ export function computeTotals(
   addFieldWarning('vacancy.vacancyDays', 'Vakantsi kestus', inputs.vacancy.vacancyDays, vacancyInUse);
   // Note: dailyCost has no recommended range (depends on role/business)
   
+  // Generate range hints for all fields that have recommended ranges
+  const rangeHints: RangeHint[] = [];
+  if (config.recommendedRanges) {
+    for (const [field, range] of Object.entries(config.recommendedRanges)) {
+      rangeHints.push({
+        field,
+        min: range.min,
+        max: range.max,
+        unit: range.unit,
+      });
+    }
+  }
+  
   return {
     normalizedHirePay,
     normalizedRoles,
@@ -700,6 +714,7 @@ export function computeTotals(
     defaultsUsed,
     missingPayWarnings,
     rangeWarnings,
+    rangeHints,
   };
 }
 
