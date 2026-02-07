@@ -9,6 +9,12 @@ export interface NumberInputWarning {
   severity: 'info' | 'warning' | 'error';
 }
 
+export interface NumberInputRangeHint {
+  min: number;
+  max: number;
+  unit: string;
+}
+
 export interface NumberInputProps {
   label?: string;
   value: number;
@@ -20,6 +26,7 @@ export interface NumberInputProps {
   step?: number;
   hint?: string;
   warning?: NumberInputWarning;
+  rangeHint?: NumberInputRangeHint;
   showDefaultIndicator?: boolean;
   className?: string;
 }
@@ -35,6 +42,7 @@ export function NumberInput({
   step = 1,
   hint,
   warning,
+  rangeHint,
   showDefaultIndicator,
   className,
 }: NumberInputProps) {
@@ -81,10 +89,8 @@ export function NumberInput({
           </span>
         )}
       </div>
-      {hint && !warning && (
-        <p className="text-xs text-muted-foreground">{hint}</p>
-      )}
-      {warning && (
+      {/* Show warning if exists, otherwise show range hint if exists, otherwise show regular hint */}
+      {warning ? (
         <div className={cn(
           "flex items-start gap-1.5 text-xs",
           warning.severity === 'warning' && "text-warning",
@@ -98,7 +104,13 @@ export function NumberInput({
           )}
           <span>{warning.message}</span>
         </div>
-      )}
+      ) : rangeHint ? (
+        <p className="text-xs text-muted-foreground">
+          Tüüpiline vahemik: {rangeHint.min}–{rangeHint.max} {rangeHint.unit}.
+        </p>
+      ) : hint ? (
+        <p className="text-xs text-muted-foreground">{hint}</p>
+      ) : null}
     </div>
   );
 }
