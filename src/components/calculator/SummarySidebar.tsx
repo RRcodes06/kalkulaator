@@ -1,10 +1,12 @@
 import { forwardRef } from 'react';
 import { useAppStore } from '@/store/appStore';
-import { TrendingUp, AlertTriangle, Info } from 'lucide-react';
+import { TrendingUp, AlertTriangle, Info, Lightbulb } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { CostBreakdownChart } from './CostBreakdownChart';
 import { BLOCK_LABELS } from '@/config/defaults';
+import { getDriverInsight } from '@/config/sectionInfo';
 import { cn } from '@/lib/utils';
+import type { BlockName } from '@/types/calculator';
 
 export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_, ref) {
   const { results, inputs, config } = useAppStore();
@@ -34,6 +36,9 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
 
   const warningsCount = results.rangeWarnings.length + results.missingPayWarnings.length;
   const hasWarnings = warningsCount > 0;
+
+  // Get block costs for insight generation
+  const getBlockCosts = (blockKey: BlockName) => results.blockCosts[blockKey];
 
   return (
     // @ts-ignore - ref forwarding
@@ -75,19 +80,30 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
         </div>
       </div>
 
-      {/* Top drivers */}
+      {/* Top drivers with insights */}
       {results.topDrivers.length > 0 && (
         <div className="mb-6">
           <p className="text-summary-muted text-xs uppercase tracking-wider mb-3">Suurimad kuluallikad</p>
-          <div className="space-y-2">
-            {results.topDrivers.map((driver, idx) => (
-              <div key={driver.block} className="flex justify-between text-sm">
-                <span className="text-summary-muted">
-                  {idx + 1}. {driver.label}
-                </span>
-                <span className="font-medium">{formatCurrency(driver.amount)}</span>
-              </div>
-            ))}
+          <div className="space-y-3">
+            {results.topDrivers.map((driver, idx) => {
+              const blockCosts = getBlockCosts(driver.block);
+              const insight = getDriverInsight(driver.block, blockCosts);
+              
+              return (
+                <div key={driver.block} className="p-3 bg-white/5 rounded-lg">
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="text-summary-foreground font-medium">
+                      {idx + 1}. {driver.label}
+                    </span>
+                    <span className="font-semibold text-summary-accent">{formatCurrency(driver.amount)}</span>
+                  </div>
+                  <div className="flex items-start gap-1.5 mt-1.5">
+                    <Lightbulb className="w-3 h-3 text-summary-muted flex-shrink-0 mt-0.5" />
+                    <p className="text-xs text-summary-muted leading-relaxed">{insight}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
