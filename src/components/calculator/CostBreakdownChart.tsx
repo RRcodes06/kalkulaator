@@ -75,8 +75,13 @@ export function CostBreakdownChart({ blockCosts, totalCost }: CostBreakdownChart
                 backgroundColor: 'hsl(220, 30%, 18%)',
                 border: '1px solid hsl(220, 20%, 30%)',
                 borderRadius: '8px',
-                color: 'white',
                 fontSize: '12px',
+              }}
+              itemStyle={{
+                color: 'white',
+              }}
+              labelStyle={{
+                color: 'rgba(255, 255, 255, 0.7)',
               }}
             />
           </PieChart>
