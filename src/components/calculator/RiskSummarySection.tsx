@@ -134,13 +134,21 @@ export function RiskSummarySection() {
               kulusid, ajakulu kui ka oodatavat riskikulu.
             </p>
 
-            <div className="pt-6 mt-2 border-t-2 border-[hsl(var(--total-highlight)/0.3)] max-w-md mx-auto">
+            <div className="pt-6 mt-2 border-t-2 border-[hsl(var(--total-highlight)/0.3)] max-w-md mx-auto space-y-4">
               <p className="text-xl font-semibold text-foreground">
                 Kas see number üllatas sind?
               </p>
-              <p className="text-sm text-muted-foreground mt-3 leading-relaxed">
-                {config.finalQuestionText || config.disclaimerText}
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Võta meiega ühendust, et arutada, kuidas värbamiskulusid optimeerida.
               </p>
+              <a
+                href="https://www.manpower.ee/et/vaerbamisteenused#kontakt"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-md bg-[hsl(var(--total-highlight))] px-6 py-3 text-sm font-semibold text-white shadow-lg hover:bg-[hsl(var(--total-highlight)/0.9)] transition-colors"
+              >
+                Võta ühendust →
+              </a>
             </div>
           </div>
         </CardContent>
