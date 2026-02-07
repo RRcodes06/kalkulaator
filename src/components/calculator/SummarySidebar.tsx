@@ -40,25 +40,49 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
   // Get block costs for insight generation
   const getBlockCosts = (blockKey: BlockName) => results.blockCosts[blockKey];
 
+  const hasCalculated = useAppStore((state) => state.hasCalculated);
+
+  // Placeholder for uncalculated state
+  const placeholder = '—';
+
   return (
     // @ts-ignore - ref forwarding
     <aside ref={ref} className="w-80 bg-summary text-summary-foreground rounded-xl shadow-summary p-6 sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto summary-scrollbar">
-      {/* GRAND TOTAL - PRIMARY VISUAL ELEMENT */}
-      <div className="mb-6 p-6 rounded-xl border-2 border-[hsl(var(--total-highlight))] bg-gradient-to-br from-[hsl(var(--total-highlight)/0.15)] via-[hsl(var(--total-highlight)/0.08)] to-transparent shadow-[0_0_30px_-5px_hsl(var(--total-glow)/0.4)]">
-        <p className="text-summary-muted text-xs uppercase tracking-widest mb-3 font-medium">Värbamise kogukulu</p>
-        <p className="text-5xl font-bold text-[hsl(var(--total-highlight))] animate-pulse-subtle tracking-tight">
-          {formatCurrency(results.totalCost)}
-        </p>
-        <div className="mt-4 pt-4 border-t border-[hsl(var(--total-highlight)/0.3)] flex items-center gap-2">
-          <TrendingUp className="w-4 h-4 text-[hsl(var(--total-highlight))]" />
-          <span className="text-sm font-medium">
-            {results.normalizedHirePay.monthlyGross > 0 
-              ? `${(results.totalCost / results.normalizedHirePay.monthlyGross).toFixed(1)}× kuupalk`
-              : '—'
-            }
-          </span>
+      {/* PRE-CALCULATION STATE */}
+      {!hasCalculated && (
+        <div className="text-center py-8 space-y-4">
+          <div className="w-16 h-16 mx-auto rounded-full bg-white/10 flex items-center justify-center">
+            <TrendingUp className="w-8 h-8 text-summary-muted" />
+          </div>
+          <div>
+            <p className="text-lg font-semibold text-summary-foreground mb-2">
+              Sisesta andmed ja vajuta ARVUTA
+            </p>
+            <p className="text-sm text-summary-muted">
+              Näed kogukulu ja jaotust pärast arvutamist.
+            </p>
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* GRAND TOTAL - PRIMARY VISUAL ELEMENT */}
+      {hasCalculated && (
+        <div className="mb-6 p-6 rounded-xl border-2 border-[hsl(var(--total-highlight))] bg-gradient-to-br from-[hsl(var(--total-highlight)/0.15)] via-[hsl(var(--total-highlight)/0.08)] to-transparent shadow-[0_0_30px_-5px_hsl(var(--total-glow)/0.4)]">
+          <p className="text-summary-muted text-xs uppercase tracking-widest mb-3 font-medium">Värbamise kogukulu</p>
+          <p className="text-5xl font-bold text-[hsl(var(--total-highlight))] animate-pulse-subtle tracking-tight">
+            {formatCurrency(results.totalCost)}
+          </p>
+          <div className="mt-4 pt-4 border-t border-[hsl(var(--total-highlight)/0.3)] flex items-center gap-2">
+            <TrendingUp className="w-4 h-4 text-[hsl(var(--total-highlight))]" />
+            <span className="text-sm font-medium">
+              {results.normalizedHirePay.monthlyGross > 0 
+                ? `${(results.totalCost / results.normalizedHirePay.monthlyGross).toFixed(1)}× kuupalk`
+                : '—'
+              }
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Position title */}
       <div className="mb-5">
@@ -69,19 +93,21 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
       </div>
 
       {/* Monthly salary context */}
-      <div className="mb-5 p-3 bg-white/5 rounded-lg">
-        <p className="text-summary-muted text-xs mb-1">Igakuine tööjõukulu</p>
-        <p className="text-xl font-bold">{formatCurrency(results.normalizedHirePay.employerMonthlyCost)}</p>
-        <p className="text-xs text-summary-muted mt-1">
-          (brutopalk {formatCurrency(results.normalizedHirePay.monthlyGross)} + maksud)
-        </p>
-        {results.defaultsUsed.hirePay && (
-          <p className="text-xs text-summary-accent mt-2">⚠ Kasutab Eesti keskmist</p>
-        )}
-      </div>
+      {hasCalculated && (
+        <div className="mb-5 p-3 bg-white/5 rounded-lg">
+          <p className="text-summary-muted text-xs mb-1">Igakuine tööjõukulu</p>
+          <p className="text-xl font-bold">{formatCurrency(results.normalizedHirePay.employerMonthlyCost)}</p>
+          <p className="text-xs text-summary-muted mt-1">
+            (brutopalk {formatCurrency(results.normalizedHirePay.monthlyGross)} + maksud)
+          </p>
+          {results.defaultsUsed.hirePay && (
+            <p className="text-xs text-summary-accent mt-2">⚠ Kasutab Eesti keskmist</p>
+          )}
+        </div>
+      )}
 
       {/* Top drivers with insights */}
-      {results.topDrivers.length > 0 && (
+      {hasCalculated && results.topDrivers.length > 0 && (
         <div className="mb-6">
           <p className="text-summary-muted text-xs uppercase tracking-wider mb-3">Suurimad kuluallikad</p>
           <div className="space-y-3">
@@ -109,47 +135,53 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
       )}
 
       {/* Chart */}
-      <div className="mb-6">
-        <p className="text-summary-muted text-xs uppercase tracking-wider mb-3">Kulude jaotus</p>
-        <CostBreakdownChart blockCosts={results.blockCosts} totalCost={results.totalCost} />
-      </div>
+      {hasCalculated && (
+        <div className="mb-6">
+          <p className="text-summary-muted text-xs uppercase tracking-wider mb-3">Kulude jaotus</p>
+          <CostBreakdownChart blockCosts={results.blockCosts} totalCost={results.totalCost} />
+        </div>
+      )}
 
       {/* Cost breakdown table */}
-      <div className="mb-6">
-        <p className="text-summary-muted text-xs uppercase tracking-wider mb-3">Detailne jaotus</p>
-        <div className="space-y-2">
-          {costBreakdown.map((item) => (
-            <div key={item.label} className="flex justify-between text-sm">
-              <span className="text-summary-muted truncate mr-2">{item.label}</span>
-              <span className="font-medium flex-shrink-0">{formatCurrency(item.value)}</span>
-            </div>
-          ))}
+      {hasCalculated && (
+        <div className="mb-6">
+          <p className="text-summary-muted text-xs uppercase tracking-wider mb-3">Detailne jaotus</p>
+          <div className="space-y-2">
+            {costBreakdown.map((item) => (
+              <div key={item.label} className="flex justify-between text-sm">
+                <span className="text-summary-muted truncate mr-2">{item.label}</span>
+                <span className="font-medium flex-shrink-0">{formatCurrency(item.value)}</span>
+              </div>
+            ))}
+          </div>
+          <div className="mt-3 pt-3 border-t border-white/10 flex justify-between font-semibold">
+            <span>Kokku</span>
+            <span>{formatCurrency(results.totalCost)}</span>
+          </div>
         </div>
-        <div className="mt-3 pt-3 border-t border-white/10 flex justify-between font-semibold">
-          <span>Kokku</span>
-          <span>{formatCurrency(results.totalCost)}</span>
-        </div>
-      </div>
+      )}
 
       {/* Bad hire scenario - TERTIARY, reduced emphasis */}
-      <div className="mb-5 p-3 bg-white/[0.03] rounded-lg border border-white/5">
-        <div className="flex items-center gap-2 mb-1.5">
-          <Info className="w-3.5 h-3.5 text-summary-muted/70" />
-          <p className="text-summary-muted/80 text-xs font-medium">Halva värbamise stsenaarium</p>
+      {hasCalculated && (
+        <div className="mb-5 p-3 bg-white/[0.03] rounded-lg border border-white/5">
+          <div className="flex items-center gap-2 mb-1.5">
+            <Info className="w-3.5 h-3.5 text-summary-muted/70" />
+            <p className="text-summary-muted/80 text-xs font-medium">Halva värbamise stsenaarium</p>
+          </div>
+          <p className="text-sm text-summary-muted">
+            Kui värbamine ebaõnnestub, on lisakulu{' '}
+            <span className="font-medium text-summary-foreground">
+              {formatCurrency(results.badHireExtraIfHappens)}
+            </span>
+          </p>
+          <p className="text-xs text-summary-muted/70 mt-1">
+            Tõenäosus: {(config.BAD_HIRE_RISK_RATE * 100).toFixed(0)}%
+          </p>
         </div>
-        <p className="text-sm text-summary-muted">
-          Kui värbamine ebaõnnestub, on lisakulu{' '}
-          <span className="font-medium text-summary-foreground">
-            {formatCurrency(results.badHireExtraIfHappens)}
-          </span>
-        </p>
-        <p className="text-xs text-summary-muted/70 mt-1">
-          Tõenäosus: {(config.BAD_HIRE_RISK_RATE * 100).toFixed(0)}%
-        </p>
-      </div>
+      )}
 
       {/* Warnings Section with Counter */}
-      {hasWarnings && (
+      {hasCalculated && hasWarnings && (
         <div className="p-4 bg-warning/10 rounded-lg border border-warning/20">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
@@ -190,16 +222,18 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
       )}
 
       {/* Risk explanation tooltip */}
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button className="mt-4 text-xs text-summary-muted hover:text-summary-foreground transition-colors underline decoration-dotted cursor-help">
-            Kuidas arvutatakse halva värbamise riski?
-          </button>
-        </TooltipTrigger>
-        <TooltipContent side="left" className="max-w-xs bg-popover text-popover-foreground">
-          <p>{config.riskExplanationText}</p>
-        </TooltipContent>
-      </Tooltip>
+      {hasCalculated && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button className="mt-4 text-xs text-summary-muted hover:text-summary-foreground transition-colors underline decoration-dotted cursor-help">
+              Kuidas arvutatakse halva värbamise riski?
+            </button>
+          </TooltipTrigger>
+          <TooltipContent side="left" className="max-w-xs bg-popover text-popover-foreground">
+            <p>{config.riskExplanationText}</p>
+          </TooltipContent>
+        </Tooltip>
+      )}
     </aside>
   );
 });

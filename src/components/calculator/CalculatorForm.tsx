@@ -21,7 +21,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 export function CalculatorForm() {
-  const { inputs, results, updateInput, updateNestedInput } = useAppStore();
+  const { inputs, results, updateInput, updateNestedInput, hasCalculated } = useAppStore();
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('et-EE', {
@@ -343,12 +343,18 @@ export function CalculatorForm() {
         />
         <div className="p-4 bg-muted rounded-lg">
           <p className="text-sm text-muted-foreground mb-2">Tootlikkuse kadu</p>
-          <p className="text-sm">
-            {inputs.onboarding.onboardingMonths} kuud × {formatCurrency(results.normalizedHirePay.employerMonthlyCost)} € × {100 - inputs.onboarding.productivityPct}% kadu
-          </p>
-          <p className="font-semibold mt-2">
-            = {formatCurrency(results.blockCosts.onboarding.total - inputs.onboarding.extraCosts)} €
-          </p>
+          {hasCalculated ? (
+            <>
+              <p className="text-sm">
+                {inputs.onboarding.onboardingMonths} kuud × {formatCurrency(results.normalizedHirePay.employerMonthlyCost)} € × {100 - inputs.onboarding.productivityPct}% kadu
+              </p>
+              <p className="font-semibold mt-2">
+                = {formatCurrency(results.blockCosts.onboarding.total - inputs.onboarding.extraCosts)} €
+              </p>
+            </>
+          ) : (
+            <p className="text-sm text-muted-foreground">Vajuta ARVUTA, et näha tulemust</p>
+          )}
         </div>
       </CalculatorSection>
 
@@ -379,9 +385,13 @@ export function CalculatorForm() {
         />
         <div className="p-4 bg-muted rounded-lg">
           <p className="text-sm text-muted-foreground mb-2">Vakantsi kogukulu</p>
-          <p className="font-semibold">
-            {inputs.vacancy.vacancyDays} päeva × {inputs.vacancy.dailyCost} €/päev = {formatCurrency(results.blockCosts.vacancy.total)} €
-          </p>
+          {hasCalculated ? (
+            <p className="font-semibold">
+              {inputs.vacancy.vacancyDays} päeva × {inputs.vacancy.dailyCost} €/päev = {formatCurrency(results.blockCosts.vacancy.total)} €
+            </p>
+          ) : (
+            <p className="text-sm text-muted-foreground">Vajuta ARVUTA, et näha tulemust</p>
+          )}
         </div>
       </CalculatorSection>
 

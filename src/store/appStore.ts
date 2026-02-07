@@ -11,6 +11,7 @@ interface AppState {
   inputs: CalculatorInputs;
   config: CalculatorConfig;
   results: ComputedResult;
+  hasCalculated: boolean;
   
   // Input actions
   updateInput: <K extends keyof CalculatorInputs>(key: K, value: CalculatorInputs[K]) => void;
@@ -28,6 +29,9 @@ interface AppState {
   // Config actions
   updateConfig: <K extends keyof CalculatorConfig>(key: K, value: CalculatorConfig[K]) => void;
   resetConfig: () => void;
+  
+  // Calculation trigger
+  triggerCalculation: () => void;
   
   // Recompute results
   recompute: () => void;
@@ -72,6 +76,7 @@ export const useAppStore = create<AppState>((set, get) => {
     inputs: initialInputs,
     config: initialConfig,
     results: initialResults,
+    hasCalculated: false,
     
     updateInput: (key, value) => {
       set((state) => {
@@ -160,6 +165,14 @@ export const useAppStore = create<AppState>((set, get) => {
         config: DEFAULT_CONFIG,
         results: computeTotals(state.inputs, DEFAULT_CONFIG),
       }));
+    },
+    
+    triggerCalculation: () => {
+      const { inputs, config } = get();
+      set({ 
+        results: computeTotals(inputs, config),
+        hasCalculated: true,
+      });
     },
     
     recompute: () => {
