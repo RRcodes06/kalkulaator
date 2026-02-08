@@ -3,7 +3,7 @@
 
 export const SECTION_INFO: Record<string, { description: string; guidance: string }> = {
   position: {
-    description: 'Värbatava positsiooni põhiandmed ja palgaootused.',
+    description: 'Värvatava positsiooni põhiandmed ja palgaootused.',
     guidance: 'Sisesta brutopalk või tunnitasu, et saada täpne kuluarvestus.',
   },
   roles: {

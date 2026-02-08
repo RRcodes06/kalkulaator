@@ -198,7 +198,7 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
           <ul className="text-sm space-y-2">
             {results.missingPayWarnings.map((w, i) => (
               <li key={`missing-${i}`} className="text-summary-muted">
-                <span className="font-medium text-summary-foreground">{w.field === 'hirePay' ? 'Värbatava palk' : w.field}:</span>{' '}
+                <span className="font-medium text-summary-foreground">{w.field === 'hirePay' ? 'Värvatava palk' : w.field}:</span>{' '}
                 {w.message}
               </li>
             ))}

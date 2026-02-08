@@ -54,7 +54,7 @@ export function CalculatorForm() {
       {/* Position & Hire Pay */}
       <CalculatorSection
         id="position"
-        title="Värbatava positsiooni põhiandmed"
+        title="Värvatava positsiooni põhiandmed"
         icon={<Briefcase className="w-5 h-5" />}
         subtotal={results.normalizedHirePay.employerMonthlyCost}
         infoKey="position"
@@ -71,7 +71,7 @@ export function CalculatorForm() {
         
         <div className="md:col-span-2">
           <PayInputGroup
-            label="Värbatava töötaja palk"
+            label="Värvatava töötaja palk"
             value={inputs.hirePay}
             onChange={(pay) => updateInput('hirePay', pay)}
             normalizedPay={results.normalizedHirePay}
