@@ -271,14 +271,14 @@ export function RiskSummarySection() {
               
               {/* Key message - risk is POSSIBLE, not included */}
               <div className="p-5 bg-background rounded-lg border-2 border-warning/30">
-                <p className="text-lg font-medium text-white mb-2">
+                <p className="text-lg font-medium text-foreground mb-2">
                   On {riskPercentage}% tõenäosus, et lisandub veel:
                 </p>
                 <p className="text-4xl font-bold text-warning">
                   {formatCurrency(results.badHireExtraIfHappens)}
                 </p>
-                <p className="text-sm text-white mt-2">
-                  See summa <strong>ei ole</strong> lisatud kogukulu hulka.
+                <p className="text-sm text-muted-foreground mt-2">
+                  See summa <strong>ei ole</strong> lisatud ülaltoodud kogukullu.
                 </p>
               </div>
               
