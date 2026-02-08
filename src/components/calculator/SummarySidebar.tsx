@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 import { useAppStore } from '@/store/appStore';
-import { TrendingUp, AlertTriangle, Info, Lightbulb } from 'lucide-react';
+import { TrendingUp, AlertTriangle, Lightbulb } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { CostBreakdownChart } from './CostBreakdownChart';
 import { BLOCK_LABELS } from '@/config/defaults';
@@ -20,6 +20,7 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
     }).format(Math.round(value));
   };
 
+  // Cost breakdown - EXCLUDES risk (shown separately)
   const costBreakdown = [
     { label: BLOCK_LABELS.strategyPrep, value: results.blockCosts.strategyPrep.total },
     { label: BLOCK_LABELS.adsBranding, value: results.blockCosts.adsBranding.total },
@@ -31,7 +32,7 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
     { label: BLOCK_LABELS.onboarding, value: results.blockCosts.onboarding.total },
     { label: BLOCK_LABELS.vacancy, value: results.blockCosts.vacancy.total },
     { label: BLOCK_LABELS.indirectCosts, value: results.blockCosts.indirectCosts.total },
-    { label: BLOCK_LABELS.expectedRisk, value: results.expectedRiskCost },
+    // Note: expectedRisk is shown separately, not in main breakdown
   ].filter(item => item.value > 0);
 
   const warningsCount = results.rangeWarnings.length + results.missingPayWarnings.length;
@@ -161,21 +162,21 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
         </div>
       )}
 
-      {/* Bad hire scenario - TERTIARY, reduced emphasis */}
+      {/* Bad hire scenario - SEPARATE from main total, clearly labeled */}
       {hasCalculated && (
-        <div className="mb-5 p-3 bg-white/[0.03] rounded-lg border border-white/5">
-          <div className="flex items-center gap-2 mb-1.5">
-            <Info className="w-3.5 h-3.5 text-summary-muted/70" />
-            <p className="text-summary-muted/80 text-xs font-medium">Halva värbamise stsenaarium</p>
+        <div className="mb-5 p-4 bg-warning/10 rounded-lg border border-warning/20">
+          <div className="flex items-center gap-2 mb-2">
+            <AlertTriangle className="w-4 h-4 text-warning" />
+            <p className="text-warning text-sm font-semibold">Lisariski stsenaarium</p>
           </div>
-          <p className="text-sm text-summary-muted">
-            Kui värbamine ebaõnnestub, on lisakulu{' '}
-            <span className="font-medium text-summary-foreground">
-              {formatCurrency(results.badHireExtraIfHappens)}
-            </span>
+          <p className="text-sm text-foreground mb-1">
+            On {(config.BAD_HIRE_RISK_RATE * 100).toFixed(0)}% tõenäosus, et lisandub:
           </p>
-          <p className="text-xs text-summary-muted/70 mt-1">
-            Tõenäosus: {(config.BAD_HIRE_RISK_RATE * 100).toFixed(0)}%
+          <p className="text-2xl font-bold text-warning">
+            {formatCurrency(results.badHireExtraIfHappens)}
+          </p>
+          <p className="text-xs text-muted-foreground mt-2">
+            See summa <strong>ei ole</strong> lisatud kogukullu.
           </p>
         </div>
       )}

@@ -29,6 +29,7 @@ import type {
   RangeWarning,
   RangeHint,
   ComputedResult,
+  EmptyFieldInfo,
 } from '@/types/calculator';
 import { BLOCK_LABELS } from '@/config/defaults';
 
@@ -491,13 +492,18 @@ export function computeTotals(
     .filter(([key]) => key !== 'expectedRisk')
     .reduce((sum, [, block]) => sum + block.total, 0);
   
-  // Total cost
-  const totalCost = baseCost + badHireResult.expectedRiskCost;
+  // Total cost - NOW excludes risk (risk shown separately)
+  const totalCost = baseCost; // Main display uses baseCost only
+  const totalCostWithRisk = baseCost + badHireResult.expectedRiskCost; // For reference
   
-  // Calculate percentages
+  // Calculate percentages based on baseCost (excluding risk from main view)
   const percentages: Record<BlockName, number> = {} as Record<BlockName, number>;
   for (const key of Object.keys(blockCosts) as BlockName[]) {
-    percentages[key] = totalCost > 0 ? (blockCosts[key].total / totalCost) * 100 : 0;
+    if (key === 'expectedRisk') {
+      percentages[key] = 0; // Risk not shown in main breakdown
+    } else {
+      percentages[key] = baseCost > 0 ? (blockCosts[key].total / baseCost) * 100 : 0;
+    }
   }
   
   // Find top 3 cost drivers
@@ -701,6 +707,47 @@ export function computeTotals(
     }
   }
   
+  // Track empty/zero fields for transparency in results
+  const emptyFields: EmptyFieldInfo[] = [];
+  
+  // Check hire pay
+  if (inputs.hirePay.payType === 'unset' || inputs.hirePay.payAmount === 0) {
+    emptyFields.push({ sectionId: 'position', fieldKey: 'hirePay', label: 'Värvatava töötaja palk', fieldType: 'salary' });
+  }
+  
+  // Check role pays
+  if (inputs.roles.hr.payType === 'unset' || inputs.roles.hr.payAmount === 0) {
+    emptyFields.push({ sectionId: 'roles', fieldKey: 'roles.hr', label: 'Personalitöötaja palk', fieldType: 'salary' });
+  }
+  if (inputs.roles.manager.payType === 'unset' || inputs.roles.manager.payAmount === 0) {
+    emptyFields.push({ sectionId: 'roles', fieldKey: 'roles.manager', label: 'Juhi palk', fieldType: 'salary' });
+  }
+  if (inputs.roles.team.payType === 'unset' || inputs.roles.team.payAmount === 0) {
+    emptyFields.push({ sectionId: 'roles', fieldKey: 'roles.team', label: 'Tiimi palk', fieldType: 'salary' });
+  }
+  
+  // Check block inputs
+  const blockFieldChecks: Array<{ sectionId: string; value: number; key: string; label: string; type: EmptyFieldInfo['fieldType'] }> = [
+    { sectionId: 'strategy', value: inputs.strategyPrep.hrHours, key: 'strategyPrep.hrHours', label: 'Strateegia: HR tunnid', type: 'hours' },
+    { sectionId: 'strategy', value: inputs.strategyPrep.managerHours, key: 'strategyPrep.managerHours', label: 'Strateegia: Juhi tunnid', type: 'hours' },
+    { sectionId: 'ads', value: inputs.adsBranding.hrHours, key: 'adsBranding.hrHours', label: 'Kuulutused: HR tunnid', type: 'hours' },
+    { sectionId: 'ads', value: inputs.adsBranding.directCosts, key: 'adsBranding.directCosts', label: 'Kuulutuste kulud', type: 'cost' },
+    { sectionId: 'candidate', value: inputs.candidateMgmt.hrHours, key: 'candidateMgmt.hrHours', label: 'Kandidaadid: HR tunnid', type: 'hours' },
+    { sectionId: 'interviews', value: inputs.interviews.hrHours, key: 'interviews.hrHours', label: 'Intervjuud: HR tunnid', type: 'hours' },
+    { sectionId: 'interviews', value: inputs.interviews.managerHours, key: 'interviews.managerHours', label: 'Intervjuud: Juhi tunnid', type: 'hours' },
+    { sectionId: 'preboarding', value: inputs.preboarding.devicesCost, key: 'preboarding.devicesCost', label: 'Seadmete kulu', type: 'cost' },
+    { sectionId: 'onboarding', value: inputs.onboarding.onboardingMonths, key: 'onboarding.onboardingMonths', label: 'Sisseelamisperiood', type: 'months' },
+    { sectionId: 'onboarding', value: inputs.onboarding.productivityPct, key: 'onboarding.productivityPct', label: 'Keskmine tootlikkus', type: 'percentage' },
+    { sectionId: 'vacancy', value: inputs.vacancy.vacancyDays, key: 'vacancy.vacancyDays', label: 'Vakantsi kestus', type: 'days' },
+    { sectionId: 'vacancy', value: inputs.vacancy.dailyCost, key: 'vacancy.dailyCost', label: 'Päevakulu', type: 'cost' },
+  ];
+  
+  for (const check of blockFieldChecks) {
+    if (check.value === 0) {
+      emptyFields.push({ sectionId: check.sectionId, fieldKey: check.key, label: check.label, fieldType: check.type });
+    }
+  }
+  
   return {
     normalizedHirePay,
     normalizedRoles,
@@ -708,6 +755,7 @@ export function computeTotals(
     baseCost,
     expectedRiskCost: badHireResult.expectedRiskCost,
     totalCost,
+    totalCostWithRisk,
     badHireSalaryCost: badHireResult.badHireSalaryCost,
     badHireExtraIfHappens: badHireResult.badHireExtraIfHappens,
     topDrivers,
@@ -716,11 +764,12 @@ export function computeTotals(
     missingPayWarnings,
     rangeWarnings,
     rangeHints,
+    emptyFields,
   };
 }
 
 // ============================================================================
-// DEFAULT INPUTS FACTORY
+// DEFAULT INPUTS FACTORY - ALL INPUTS START EMPTY
 // ============================================================================
 
 export function createDefaultInputs(): CalculatorInputs {
@@ -735,16 +784,17 @@ export function createDefaultInputs(): CalculatorInputs {
       manager: { enabled: true, payType: 'unset', payAmount: 0 },
       team: { enabled: true, payType: 'unset', payAmount: 0 },
     },
-    strategyPrep: { hrHours: 4, managerHours: 2, teamHours: 0 },
-    adsBranding: { hrHours: 3, managerHours: 1, teamHours: 0, directCosts: 500 },
-    candidateMgmt: { hrHours: 10, managerHours: 2, teamHours: 0, testsCost: 0 },
-    interviews: { hrHours: 6, managerHours: 8, teamHours: 4, directCosts: 0 },
-    backgroundOffer: { hrHours: 3, managerHours: 1, teamHours: 0, directCosts: 0 },
+    // ALL hours and costs start at 0 - user must fill in
+    strategyPrep: { hrHours: 0, managerHours: 0, teamHours: 0 },
+    adsBranding: { hrHours: 0, managerHours: 0, teamHours: 0, directCosts: 0 },
+    candidateMgmt: { hrHours: 0, managerHours: 0, teamHours: 0, testsCost: 0 },
+    interviews: { hrHours: 0, managerHours: 0, teamHours: 0, directCosts: 0 },
+    backgroundOffer: { hrHours: 0, managerHours: 0, teamHours: 0, directCosts: 0 },
     otherServices: [],
-    preboarding: { devicesCost: 500, itSetupHours: 2, itHourlyRate: 25, prepHours: 2 },
-    onboarding: { onboardingMonths: 3, productivityPct: 50, extraCosts: 0 },
-    vacancy: { vacancyDays: 30, dailyCost: 0 },
-    indirectCosts: { hrHours: 5, managerHours: 3, teamHours: 2 },
+    preboarding: { devicesCost: 0, itSetupHours: 0, itHourlyRate: 0, prepHours: 0 },
+    onboarding: { onboardingMonths: 0, productivityPct: 0, extraCosts: 0 },
+    vacancy: { vacancyDays: 0, dailyCost: 0 },
+    indirectCosts: { hrHours: 0, managerHours: 0, teamHours: 0 },
   };
 }
 
