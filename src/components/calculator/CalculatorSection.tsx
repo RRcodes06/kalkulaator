@@ -119,11 +119,11 @@ export function CalculatorSection({
           sectionState === 'completed' && "ring-1 ring-success/20",
           sectionState === 'in-progress' && "ring-1 ring-primary/20"
         )}>
-          <AccordionTrigger className="px-6 py-4 hover:no-underline [&[data-state=open]>div>.chevron]:rotate-180">
+          <AccordionTrigger className="px-6 py-5 hover:no-underline [&[data-state=open]>div>.chevron]:rotate-180">
             <div className="flex items-center justify-between w-full pr-4">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 <div className={cn(
-                  "w-10 h-10 rounded-lg flex items-center justify-center transition-colors",
+                  "w-11 h-11 rounded-lg flex items-center justify-center transition-colors",
                   sectionState === 'completed' && "bg-success/10 text-success",
                   sectionState === 'in-progress' && "bg-primary/10 text-primary",
                   sectionState === 'not-started' && "bg-muted text-muted-foreground"
@@ -132,7 +132,7 @@ export function CalculatorSection({
                 </div>
                 <div className="text-left">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-foreground">{title}</h3>
+                    <h3 className="font-semibold text-base text-foreground">{title}</h3>
                     <StateIndicator state={sectionState} />
                     {hasInfo && (
                       <button
@@ -163,14 +163,14 @@ export function CalculatorSection({
               )}
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 pb-6 pt-2">
+          <AccordionContent className="px-6 pb-8 pt-4">
             {showInfo && hasInfo && (
               <SectionInfoBox 
                 infoKey={resolvedInfoKey} 
                 onClose={() => setShowInfo(false)} 
               />
             )}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {children}
             </div>
           </AccordionContent>

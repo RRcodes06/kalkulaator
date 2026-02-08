@@ -49,7 +49,7 @@ export function NumberInput({
   const { inputRef, displayValue, handleFocus, handleChange } = useExcelInputBehavior(value);
 
   return (
-    <div className={cn('space-y-1.5', className)}>
+    <div className={cn('space-y-2', className)}>
       {(label || showDefaultIndicator) && (
         <div className="flex items-center justify-between">
           {label && <Label className="text-sm font-medium text-foreground">{label}</Label>}
@@ -76,15 +76,15 @@ export function NumberInput({
           max={max}
           step={step}
           className={cn(
-            'h-10 text-right pr-3 bg-card',
-            prefix && 'pl-8',
-            suffix && 'pr-12',
+            'h-11 text-base text-right pr-4 bg-card',
+            prefix && 'pl-10',
+            suffix && 'pr-14',
             warning && warning.severity === 'warning' && 'border-warning focus-visible:ring-warning',
             warning && warning.severity === 'info' && 'border-muted-foreground/50'
           )}
         />
         {suffix && (
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
+          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
             {suffix}
           </span>
         )}

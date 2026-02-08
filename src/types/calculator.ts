@@ -93,6 +93,7 @@ export interface BackgroundOfferInput extends BlockHoursInput {
 export interface PreboardingInput {
   devicesCost: number;
   itSetupHours: number;
+  itHourlyRate: number; // IT specialist hourly rate
   prepHours: number; // HR prep hours
 }
 
