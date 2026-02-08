@@ -131,7 +131,7 @@ export function PayInputGroup({
 
       {showCostBreakdown && normalizedPay && (
         <div className="p-4 bg-muted rounded-lg">
-          <p className="text-sm text-muted-foreground mb-2">Tööandja kulud</p>
+          <p className="text-sm text-muted-foreground mb-2">Tööandja kulu</p>
           <div className="space-y-1 text-sm">
             <div className="flex justify-between">
               <span>Brutopalk</span>

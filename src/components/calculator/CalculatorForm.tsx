@@ -379,12 +379,9 @@ export function CalculatorForm() {
         subtotal={results.blockCosts.indirectCosts.total}
         infoKey="indirect"
       >
-        <div className="md:col-span-3 p-4 bg-muted/50 rounded-lg border border-border space-y-2">
+        <div className="md:col-span-3 p-4 bg-muted/50 rounded-lg border border-border">
           <p className="text-sm text-muted-foreground">
-            Kaudsed kulud näitavad värbamisega seotud <strong>fookuse kadu ja lisatööd</strong>, mis ei kajastu otsestes arvetes.
-          </p>
-          <p className="text-xs text-muted-foreground">
-            ℹ Arvestatakse <strong>ainult brutotunnipalgaga</strong> (ilma tööandja maksudeta).
+            ℹ Arvestatakse ainult brutotunnipalgaga (ilma tööandja maksudeta).
           </p>
         </div>
         <NumberInput
