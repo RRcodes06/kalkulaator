@@ -15,7 +15,6 @@ import { SECTION_INFO } from '@/config/sectionInfo';
 interface CalculatorSectionProps {
   id: string;
   title: string;
-  subtitle?: string;
   icon: ReactNode;
   children: ReactNode;
   subtotal?: number;
@@ -73,7 +72,6 @@ function SectionInfoBox({ infoKey, onClose }: { infoKey: string; onClose: () => 
 export function CalculatorSection({
   id,
   title,
-  subtitle,
   icon,
   children,
   subtotal,
@@ -151,9 +149,6 @@ export function CalculatorSection({
                       </button>
                     )}
                   </div>
-                  {subtitle && (
-                    <p className="text-sm text-muted-foreground">{subtitle}</p>
-                  )}
                 </div>
               </div>
               {subtotal !== undefined && subtotal > 0 && hasCalculated && (

@@ -32,8 +32,7 @@ export function OtherServicesSection() {
   return (
     <CalculatorSection
       id="other-services"
-      title="Muud teenused"
-      subtitle="Värbamisagentuurid, peatöövõtjad, konsultandid"
+      title="Värbamisagentuurid, peatöövõtjad, konsultandid"
       icon={<Briefcase className="w-5 h-5" />}
       subtotal={results.blockCosts.otherServices.total}
       infoKey="other"
