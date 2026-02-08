@@ -112,15 +112,15 @@ function ServiceRowCard({ row, onUpdate, onRemove }: ServiceRowCardProps) {
   };
 
   return (
-    <div className="p-4 bg-muted/50 rounded-lg border border-border space-y-4">
+    <div className="p-5 bg-muted/50 rounded-lg border border-border space-y-5">
       <div className="flex items-center justify-between">
         <div className="flex-1 mr-4">
-          <Label className="text-xs text-muted-foreground mb-1 block">Teenuse nimetus</Label>
+          <Label className="text-sm text-muted-foreground mb-1.5 block">Teenuse nimetus</Label>
           <Input
             value={row.name}
             onChange={(e) => onUpdate({ name: e.target.value })}
             placeholder="nt. Värbamisagentuur"
-            className="bg-card"
+            className="bg-card h-11 text-base"
           />
         </div>
         <Button
@@ -133,15 +133,15 @@ function ServiceRowCard({ row, onUpdate, onRemove }: ServiceRowCardProps) {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
         {/* Service type */}
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           <Label className="text-sm">Teenuse tüüp</Label>
           <Select
             value={row.details.serviceType}
             onValueChange={(v) => handleServiceTypeChange(v as ServiceType)}
           >
-            <SelectTrigger className="bg-card">
+            <SelectTrigger className="bg-card h-11">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -154,7 +154,7 @@ function ServiceRowCard({ row, onUpdate, onRemove }: ServiceRowCardProps) {
         {/* Inhouse pricing */}
         {isInhouse && row.details.serviceType === 'inhouse' && (
           <>
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <Label className="text-sm">Palga tüüp</Label>
               <Select
                 value={row.details.payType}
@@ -168,7 +168,7 @@ function ServiceRowCard({ row, onUpdate, onRemove }: ServiceRowCardProps) {
                   })
                 }
               >
-                <SelectTrigger className="bg-card">
+                <SelectTrigger className="bg-card h-11">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -210,7 +210,7 @@ function ServiceRowCard({ row, onUpdate, onRemove }: ServiceRowCardProps) {
         {/* Outsourced pricing */}
         {!isInhouse && row.details.serviceType === 'outsourced' && (
           <>
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <Label className="text-sm">Arvelduse tüüp</Label>
               <Select
                 value={row.details.billingType}
@@ -220,7 +220,7 @@ function ServiceRowCard({ row, onUpdate, onRemove }: ServiceRowCardProps) {
                   })
                 }
               >
-                <SelectTrigger className="bg-card">
+                <SelectTrigger className="bg-card h-11">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -256,22 +256,26 @@ function ServiceRowCard({ row, onUpdate, onRemove }: ServiceRowCardProps) {
           </>
         )}
 
-        {/* Service hours - always required */}
-        <NumberInput
-          label="Teenuse tunnid"
-          value={row.serviceHours}
-          onChange={(v) => onUpdate({ serviceHours: v })}
-          suffix="h"
-          min={0}
-          hint="Aeg, mis see teenus võtab"
-        />
+        {/* Service hours - only show for hourly billing types */}
+        {((isInhouse && row.details.serviceType === 'inhouse' && row.details.payType === 'hourly') ||
+          (!isInhouse && row.details.serviceType === 'outsourced' && row.details.billingType === 'hourly')) && (
+          <NumberInput
+            label="Teenuse tunnid"
+            value={row.serviceHours}
+            onChange={(v) => onUpdate({ serviceHours: v })}
+            suffix="h"
+            min={0}
+            hint="Aeg, mis see teenus võtab"
+          />
+        )}
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3 pt-1">
         <Checkbox
           id={`repeat-${row.id}`}
           checked={row.repeatOnBadHire}
           onCheckedChange={(checked) => onUpdate({ repeatOnBadHire: !!checked })}
+          className="h-5 w-5"
         />
         <Label htmlFor={`repeat-${row.id}`} className="text-sm cursor-pointer">
           Korduv kulu halva värbamise korral

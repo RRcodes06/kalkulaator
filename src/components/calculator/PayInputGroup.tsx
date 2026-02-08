@@ -49,11 +49,11 @@ export function PayInputGroup({
 
   if (compact) {
     return (
-      <div className="space-y-3">
+      <div className="space-y-4">
         <Label className="text-sm font-medium">{label}</Label>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-3">
           <Select value={value.payType} onValueChange={handlePayTypeChange}>
-            <SelectTrigger className="bg-card">
+            <SelectTrigger className="bg-card h-11">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -75,9 +75,9 @@ export function PayInputGroup({
         </div>
 
         {isDefaultUsed && defaultSalaryHint && (
-          <div className="flex items-start gap-2 px-3 py-2 bg-warning/10 border border-warning/20 rounded-md">
+          <div className="flex items-start gap-2 px-4 py-3 bg-warning/10 border border-warning/20 rounded-md">
             <span className="text-warning shrink-0">⚠</span>
-            <p className="text-xs text-warning leading-relaxed">{defaultSalaryHint}</p>
+            <p className="text-sm text-warning leading-relaxed">{defaultSalaryHint}</p>
           </div>
         )}
 
@@ -95,11 +95,11 @@ export function PayInputGroup({
   }
 
   return (
-    <div className="space-y-4">
-      <div className="space-y-1.5">
+    <div className="space-y-5">
+      <div className="space-y-2">
         <Label className="text-sm font-medium">{label} - Palga tüüp</Label>
         <Select value={value.payType} onValueChange={handlePayTypeChange}>
-          <SelectTrigger className="bg-card">
+          <SelectTrigger className="bg-card h-11">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -132,9 +132,9 @@ export function PayInputGroup({
       )}
 
       {showCostBreakdown && normalizedPay && (
-        <div className="p-4 bg-muted rounded-lg">
-          <p className="text-sm text-muted-foreground mb-2">Tööandja kulu</p>
-          <div className="space-y-1 text-sm">
+        <div className="p-5 bg-muted rounded-lg">
+          <p className="text-sm text-muted-foreground mb-3">Tööandja kulu</p>
+          <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span>Brutopalk</span>
               <span className="font-medium">{formatCurrency(normalizedPay.monthlyGross)} €</span>
@@ -145,13 +145,13 @@ export function PayInputGroup({
                 {formatCurrency(normalizedPay.employerMonthlyCost - normalizedPay.monthlyGross)} €
               </span>
             </div>
-            <div className="flex justify-between font-semibold pt-1 border-t border-border">
+            <div className="flex justify-between font-semibold pt-2 border-t border-border">
               <span>Kokku tööjõukulu</span>
               <span>{formatCurrency(normalizedPay.employerMonthlyCost)} €/kuu</span>
             </div>
           </div>
           {isDefaultUsed && (
-            <p className="text-xs text-warning mt-2">⚠ Kasutatakse Eesti keskmist palka</p>
+            <p className="text-sm text-warning mt-3">⚠ Kasutatakse Eesti keskmist palka</p>
           )}
         </div>
       )}

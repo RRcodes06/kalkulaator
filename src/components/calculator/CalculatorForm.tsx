@@ -289,6 +289,13 @@ export function CalculatorForm() {
           hint="Kontode loomine, tarkvara paigaldus"
         />
         <NumberInput
+          label="IT spetsialisti tunnipalk"
+          value={inputs.preboarding.itHourlyRate}
+          onChange={(v) => updateNestedInput('preboarding', 'itHourlyRate', v)}
+          suffix="€/h"
+          hint="IT-töötaja brutotunnipalk"
+        />
+        <NumberInput
           label="HR ettevalmistuse tunnid"
           value={inputs.preboarding.prepHours}
           onChange={(v) => updateNestedInput('preboarding', 'prepHours', v)}

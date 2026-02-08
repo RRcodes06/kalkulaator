@@ -27,9 +27,9 @@ export function RolePaySection() {
       hideInfoButton
     >
       {/* HR Role */}
-      <div className="space-y-4 p-4 bg-muted/30 rounded-lg">
+      <div className="space-y-5 p-5 bg-muted/30 rounded-lg">
         <div className="flex items-center justify-between">
-          <Label className="font-medium">Värbamisspetsialist (HR)</Label>
+          <Label className="font-medium text-base">Värbamisspetsialist (HR)</Label>
           <Switch
             checked={inputs.roles.hr.enabled}
             onCheckedChange={(checked) => updateRole('hr', { enabled: checked })}
@@ -59,9 +59,9 @@ export function RolePaySection() {
       </div>
 
       {/* Manager Role */}
-      <div className="space-y-4 p-4 bg-muted/30 rounded-lg">
+      <div className="space-y-5 p-5 bg-muted/30 rounded-lg">
         <div className="flex items-center justify-between">
-          <Label className="font-medium">Värbamise eest vastutav juht</Label>
+          <Label className="font-medium text-base">Värbamise eest vastutav juht</Label>
           <Switch
             checked={inputs.roles.manager.enabled}
             onCheckedChange={(checked) => updateRole('manager', { enabled: checked })}
@@ -91,9 +91,9 @@ export function RolePaySection() {
       </div>
 
       {/* Team Role */}
-      <div className="space-y-4 p-4 bg-muted/30 rounded-lg">
+      <div className="space-y-5 p-5 bg-muted/30 rounded-lg">
         <div className="flex items-center justify-between">
-          <Label className="font-medium">Tiimiliikmed</Label>
+          <Label className="font-medium text-base">Tiimiliikmed</Label>
           <Switch
             checked={inputs.roles.team.enabled}
             onCheckedChange={(checked) => updateRole('team', { enabled: checked })}

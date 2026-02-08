@@ -448,7 +448,7 @@ export function computeTotals(
     },
     preboarding: {
       timeCost: (
-        inputs.preboarding.itSetupHours * normalizedRoles.team.employerHourlyRate +
+        inputs.preboarding.itSetupHours * inputs.preboarding.itHourlyRate * 1.338 + // Apply employer taxes
         inputs.preboarding.prepHours * normalizedRoles.hr.employerHourlyRate
       ),
       directCost: inputs.preboarding.devicesCost,
@@ -741,7 +741,7 @@ export function createDefaultInputs(): CalculatorInputs {
     interviews: { hrHours: 6, managerHours: 8, teamHours: 4, directCosts: 0 },
     backgroundOffer: { hrHours: 3, managerHours: 1, teamHours: 0, directCosts: 0 },
     otherServices: [],
-    preboarding: { devicesCost: 500, itSetupHours: 2, prepHours: 2 },
+    preboarding: { devicesCost: 500, itSetupHours: 2, itHourlyRate: 25, prepHours: 2 },
     onboarding: { onboardingMonths: 3, productivityPct: 50, extraCosts: 0 },
     vacancy: { vacancyDays: 30, dailyCost: 0 },
     indirectCosts: { hrHours: 5, managerHours: 3, teamHours: 2 },
