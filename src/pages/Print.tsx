@@ -229,14 +229,37 @@ const Print = () => {
       <section className="print-section px-8 py-6 page-break-inside-avoid">
         <h2 className="text-lg font-semibold mb-4 border-b border-gray-200 pb-2">Kokkuvõte</h2>
         
-        {/* Total Cost Highlight */}
+        {/* Total Cost Highlight - EXCLUDES RISK (matches calculator UX) */}
         <div className="bg-gray-50 rounded-lg p-4 mb-6 text-center">
           <p className="text-sm text-gray-600 mb-1">Värbamise kogukulu</p>
           <p className="text-4xl font-bold text-primary">{formatCurrency(results.totalCost)}</p>
           <p className="text-sm text-gray-500 mt-1">
-            (sh oodatav riskikulu {formatCurrency(results.expectedRiskCost)})
+            Riskikulu on näidatud eraldi allpool.
           </p>
         </div>
+
+        {/* Empty Fields Notice - show which inputs were left empty */}
+        {results.emptyFields && results.emptyFields.length > 0 && (
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+            <h3 className="font-medium text-sm text-yellow-800 mb-2">Täitmata jäetud väljad</h3>
+            <p className="text-xs text-yellow-700 mb-2">
+              Järgmised väljad olid tühjad või nullid. Arvutus põhineb kasutaja sisestatud andmetel.
+            </p>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              {results.emptyFields.slice(0, 10).map((field, idx) => (
+                <div key={idx} className="flex items-start gap-1">
+                  <span className="text-yellow-600">•</span>
+                  <span className="text-gray-700">{field.label}</span>
+                </div>
+              ))}
+              {results.emptyFields.length > 10 && (
+                <div className="col-span-2 text-gray-500 italic">
+                  ... ja veel {results.emptyFields.length - 10} välja
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Breakdown Table */}
         <div className="grid grid-cols-2 gap-8">
@@ -260,16 +283,6 @@ const Print = () => {
                     </td>
                   </tr>
                 ))}
-                <tr className="border-t-2 border-gray-300 font-semibold">
-                  <td className="py-2">Baaskulu</td>
-                  <td className="py-2 text-right">{formatCurrency(results.baseCost)}</td>
-                  <td className="py-2 text-right"></td>
-                </tr>
-                <tr className="text-gray-600">
-                  <td className="py-1">+ Oodatav riskikulu</td>
-                  <td className="py-1 text-right">{formatCurrency(results.expectedRiskCost)}</td>
-                  <td className="py-1 text-right"></td>
-                </tr>
                 <tr className="border-t-2 border-black font-bold text-lg">
                   <td className="py-2">KOKKU</td>
                   <td className="py-2 text-right">{formatCurrency(results.totalCost)}</td>
@@ -277,6 +290,9 @@ const Print = () => {
                 </tr>
               </tbody>
             </table>
+            <p className="text-xs text-gray-500 mt-2 italic">
+              * Riskikulu ei ole kogukulu hulka arvestatud
+            </p>
           </div>
 
           <div>
@@ -494,15 +510,16 @@ const Print = () => {
         )}
 
         <div className="grid grid-cols-2 gap-4 text-center">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-            <p className="text-sm text-gray-600 mb-1">Kui värbamine ebaõnnestub</p>
-            <p className="text-2xl font-bold text-red-700">+{formatCurrency(results.badHireExtraIfHappens)}</p>
-            <p className="text-xs text-gray-500">lisandub põhikulule</p>
+          <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+            <p className="text-sm text-gray-600 mb-1">Lisariski stsenaarium</p>
+            <p className="text-sm text-gray-500 mb-2">On {(config.BAD_HIRE_RISK_RATE * 100).toFixed(0)}% tõenäosus, et lisandub:</p>
+            <p className="text-2xl font-bold text-orange-700">+{formatCurrency(results.badHireExtraIfHappens)}</p>
+            <p className="text-xs text-gray-500 mt-2">See summa <strong>ei ole</strong> lisatud kogukulu hulka.</p>
           </div>
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <p className="text-sm text-gray-600 mb-1">Oodatav riskikulu ({(config.BAD_HIRE_RISK_RATE * 100).toFixed(0)}%)</p>
-            <p className="text-2xl font-bold text-yellow-700">{formatCurrency(results.expectedRiskCost)}</p>
-            <p className="text-xs text-gray-500">arvestatud kogukulusse</p>
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+            <p className="text-sm text-gray-600 mb-1">Statistiline tõenäosus</p>
+            <p className="text-3xl font-bold text-gray-700">{(config.BAD_HIRE_RISK_RATE * 100).toFixed(0)}%</p>
+            <p className="text-xs text-gray-500 mt-2">et värbamine ebaõnnestub</p>
           </div>
         </div>
       </section>
@@ -514,9 +531,15 @@ const Print = () => {
         <div className="bg-primary/5 border border-primary/20 rounded-lg p-6 text-center">
           <h2 className="text-xl font-semibold mb-3">{config.finalQuestionText}</h2>
           <p className="text-gray-600 mb-4">{config.ctaPlaceholderText}</p>
-          <div className="inline-block px-6 py-2 bg-primary text-white rounded-lg font-medium">
+          <a
+            href="https://www.manpower.ee/et/vaerbamisteenused"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block px-6 py-2 bg-primary text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
+          >
             Võta ühendust →
-          </div>
+          </a>
+          <p className="text-xs text-gray-500 mt-2">manpower.ee/et/vaerbamisteenused</p>
         </div>
       </section>
 
