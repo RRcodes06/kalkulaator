@@ -379,11 +379,6 @@ export function CalculatorForm() {
         subtotal={results.blockCosts.indirectCosts.total}
         infoKey="indirect"
       >
-        <div className="md:col-span-3 p-4 bg-muted/50 rounded-lg border border-border">
-          <p className="text-sm text-muted-foreground">
-            ℹ Arvestatakse ainult brutotunnipalgaga (ilma tööandja maksudeta).
-          </p>
-        </div>
         <NumberInput
           label="Personalitöötaja tunnid"
           value={inputs.indirectCosts.hrHours}
