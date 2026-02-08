@@ -54,8 +54,7 @@ export function CalculatorForm() {
       {/* Position & Hire Pay */}
       <CalculatorSection
         id="position"
-        title="Ametikoht ja palk"
-        subtitle="Värbatava positsiooni põhiandmed"
+        title="Värbatava positsiooni põhiandmed"
         icon={<Briefcase className="w-5 h-5" />}
         subtotal={results.normalizedHirePay.employerMonthlyCost}
         infoKey="position"
@@ -88,8 +87,7 @@ export function CalculatorForm() {
       {/* Strategy & Prep */}
       <CalculatorSection
         id="strategy"
-        title="Strateegia ja ettevalmistus"
-        subtitle="Ametiprofiili koostamine, nõuete määramine"
+        title="Ametiprofiili koostamine, nõuete määramine"
         icon={<Users className="w-5 h-5" />}
         subtotal={results.blockCosts.strategyPrep.total}
         infoKey="strategy"
@@ -123,8 +121,7 @@ export function CalculatorForm() {
       {/* Ads & Branding */}
       <CalculatorSection
         id="ads"
-        title="Kuulutused ja bränding"
-        subtitle="Töökuulutused, tööandja brändi materjalid"
+        title="Töökuulutused, tööandja brändi materjalid"
         icon={<Megaphone className="w-5 h-5" />}
         subtotal={results.blockCosts.adsBranding.total}
         infoKey="ads"
@@ -159,8 +156,7 @@ export function CalculatorForm() {
       {/* Candidate Management */}
       <CalculatorSection
         id="candidate"
-        title="Kandidaatide haldus ja testid"
-        subtitle="CV-de läbivaatus, testid, suhtlus"
+        title="CV-de läbivaatus, testid, suhtlus"
         icon={<UserCheck className="w-5 h-5" />}
         subtotal={results.blockCosts.candidateMgmt.total}
         infoKey="candidate"
@@ -193,8 +189,7 @@ export function CalculatorForm() {
       {/* Interviews */}
       <CalculatorSection
         id="interviews"
-        title="Intervjuud"
-        subtitle="Intervjuude läbiviimine ja koordineerimine"
+        title="Intervjuude läbiviimine ja koordineerimine"
         icon={<Clock className="w-5 h-5" />}
         subtotal={results.blockCosts.interviews.total}
         infoKey="interviews"
@@ -238,8 +233,7 @@ export function CalculatorForm() {
       {/* Background & Offer */}
       <CalculatorSection
         id="background"
-        title="Taustakontroll ja pakkumine"
-        subtitle="Taustakontroll, lepingu koostamine"
+        title="Taustakontroll, lepingu koostamine"
         icon={<Package className="w-5 h-5" />}
         subtotal={results.blockCosts.backgroundOffer.total}
         infoKey="background"
@@ -275,8 +269,7 @@ export function CalculatorForm() {
       {/* Preboarding */}
       <CalculatorSection
         id="preboarding"
-        title="Ettevalmistus enne alustamist"
-        subtitle="Töökoha ettevalmistus, varustus"
+        title="Töökoha ettevalmistus, varustus"
         icon={<Wrench className="w-5 h-5" />}
         subtotal={results.blockCosts.preboarding.total}
         infoKey="preboarding"
@@ -307,8 +300,7 @@ export function CalculatorForm() {
       {/* Onboarding */}
       <CalculatorSection
         id="onboarding"
-        title="Sisseelamine"
-        subtitle="Tootlikkuse kadu uue töötaja sisseelamisel"
+        title="Tootlikkuse kadu uue töötaja sisseelamisel"
         icon={<GraduationCap className="w-5 h-5" />}
         subtotal={results.blockCosts.onboarding.total}
         infoKey="onboarding"
@@ -346,8 +338,7 @@ export function CalculatorForm() {
       {/* Vacancy Cost */}
       <CalculatorSection
         id="vacancy"
-        title="Vaba ametikoha kulu"
-        subtitle="Kaotatud tootlikkus täitmata positsiooni tõttu"
+        title="Kaotatud tootlikkus täitmata positsiooni tõttu"
         icon={<TrendingDown className="w-5 h-5" />}
         subtotal={results.blockCosts.vacancy.total}
         infoKey="vacancy"
@@ -373,18 +364,16 @@ export function CalculatorForm() {
       {/* Indirect Costs */}
       <CalculatorSection
         id="indirect"
-        title="Kaudsed kulud"
-        subtitle="Fookuse kadu ja lisatöö, mis ei kajastu otsestes arvetes"
+        title="Tiimi ülekoormus, juhi tähelepanu hajumine, prioriteetide ümberjagamine"
         icon={<Users className="w-5 h-5" />}
         subtotal={results.blockCosts.indirectCosts.total}
-        infoKey="indirect"
+        hideInfoButton
       >
         <NumberInput
           label="Personalitöötaja tunnid"
           value={inputs.indirectCosts.hrHours}
           onChange={(v) => updateNestedInput('indirectCosts', 'hrHours', v)}
           suffix="h"
-          hint="Koordineerimine, aruandlus"
           warning={getWarningForField('indirectCosts.hrHours')}
           rangeHint={getRangeHintForField('indirectCosts.hrHours')}
         />
@@ -393,7 +382,6 @@ export function CalculatorForm() {
           value={inputs.indirectCosts.managerHours}
           onChange={(v) => updateNestedInput('indirectCosts', 'managerHours', v)}
           suffix="h"
-          hint="Prioriteetide ümberjagamine"
           warning={getWarningForField('indirectCosts.managerHours')}
           rangeHint={getRangeHintForField('indirectCosts.managerHours')}
         />
@@ -402,7 +390,6 @@ export function CalculatorForm() {
           value={inputs.indirectCosts.teamHours}
           onChange={(v) => updateNestedInput('indirectCosts', 'teamHours', v)}
           suffix="h"
-          hint="Ülekoormus, ülesannete jagamine"
           warning={getWarningForField('indirectCosts.teamHours')}
           rangeHint={getRangeHintForField('indirectCosts.teamHours')}
         />

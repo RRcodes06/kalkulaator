@@ -22,8 +22,7 @@ export function RolePaySection() {
   return (
     <CalculatorSection
       id="roles"
-      title="Kaasatud rollide palgad"
-      subtitle="Määra värbamisega seotud töötajate palgad"
+      title="Määra värbamisega seotud töötajate palgad"
       icon={<Users className="w-5 h-5" />}
       hideInfoButton
     >
