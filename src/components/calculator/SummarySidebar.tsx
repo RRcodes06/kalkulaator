@@ -169,14 +169,14 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
             <AlertTriangle className="w-4 h-4 text-warning" />
             <p className="text-warning text-sm font-semibold">Lisariski stsenaarium</p>
           </div>
-          <p className="text-sm text-foreground mb-1">
+          <p className="text-sm text-white mb-1">
             On {(config.BAD_HIRE_RISK_RATE * 100).toFixed(0)}% tõenäosus, et lisandub:
           </p>
           <p className="text-2xl font-bold text-warning">
             {formatCurrency(results.badHireExtraIfHappens)}
           </p>
-          <p className="text-xs text-muted-foreground mt-2">
-            See summa <strong>ei ole</strong> lisatud kogukullu.
+          <p className="text-xs text-white/75 mt-2">
+            See summa <strong>ei ole</strong> lisatud kogukulu hulka.
           </p>
         </div>
       )}
