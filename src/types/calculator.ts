@@ -275,10 +275,11 @@ export interface ComputedResult {
   // Block costs breakdown
   blockCosts: BlockCostsMap;
   
-  // Totals
-  baseCost: number; // sum of all blocks except risk
-  expectedRiskCost: number;
-  totalCost: number; // baseCost + expectedRiskCost
+  // Totals - NOW SEPARATED
+  baseCost: number; // sum of all blocks except risk - THIS IS THE MAIN TOTAL NOW
+  expectedRiskCost: number; // risk cost shown separately, NOT added to baseCost
+  totalCost: number; // baseCost only (without risk) - for backwards compatibility
+  totalCostWithRisk: number; // baseCost + expectedRiskCost - for reference
   
   // Bad hire scenario details
   badHireSalaryCost: number;
@@ -295,4 +296,14 @@ export interface ComputedResult {
   missingPayWarnings: MissingPayWarning[];
   rangeWarnings: RangeWarning[];
   rangeHints: RangeHint[];
+  
+  // Empty/zero fields tracking for transparency
+  emptyFields: EmptyFieldInfo[];
+}
+
+export interface EmptyFieldInfo {
+  sectionId: string;
+  fieldKey: string;
+  label: string;
+  fieldType: 'salary' | 'hours' | 'cost' | 'months' | 'percentage' | 'days' | 'rate';
 }

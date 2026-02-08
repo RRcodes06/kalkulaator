@@ -22,8 +22,9 @@ const CHART_COLORS = [
 ];
 
 export function CostBreakdownChart({ blockCosts, totalCost }: CostBreakdownChartProps) {
+  // Exclude expectedRisk from the chart - it's shown separately
   const data = (Object.entries(blockCosts) as [BlockName, { total: number }][])
-    .filter(([_, cost]) => cost.total > 0)
+    .filter(([key, cost]) => key !== 'expectedRisk' && cost.total > 0)
     .map(([key, cost], index) => ({
       name: BLOCK_LABELS[key] || key,
       shortName: getShortLabel(key),
