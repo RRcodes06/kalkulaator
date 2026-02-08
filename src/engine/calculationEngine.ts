@@ -526,7 +526,7 @@ export function computeTotals(
   if (normalizedHirePay.isDefault) {
     missingPayWarnings.push({
       field: 'hirePay',
-      message: 'Värbatava palk pole määratud. Kasutatakse Eesti keskmist.',
+      message: 'Värvatava palk pole määratud. Kasutatakse Eesti keskmist.',
     });
   }
   
