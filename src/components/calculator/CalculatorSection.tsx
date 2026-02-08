@@ -20,6 +20,7 @@ interface CalculatorSectionProps {
   children: ReactNode;
   subtotal?: number;
   infoKey?: string; // key to look up in SECTION_INFO
+  hideInfoButton?: boolean; // hide the ? info button
 }
 
 function StateIndicator({ state }: { state: SectionState }) {
@@ -77,6 +78,7 @@ export function CalculatorSection({
   children,
   subtotal,
   infoKey,
+  hideInfoButton,
 }: CalculatorSectionProps) {
   const { openSection, setOpenSection, getSectionState } = useAccordionController();
   const { hasCalculated } = useAppStore();
@@ -85,7 +87,7 @@ export function CalculatorSection({
   
   // Use provided infoKey or derive from id
   const resolvedInfoKey = infoKey || id;
-  const hasInfo = Boolean(SECTION_INFO[resolvedInfoKey]);
+  const hasInfo = Boolean(SECTION_INFO[resolvedInfoKey]) && !hideInfoButton;
   
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('et-EE', {
