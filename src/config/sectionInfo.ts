@@ -100,7 +100,7 @@ export function getDriverInsight(blockKey: string, _blockCosts?: { timeCost: num
   
   // Special cases
   if (blockKey === 'onboarding') {
-    return `${baseInsight} Mõju tuleneb tootlikkuse kadust sisseelamisperioodil.`;
+    return `${baseInsight} Mõju tuleneb tootlikkuse kaost sisseelamisperioodil.`;
   }
   
   if (blockKey === 'vacancy') {

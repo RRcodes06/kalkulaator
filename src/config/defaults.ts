@@ -17,9 +17,9 @@ export const ROLE_DEFAULT_SALARIES = {
 } as const;
 
 export const ROLE_SALARY_LABELS = {
-  team: 'Eesti keskmist brutopalka',
-  hr: 'Eesti värbaja keskmist brutopalka',
-  manager: 'Eesti personalijuhi keskmist brutopalka',
+  team: 'Eesti Statistikaameti andmetel keskmine brutopalk',
+  hr: 'Eesti Statistikaameti andmetel värbamisspetsialisti keskmine brutopalk',
+  manager: 'Eesti Statistikaameti andmetel personalijuhi keskmine brutopalk',
 } as const;
 
 // ============================================================================

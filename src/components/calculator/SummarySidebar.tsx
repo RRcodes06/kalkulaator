@@ -221,19 +221,6 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
         </div>
       )}
 
-      {/* Risk explanation tooltip */}
-      {hasCalculated && (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button className="mt-4 text-xs text-summary-muted hover:text-summary-foreground transition-colors underline decoration-dotted cursor-help">
-              Kuidas arvutatakse halva värbamise riski?
-            </button>
-          </TooltipTrigger>
-          <TooltipContent side="left" className="max-w-xs bg-popover text-popover-foreground">
-            <p>{config.riskExplanationText}</p>
-          </TooltipContent>
-        </Tooltip>
-      )}
     </aside>
   );
 });

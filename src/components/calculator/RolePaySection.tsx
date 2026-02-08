@@ -25,12 +25,11 @@ export function RolePaySection() {
       title="Kaasatud rollide palgad"
       subtitle="Määra värbamisega seotud töötajate palgad"
       icon={<Users className="w-5 h-5" />}
-      infoKey="roles"
     >
       {/* HR Role */}
       <div className="space-y-4 p-4 bg-muted/30 rounded-lg">
         <div className="flex items-center justify-between">
-          <Label className="font-medium">Personalitöötaja (HR)</Label>
+          <Label className="font-medium">Värbamisspetsialist (HR)</Label>
           <Switch
             checked={inputs.roles.hr.enabled}
             onCheckedChange={(checked) => updateRole('hr', { enabled: checked })}
@@ -53,7 +52,7 @@ export function RolePaySection() {
             }
             normalizedPay={results.normalizedRoles.hr}
             isDefaultUsed={results.defaultsUsed.hrPay}
-            defaultSalaryHint={`Kasutab ${ROLE_SALARY_LABELS.hr}: ${ROLE_DEFAULT_SALARIES.hr} €`}
+            defaultSalaryHint={`${ROLE_SALARY_LABELS.hr}: ${ROLE_DEFAULT_SALARIES.hr} €`}
             compact
           />
         )}
@@ -62,7 +61,7 @@ export function RolePaySection() {
       {/* Manager Role */}
       <div className="space-y-4 p-4 bg-muted/30 rounded-lg">
         <div className="flex items-center justify-between">
-          <Label className="font-medium">Värbav juht</Label>
+          <Label className="font-medium">Värbamise eest vastutav juht</Label>
           <Switch
             checked={inputs.roles.manager.enabled}
             onCheckedChange={(checked) => updateRole('manager', { enabled: checked })}
@@ -85,7 +84,7 @@ export function RolePaySection() {
             }
             normalizedPay={results.normalizedRoles.manager}
             isDefaultUsed={results.defaultsUsed.managerPay}
-            defaultSalaryHint={`Kasutab ${ROLE_SALARY_LABELS.manager}: ${ROLE_DEFAULT_SALARIES.manager} €`}
+            defaultSalaryHint={`${ROLE_SALARY_LABELS.manager}: ${ROLE_DEFAULT_SALARIES.manager} €`}
             compact
           />
         )}
@@ -117,24 +116,10 @@ export function RolePaySection() {
             }
             normalizedPay={results.normalizedRoles.team}
             isDefaultUsed={results.defaultsUsed.teamPay}
-            defaultSalaryHint={`Kasutab ${ROLE_SALARY_LABELS.team}: ${ROLE_DEFAULT_SALARIES.team} €`}
+            defaultSalaryHint={`${ROLE_SALARY_LABELS.team}: ${ROLE_DEFAULT_SALARIES.team} €`}
             compact
           />
         )}
-      </div>
-
-      <div className="md:col-span-3 p-4 bg-muted rounded-lg space-y-2">
-        <p className="text-xs text-muted-foreground">
-          ℹ Tööandja kulud sisaldavad sotsiaalmaksu (33%) ja töötuskindlustusmakset (0.8%).
-        </p>
-        <div className="text-xs text-muted-foreground space-y-1">
-          <p className="font-medium">Vaikimisi kasutatavad palgad:</p>
-          <ul className="list-disc list-inside pl-2 space-y-0.5">
-            <li>Tiimiliige: {ROLE_DEFAULT_SALARIES.team} € ({ROLE_SALARY_LABELS.team})</li>
-            <li>HR: {ROLE_DEFAULT_SALARIES.hr} € ({ROLE_SALARY_LABELS.hr})</li>
-            <li>Värbav juht: {ROLE_DEFAULT_SALARIES.manager} € ({ROLE_SALARY_LABELS.manager})</li>
-          </ul>
-        </div>
       </div>
     </CalculatorSection>
   );
