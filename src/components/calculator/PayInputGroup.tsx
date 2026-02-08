@@ -52,21 +52,16 @@ export function PayInputGroup({
       <div className="space-y-3">
         <Label className="text-sm font-medium">{label}</Label>
         <div className="grid grid-cols-2 gap-2">
-          <div>
-            <Select value={value.payType} onValueChange={handlePayTypeChange}>
-              <SelectTrigger className="bg-card">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="unset">Vaikimisi</SelectItem>
-                <SelectItem value="monthly">Kuupalk</SelectItem>
-                <SelectItem value="hourly">Tunnipalk</SelectItem>
-              </SelectContent>
-            </Select>
-            {isDefaultUsed && defaultSalaryHint && (
-              <p className="text-xs text-warning mt-1.5">⚠ {defaultSalaryHint}</p>
-            )}
-          </div>
+          <Select value={value.payType} onValueChange={handlePayTypeChange}>
+            <SelectTrigger className="bg-card">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="unset">Vaikimisi</SelectItem>
+              <SelectItem value="monthly">Kuupalk</SelectItem>
+              <SelectItem value="hourly">Tunnipalk</SelectItem>
+            </SelectContent>
+          </Select>
 
           {value.payType !== 'unset' && (
             <NumberInput
@@ -78,6 +73,13 @@ export function PayInputGroup({
             />
           )}
         </div>
+
+        {isDefaultUsed && defaultSalaryHint && (
+          <div className="flex items-start gap-2 px-3 py-2 bg-warning/10 border border-warning/20 rounded-md">
+            <span className="text-warning shrink-0">⚠</span>
+            <p className="text-xs text-warning leading-relaxed">{defaultSalaryHint}</p>
+          </div>
+        )}
 
         {value.payType === 'hourly' && (
           <NumberInput
