@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { CalculatorInputs, CalculatorConfig, ComputedResult, ServiceRow } from '@/types/calculator';
-import { DEFAULT_CONFIG, STORAGE_KEYS } from '@/config/defaults';
+import { DEFAULT_CONFIG, STORAGE_KEYS, ROLE_DEFAULT_SALARIES } from '@/config/defaults';
 import { computeTotals, createDefaultInputs, createServiceRow } from '@/engine/calculationEngine';
 
 // ============================================================================
@@ -20,6 +20,7 @@ interface AppState {
     NK extends keyof NonNullable<CalculatorInputs[K]>
   >(key: K, nestedKey: NK, value: NonNullable<CalculatorInputs[K]>[NK]) => void;
   resetInputs: () => void;
+  fillWithAverages: () => void;
   
   // Service row actions
   addServiceRow: (prefilledName?: string) => void;
@@ -109,6 +110,88 @@ export const useAppStore = create<AppState>((set, get) => {
       set({
         inputs: freshInputs,
         results: computeTotals(freshInputs, config),
+        hasCalculated: false,
+      });
+    },
+    
+    fillWithAverages: () => {
+      const { config } = get();
+      const ranges = config.recommendedRanges;
+      
+      // Helper to get midpoint rounded by unit
+      const mid = (key: string): number | undefined => {
+        const r = ranges[key];
+        if (!r) return undefined;
+        const raw = (r.min + r.max) / 2;
+        if (r.unit === 'h') return Math.round(raw);
+        if (r.unit === '€') return Math.round(raw);
+        if (r.unit === '%') return Math.round(raw);
+        return Math.round(raw); // days, months
+      };
+
+      const filledInputs: CalculatorInputs = {
+        positionTitle: '',
+        hirePay: { payType: 'monthly', payAmount: ROLE_DEFAULT_SALARIES.team, hoursPerMonth: config.HOURS_PER_MONTH },
+        roles: {
+          hr: { enabled: true, payType: 'monthly', payAmount: ROLE_DEFAULT_SALARIES.hr },
+          manager: { enabled: true, payType: 'monthly', payAmount: ROLE_DEFAULT_SALARIES.manager },
+          team: { enabled: true, payType: 'monthly', payAmount: ROLE_DEFAULT_SALARIES.team },
+        },
+        strategyPrep: {
+          hrHours: mid('strategyPrep.hrHours') ?? 0,
+          managerHours: mid('strategyPrep.managerHours') ?? 0,
+          teamHours: mid('strategyPrep.teamHours') ?? 0,
+        },
+        adsBranding: {
+          hrHours: mid('adsBranding.hrHours') ?? 0,
+          managerHours: mid('adsBranding.managerHours') ?? 0,
+          teamHours: 0,
+          directCosts: mid('adsBranding.directCosts') ?? 0,
+        },
+        candidateMgmt: {
+          hrHours: mid('candidateMgmt.hrHours') ?? 0,
+          managerHours: mid('candidateMgmt.managerHours') ?? 0,
+          teamHours: 0,
+          testsCost: 0, // no range, leave empty
+        },
+        interviews: {
+          hrHours: mid('interviews.hrHours') ?? 0,
+          managerHours: mid('interviews.managerHours') ?? 0,
+          teamHours: mid('interviews.teamHours') ?? 0,
+          directCosts: mid('interviews.directCosts') ?? 0,
+        },
+        backgroundOffer: {
+          hrHours: mid('backgroundOffer.hrHours') ?? 0,
+          managerHours: mid('backgroundOffer.managerHours') ?? 0,
+          teamHours: 0,
+          directCosts: 0, // no range
+        },
+        otherServices: [], // provider-dependent, leave empty
+        preboarding: {
+          devicesCost: 0, // no range
+          itSetupHours: 0, // no range
+          itHourlyRate: 0, // no range
+          prepHours: 0, // no range
+        },
+        onboarding: {
+          onboardingMonths: mid('onboarding.onboardingMonths') ?? 0,
+          productivityPct: mid('onboarding.productivityPct') ?? 0,
+          extraCosts: 0, // no range
+        },
+        vacancy: {
+          vacancyDays: mid('vacancy.vacancyDays') ?? 0,
+          dailyCost: 0, // no range
+        },
+        indirectCosts: {
+          hrHours: mid('indirectCosts.hrHours') ?? 0,
+          managerHours: mid('indirectCosts.managerHours') ?? 0,
+          teamHours: mid('indirectCosts.teamHours') ?? 0,
+        },
+      };
+
+      set({
+        inputs: filledInputs,
+        results: computeTotals(filledInputs, config),
       });
     },
     
