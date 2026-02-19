@@ -99,10 +99,10 @@ function buildAutoFillValues(config: CalculatorConfig): Record<string, number> {
   return vals;
 }
 
-/** Check if a numeric field is "empty" (undefined, null, NaN, or blank string coerced). */
+/** Check if a numeric field is "empty" (undefined, null, NaN, blank string, or 0). */
 function isFieldEmpty(value: unknown): boolean {
   if (value === undefined || value === null || value === '') return true;
-  // We do NOT treat 0 as empty – user may have typed 0 intentionally
+  if (typeof value === 'number' && value === 0) return true;
   return false;
 }
 
