@@ -4,7 +4,9 @@ import { SummarySidebar } from '@/components/calculator/SummarySidebar';
 import { ResetModal } from '@/components/calculator/ResetModal';
 import { PrivacyNotice } from '@/components/calculator/PrivacyNotice';
 import { Button } from '@/components/ui/button';
-import { Printer, Settings, Wand2, Eraser } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Printer, Settings, Eraser } from 'lucide-react';
 import { useAppStore } from '@/store/appStore';
 import { AccordionControllerProvider } from '@/hooks/useAccordionController';
 
@@ -15,11 +17,11 @@ const Index = () => {
   const inputs = useAppStore((s) => s.inputs);
   const results = useAppStore((s) => s.results);
   const config = useAppStore((s) => s.config);
-  const fillWithAverages = useAppStore((s) => s.fillWithAverages);
+  const autoFillEnabled = useAppStore((s) => s.autoFillEnabled);
+  const toggleAutoFill = useAppStore((s) => s.toggleAutoFill);
   const resetInputs = useAppStore((s) => s.resetInputs);
 
   const handlePrint = () => {
-    // Serialize snapshot to sessionStorage
     const snapshot = {
       inputs,
       results,
@@ -36,7 +38,7 @@ const Index = () => {
       },
       generatedAt: new Date().toISOString(),
     };
-    
+
     sessionStorage.setItem(PRINT_SNAPSHOT_KEY, JSON.stringify(snapshot));
     window.open('/print', '_blank');
   };
@@ -79,17 +81,23 @@ const Index = () => {
             {/* Calculator Form */}
             <div className="flex-1 min-w-0">
               <PrivacyNotice />
-              <div className="flex items-center gap-3 mt-4">
-                <Button variant="secondary" size="sm" onClick={fillWithAverages} className="gap-2">
-                  <Wand2 className="w-4 h-4" />
-                  Täida keskmistega
-                </Button>
+              <div className="flex items-center gap-4 mt-4">
+                <div className="flex items-center gap-2">
+                  <Switch
+                    id="auto-fill-toggle"
+                    checked={autoFillEnabled}
+                    onCheckedChange={toggleAutoFill}
+                  />
+                  <Label htmlFor="auto-fill-toggle" className="text-sm font-medium cursor-pointer">
+                    Täida keskmistega
+                  </Label>
+                </div>
                 <Button variant="ghost" size="sm" onClick={resetInputs} className="gap-2 text-muted-foreground">
                   <Eraser className="w-4 h-4" />
                   Tühjenda
                 </Button>
                 <span className="text-xs text-muted-foreground">
-                  Täitub soovituslike vahemike keskmisega. Saad hiljem muuta.
+                  Täidab ainult tühjad väljad soovituslike vahemike keskmisega.
                 </span>
               </div>
               <div className="mt-6">
