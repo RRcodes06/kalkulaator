@@ -4,7 +4,7 @@ import { SummarySidebar } from '@/components/calculator/SummarySidebar';
 import { ResetModal } from '@/components/calculator/ResetModal';
 import { PrivacyNotice } from '@/components/calculator/PrivacyNotice';
 import { Button } from '@/components/ui/button';
-import { Printer, Settings } from 'lucide-react';
+import { Printer, Settings, Wand2, Eraser } from 'lucide-react';
 import { useAppStore } from '@/store/appStore';
 import { AccordionControllerProvider } from '@/hooks/useAccordionController';
 
@@ -15,6 +15,8 @@ const Index = () => {
   const inputs = useAppStore((s) => s.inputs);
   const results = useAppStore((s) => s.results);
   const config = useAppStore((s) => s.config);
+  const fillWithAverages = useAppStore((s) => s.fillWithAverages);
+  const resetInputs = useAppStore((s) => s.resetInputs);
 
   const handlePrint = () => {
     // Serialize snapshot to sessionStorage
@@ -77,6 +79,19 @@ const Index = () => {
             {/* Calculator Form */}
             <div className="flex-1 min-w-0">
               <PrivacyNotice />
+              <div className="flex items-center gap-3 mt-4">
+                <Button variant="secondary" size="sm" onClick={fillWithAverages} className="gap-2">
+                  <Wand2 className="w-4 h-4" />
+                  Täida keskmistega
+                </Button>
+                <Button variant="ghost" size="sm" onClick={resetInputs} className="gap-2 text-muted-foreground">
+                  <Eraser className="w-4 h-4" />
+                  Tühjenda
+                </Button>
+                <span className="text-xs text-muted-foreground">
+                  Täitub soovituslike vahemike keskmisega. Saad hiljem muuta.
+                </span>
+              </div>
               <div className="mt-6">
                 <CalculatorForm />
               </div>
