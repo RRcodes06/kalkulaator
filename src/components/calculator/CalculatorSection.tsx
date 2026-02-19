@@ -81,7 +81,9 @@ export function CalculatorSection({
   const { openSection, setOpenSection, getSectionState } = useAccordionController();
   const { hasCalculated } = useAppStore();
   const sectionState = getSectionState(id);
-  const [showInfo, setShowInfo] = useState(false);
+  const resolvedInfoKeyEarly = infoKey || id;
+  const hasInfoEarly = Boolean(SECTION_INFO[resolvedInfoKeyEarly]) && !hideInfoButton;
+  const [showInfo, setShowInfo] = useState(hasInfoEarly);
   
   // Use provided infoKey or derive from id
   const resolvedInfoKey = infoKey || id;
