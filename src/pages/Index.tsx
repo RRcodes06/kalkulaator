@@ -58,17 +58,17 @@ const Index = () => {
               </p>
             </div>
             <div className="flex items-center gap-3">
+              <Button variant="outline" size="sm" onClick={handlePrint} className="gap-2">
+                <Printer className="w-4 h-4" />
+                Prindi aruanne (PDF)
+              </Button>
+              <ResetModal />
               <Link to="/admin">
                 <Button variant="ghost" size="sm" className="gap-2">
                   <Settings className="w-4 h-4" />
                   Admin
                 </Button>
               </Link>
-              <Button variant="outline" size="sm" onClick={handlePrint} className="gap-2">
-                <Printer className="w-4 h-4" />
-                Prindi aruanne (PDF)
-              </Button>
-              <ResetModal />
             </div>
           </div>
         </div>
