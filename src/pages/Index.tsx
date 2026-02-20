@@ -54,7 +54,7 @@ const Index = () => {
                 Värbamisprotsessi tegeliku kogukulu kalkulaator
               </h1>
               <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
-                {disclaimer}
+                See kalkulaator annab ligikaudse hinnangu värbamisprotsessi kogukulule. Tegelikud kulud võivad varieeruda sõltuvalt konkreetsetest asjaoludest ja sisestatud andmetest. Kalkulaator hõlmab kõiki värbamisprotsessiga seotud otseseid, kaudseid ja varjatud kulusid. Kõik kulud on arvestatud proportsioonis kuu kogukuluga. Kui täpsed andmed puuduvad, kasuta soovituslikke vahemikke või funktsiooni „Täida keskmistega".
               </p>
             </div>
             <div className="flex items-center gap-3">
