@@ -747,6 +747,24 @@ export const translations = {
     configIndirectExplanation: 'Indirect costs include time that colleagues dedicate to helping the new employee, meetings, and other activities that are not directly part of the recruitment process.',
     configFinalQuestion: 'Did this number surprise you?',
     configCtaPlaceholder: 'Contact us to discuss how to optimize your recruitment costs.',
+
+    // Empty field labels
+    emptyHirePay: 'Hired employee salary',
+    emptyHrPay: 'HR specialist salary',
+    emptyManagerPay: 'Manager salary',
+    emptyTeamPay: 'Team salary',
+    emptyStrategyHr: 'Strategy: HR hours',
+    emptyStrategyManager: 'Strategy: Manager hours',
+    emptyAdsHr: 'Job ads: HR hours',
+    emptyAdsCosts: 'Job ads costs',
+    emptyCandidateHr: 'Candidates: HR hours',
+    emptyInterviewsHr: 'Interviews: HR hours',
+    emptyInterviewsManager: 'Interviews: Manager hours',
+    emptyDevicesCost: 'Devices cost',
+    emptyOnboardingMonths: 'Onboarding period',
+    emptyProductivity: 'Average productivity',
+    emptyVacancyDays: 'Vacancy duration',
+    emptyDailyCost: 'Daily cost',
   },
 } as const;
 
