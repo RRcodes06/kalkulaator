@@ -50,6 +50,13 @@ export function NumberInput({
   const { inputRef, displayValue, handleFocus, handleChange } = useExcelInputBehavior(value);
   const { t } = useLanguage();
 
+  const translateUnit = (unit: string) => {
+    if (unit === 'months') return t('unitMonths');
+    if (unit === 'days') return t('unitDays');
+    if (unit === 'h') return t('unitHours');
+    return unit;
+  };
+
   return (
     <div className={cn('space-y-2', className)}>
       {(label || showDefaultIndicator) && (
