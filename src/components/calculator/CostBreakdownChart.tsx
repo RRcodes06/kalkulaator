@@ -1,6 +1,7 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import type { BlockCostsMap, BlockName } from '@/types/calculator';
-import { BLOCK_LABELS } from '@/config/defaults';
+import { useLanguage } from '@/i18n/LanguageContext';
+import type { TranslationKey } from '@/i18n/translations';
 
 interface CostBreakdownChartProps {
   blockCosts: BlockCostsMap;
@@ -21,13 +22,42 @@ const CHART_COLORS = [
   'hsl(45, 80%, 50%)',
 ];
 
+const BLOCK_LABEL_KEYS: Record<string, TranslationKey> = {
+  strategyPrep: 'blockStrategyPrep',
+  adsBranding: 'blockAdsBranding',
+  candidateMgmt: 'blockCandidateMgmt',
+  interviews: 'blockInterviews',
+  backgroundOffer: 'blockBackgroundOffer',
+  otherServices: 'blockOtherServices',
+  preboarding: 'blockPreboarding',
+  onboarding: 'blockOnboarding',
+  vacancy: 'blockVacancy',
+  indirectCosts: 'blockIndirectCosts',
+  expectedRisk: 'blockExpectedRisk',
+};
+
+const SHORT_LABEL_KEYS: Record<string, TranslationKey> = {
+  strategyPrep: 'chartStrategy',
+  adsBranding: 'chartAds',
+  candidateMgmt: 'chartCandidates',
+  interviews: 'chartInterviews',
+  backgroundOffer: 'chartBackground',
+  otherServices: 'chartOtherServices',
+  preboarding: 'chartPreboarding',
+  onboarding: 'chartOnboarding',
+  vacancy: 'chartVacancy',
+  indirectCosts: 'chartIndirect',
+  expectedRisk: 'chartRisk',
+};
+
 export function CostBreakdownChart({ blockCosts, totalCost }: CostBreakdownChartProps) {
-  // Exclude expectedRisk from the chart - it's shown separately
+  const { t } = useLanguage();
+
   const data = (Object.entries(blockCosts) as [BlockName, { total: number }][])
     .filter(([key, cost]) => key !== 'expectedRisk' && cost.total > 0)
     .map(([key, cost], index) => ({
-      name: BLOCK_LABELS[key] || key,
-      shortName: getShortLabel(key),
+      name: t(BLOCK_LABEL_KEYS[key] || 'blockStrategyPrep'),
+      shortName: t(SHORT_LABEL_KEYS[key] || 'chartStrategy'),
       value: Math.round(cost.total),
       percentage: totalCost > 0 ? (cost.total / totalCost) * 100 : 0,
       color: CHART_COLORS[index % CHART_COLORS.length],
@@ -37,7 +67,7 @@ export function CostBreakdownChart({ blockCosts, totalCost }: CostBreakdownChart
   if (data.length === 0) {
     return (
       <div className="h-32 flex items-center justify-center text-summary-muted text-sm">
-        Andmed puuduvad
+        {t('noData')}
       </div>
     );
   }
@@ -53,7 +83,6 @@ export function CostBreakdownChart({ blockCosts, totalCost }: CostBreakdownChart
 
   return (
     <div className="space-y-3">
-      {/* Chart */}
       <div className="h-40">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
@@ -78,18 +107,13 @@ export function CostBreakdownChart({ blockCosts, totalCost }: CostBreakdownChart
                 borderRadius: '8px',
                 fontSize: '12px',
               }}
-              itemStyle={{
-                color: 'white',
-              }}
-              labelStyle={{
-                color: 'rgba(255, 255, 255, 0.7)',
-              }}
+              itemStyle={{ color: 'white' }}
+              labelStyle={{ color: 'rgba(255, 255, 255, 0.7)' }}
             />
           </PieChart>
         </ResponsiveContainer>
       </div>
 
-      {/* Custom legend below */}
       <div className="grid grid-cols-2 gap-x-2 gap-y-1">
         {data.slice(0, 6).map((item) => (
           <div key={item.name} className="flex items-center gap-1.5 text-xs">
@@ -109,26 +133,9 @@ export function CostBreakdownChart({ blockCosts, totalCost }: CostBreakdownChart
       
       {data.length > 6 && (
         <p className="text-xs text-summary-muted text-center">
-          +{data.length - 6} muud kategooriat
+          {t('moreCategories', { count: data.length - 6 })}
         </p>
       )}
     </div>
   );
-}
-
-function getShortLabel(key: string): string {
-  const shortLabels: Record<string, string> = {
-    strategyPrep: 'Strateegia',
-    adsBranding: 'Kuulutused',
-    candidateMgmt: 'Kandidaadid',
-    interviews: 'Intervjuud',
-    backgroundOffer: 'Taustakontroll',
-    otherServices: 'Muud teenused',
-    preboarding: 'Ettevalmistus',
-    onboarding: 'Sisseelamine',
-    vacancy: 'Vakants',
-    indirectCosts: 'Kaudsed',
-    expectedRisk: 'Risk',
-  };
-  return shortLabels[key] || key;
 }

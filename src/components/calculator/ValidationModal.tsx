@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { AlertTriangle, ChevronRight, Calculator } from 'lucide-react';
 import {
   Dialog,
@@ -9,6 +8,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 export interface EmptyField {
   sectionId: string;
@@ -31,7 +31,7 @@ export function ValidationModal({
   onReview,
   onCalculateAnyway,
 }: ValidationModalProps) {
-  // Group fields by section for display
+  const { t } = useLanguage();
   const fieldLabels = emptyFields.map(f => f.label);
   const displayList = fieldLabels.slice(0, 5);
   const remaining = fieldLabels.length - 5;
@@ -42,10 +42,10 @@ export function ValidationModal({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-warning">
             <AlertTriangle className="w-5 h-5" />
-            Puudulikud andmed
+            {t('validationTitle')}
           </DialogTitle>
           <DialogDescription className="pt-2">
-            Jätsid täitmata või nulliga:
+            {t('validationDescription')}
           </DialogDescription>
         </DialogHeader>
         
@@ -59,7 +59,7 @@ export function ValidationModal({
             ))}
             {remaining > 0 && (
               <li className="text-muted-foreground/70 pl-5">
-                ...ja veel {remaining} välja
+                {t('validationMore', { count: remaining })}
               </li>
             )}
           </ul>
@@ -71,14 +71,14 @@ export function ValidationModal({
             onClick={onReview}
             className="w-full sm:w-auto"
           >
-            Vaata andmed üle
+            {t('validationReview')}
           </Button>
           <Button
             onClick={onCalculateAnyway}
             className="w-full sm:w-auto gap-2"
           >
             <Calculator className="w-4 h-4" />
-            Arvuta puudulike andmetega
+            {t('validationCalculateAnyway')}
           </Button>
         </DialogFooter>
       </DialogContent>

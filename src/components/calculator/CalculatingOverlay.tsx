@@ -1,18 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 interface CalculatingOverlayProps {
   isVisible: boolean;
   onComplete: () => void;
 }
 
-const messages = [
-  'Arvutame…',
-  'Koostame kokkuvõtet…',
-];
-
 export function CalculatingOverlay({ isVisible, onComplete }: CalculatingOverlayProps) {
+  const { t } = useLanguage();
   const [messageIndex, setMessageIndex] = useState(0);
+
+  const messages = [t('calculating'), t('preparingSummary')];
 
   useEffect(() => {
     if (!isVisible) {
@@ -20,12 +19,10 @@ export function CalculatingOverlay({ isVisible, onComplete }: CalculatingOverlay
       return;
     }
 
-    // Change message after 1.5s
     const messageTimer = setTimeout(() => {
       setMessageIndex(1);
     }, 1500);
 
-    // Complete after 2.5-3s total
     const completeTimer = setTimeout(() => {
       onComplete();
     }, 2800);

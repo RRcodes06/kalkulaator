@@ -1,6 +1,8 @@
 import { Info } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ROLE_DEFAULT_SALARIES } from '@/config/defaults';
+import { useLanguage } from '@/i18n/LanguageContext';
+import type { TranslationKey } from '@/i18n/translations';
 
 export interface MissingInputInfo {
   label: string;
@@ -12,46 +14,39 @@ interface MissingInputsInfoProps {
   missingInputs: MissingInputInfo[];
 }
 
-const TYPICAL_GUIDANCE: Record<string, string> = {
-  // Salaries
-  'Värvatava töötaja palk': `Tavaliselt ${ROLE_DEFAULT_SALARIES.team.toLocaleString('et-EE')} – 4000 € kuus`,
-  'Personalitöötaja palk': `Tavaliselt ${ROLE_DEFAULT_SALARIES.hr.toLocaleString('et-EE')} € kuus`,
-  'Juhi palk': `Tavaliselt ${ROLE_DEFAULT_SALARIES.manager.toLocaleString('et-EE')} € kuus`,
-  'Tiimi palk': `Tavaliselt ${ROLE_DEFAULT_SALARIES.team.toLocaleString('et-EE')} € kuus`,
-  
-  // Hours
-  'Personalitöötaja tunnid': 'Tavaliselt 2–15 tundi',
-  'Juhi tunnid': 'Tavaliselt 1–10 tundi',
-  'Tiimi tunnid': 'Tavaliselt 0–8 tundi',
-  
-  // Onboarding
-  'Sisseelamisperiood': 'Tavaliselt 1–6 kuud',
-  'Keskmine tootlikkus': 'Tavaliselt 40–70%',
-  
-  // Vacancy
-  'Vakantsi kestus': 'Tavaliselt 20–60 päeva',
-  'Päevakulu': 'Sõltub ametikohast',
-  
-  // Devices
-  'Seadmete kulu': 'Tavaliselt 500–2000 €',
-  'IT spetsialisti tunnipalk': 'Tavaliselt 20–35 €/h',
-};
-
 export function MissingInputsInfo({ missingInputs }: MissingInputsInfoProps) {
+  const { t } = useLanguage();
+
   if (missingInputs.length === 0) return null;
+
+  // Build guidance map using translation keys
+  const TYPICAL_GUIDANCE: Record<string, string> = {
+    [t('fieldHirePay')]: t('guidanceHirePay', { min: ROLE_DEFAULT_SALARIES.team.toLocaleString('et-EE') }),
+    [t('fieldHrPay')]: t('guidanceHrPay', { amount: ROLE_DEFAULT_SALARIES.hr.toLocaleString('et-EE') }),
+    [t('fieldManagerPay')]: t('guidanceManagerPay', { amount: ROLE_DEFAULT_SALARIES.manager.toLocaleString('et-EE') }),
+    [t('fieldTeamPay')]: t('guidanceTeamPay', { amount: ROLE_DEFAULT_SALARIES.team.toLocaleString('et-EE') }),
+    [t('hrHours')]: t('guidanceHrHours'),
+    [t('managerHours')]: t('guidanceManagerHours'),
+    [t('teamHours')]: t('guidanceTeamHours'),
+    [t('onboardingMonths')]: t('guidanceOnboardingMonths'),
+    [t('productivityPct')]: t('guidanceProductivity'),
+    [t('vacancyDays')]: t('guidanceVacancyDays'),
+    [t('dailyCost')]: t('guidanceDailyCost'),
+    [t('devicesCost')]: t('guidanceDevicesCost'),
+    [t('itHourlyRate')]: t('guidanceItRate'),
+  };
 
   return (
     <Card className="border-muted bg-muted/30">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-base text-primary">
           <Info className="w-4 h-4" />
-          Täitmata väljad
+          {t('missingFieldsTitle')}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground mb-4">
-          Järgmised väljad jäeti tühjaks või nulliks. Arvutus kasutab neid nullina.
-          Siin on tüüpilised väärtused teadmiseks:
+          {t('missingFieldsDescription')}
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {missingInputs.slice(0, 8).map((item, idx) => {
@@ -68,7 +63,7 @@ export function MissingInputsInfo({ missingInputs }: MissingInputsInfoProps) {
         </div>
         {missingInputs.length > 8 && (
           <p className="text-xs text-muted-foreground mt-3">
-            ...ja veel {missingInputs.length - 8} täitmata välja
+            {t('andMoreFields', { count: missingInputs.length - 8 })}
           </p>
         )}
       </CardContent>

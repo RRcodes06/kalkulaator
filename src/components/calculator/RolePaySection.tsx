@@ -3,10 +3,12 @@ import { CalculatorSection } from './CalculatorSection';
 import { PayInputGroup } from './PayInputGroup';
 import { Label } from '@/components/ui/label';
 import { Users } from 'lucide-react';
-import { ROLE_DEFAULT_SALARIES, ROLE_SALARY_LABELS } from '@/config/defaults';
+import { ROLE_DEFAULT_SALARIES } from '@/config/defaults';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 export function RolePaySection() {
   const { inputs, results, updateInput } = useAppStore();
+  const { t } = useLanguage();
 
   const updateRole = (
     role: 'hr' | 'manager' | 'team',
@@ -21,15 +23,15 @@ export function RolePaySection() {
   return (
     <CalculatorSection
       id="roles"
-      title="Määra värbamisega seotud töötajate palgad"
+      title={t('sectionRoles')}
       icon={<Users className="w-5 h-5" />}
       hideInfoButton
     >
       {/* HR Role */}
       <div className="space-y-5 p-5 bg-muted/30 rounded-lg">
-        <Label className="font-medium text-base">Värbamisspetsialist (HR)</Label>
+        <Label className="font-medium text-base">{t('hrRole')}</Label>
         <PayInputGroup
-          label="HR palk"
+          label={t('hrPayLabel')}
           value={{
             payType: inputs.roles.hr.payType,
             payAmount: inputs.roles.hr.payAmount,
@@ -44,16 +46,16 @@ export function RolePaySection() {
           }
           normalizedPay={results.normalizedRoles.hr}
           isDefaultUsed={results.defaultsUsed.hrPay}
-          defaultSalaryHint={`${ROLE_SALARY_LABELS.hr}: ${ROLE_DEFAULT_SALARIES.hr} €`}
+          defaultSalaryHint={`${t('roleSalaryLabelHr')}: ${ROLE_DEFAULT_SALARIES.hr} €`}
           compact
         />
       </div>
 
       {/* Manager Role */}
       <div className="space-y-5 p-5 bg-muted/30 rounded-lg">
-        <Label className="font-medium text-base">Värbamise eest vastutav juht</Label>
+        <Label className="font-medium text-base">{t('managerRole')}</Label>
         <PayInputGroup
-          label="Juhi palk"
+          label={t('managerPayLabel')}
           value={{
             payType: inputs.roles.manager.payType,
             payAmount: inputs.roles.manager.payAmount,
@@ -68,19 +70,19 @@ export function RolePaySection() {
           }
           normalizedPay={results.normalizedRoles.manager}
           isDefaultUsed={results.defaultsUsed.managerPay}
-          defaultSalaryHint={`${ROLE_SALARY_LABELS.manager}: ${ROLE_DEFAULT_SALARIES.manager} €`}
+          defaultSalaryHint={`${t('roleSalaryLabelManager')}: ${ROLE_DEFAULT_SALARIES.manager} €`}
           compact
         />
       </div>
 
       {/* Team Role */}
       <div className="space-y-5 p-5 bg-muted/30 rounded-lg">
-        <Label className="font-medium text-base">Tiimiliikmed</Label>
+        <Label className="font-medium text-base">{t('teamRole')}</Label>
         <p className="text-sm text-muted-foreground -mt-2">
-          Tiimi palka kasutatakse hiljem tiimi panustatud tundide arvutamiseks. Kui tiim panus on (0 h), kulu ei lisandu.
+          {t('teamRoleDescription')}
         </p>
         <PayInputGroup
-          label="Tiimi palk"
+          label={t('teamPayLabel')}
           value={{
             payType: inputs.roles.team.payType,
             payAmount: inputs.roles.team.payAmount,
@@ -95,7 +97,7 @@ export function RolePaySection() {
           }
           normalizedPay={results.normalizedRoles.team}
           isDefaultUsed={results.defaultsUsed.teamPay}
-          defaultSalaryHint={`${ROLE_SALARY_LABELS.team}: ${ROLE_DEFAULT_SALARIES.team} €`}
+          defaultSalaryHint={`${t('roleSalaryLabelTeam')}: ${ROLE_DEFAULT_SALARIES.team} €`}
           compact
         />
       </div>

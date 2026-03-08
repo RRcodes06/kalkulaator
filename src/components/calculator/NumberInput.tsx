@@ -3,6 +3,7 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { AlertTriangle, Info } from 'lucide-react';
 import { useExcelInputBehavior } from '@/hooks/useExcelInputBehavior';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 export interface NumberInputWarning {
   message: string;
@@ -47,6 +48,7 @@ export function NumberInput({
   className,
 }: NumberInputProps) {
   const { inputRef, displayValue, handleFocus, handleChange } = useExcelInputBehavior(value);
+  const { t } = useLanguage();
 
   return (
     <div className={cn('space-y-2', className)}>
@@ -55,7 +57,7 @@ export function NumberInput({
           {label && <Label className="text-sm font-medium text-foreground">{label}</Label>}
           {showDefaultIndicator && (
             <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-              vaikeväärtus
+              {t('defaultValue')}
             </span>
           )}
         </div>
@@ -89,7 +91,6 @@ export function NumberInput({
           </span>
         )}
       </div>
-      {/* Show warning if exists, otherwise show range hint if exists, otherwise show regular hint */}
       {warning ? (
         <div className={cn(
           "flex items-start gap-1.5 text-xs",
@@ -106,7 +107,7 @@ export function NumberInput({
         </div>
       ) : rangeHint ? (
         <p className="text-xs text-muted-foreground">
-          Tüüpiline vahemik: {rangeHint.min}–{rangeHint.max} {rangeHint.unit}.
+          {t('typicalRange', { min: rangeHint.min, max: rangeHint.max, unit: rangeHint.unit })}
         </p>
       ) : hint ? (
         <p className="text-xs text-muted-foreground">{hint}</p>
