@@ -436,6 +436,9 @@ export const translations = {
     // NumberInput
     defaultValue: 'default',
     typicalRange: 'Typical range: {min}–{max} {unit}.',
+    unitMonths: 'months',
+    unitDays: 'days',
+    unitHours: 'h',
 
     // Summary sidebar
     enterDataAndCalculate: 'Enter data and press CALCULATE',
