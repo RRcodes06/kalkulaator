@@ -58,11 +58,11 @@ export const DEFAULT_RECOMMENDED_RANGES: RecommendedRanges = {
   'indirectCosts.teamHours': { min: 0, max: 8, unit: 'h' },
   
   // Onboarding
-  'onboarding.onboardingMonths': { min: 1, max: 12, unit: 'kuud' },
+  'onboarding.onboardingMonths': { min: 1, max: 12, unit: 'months' },
   'onboarding.productivityPct': { min: 20, max: 80, unit: '%' },
   
   // Vacancy
-  'vacancy.vacancyDays': { min: 10, max: 90, unit: 'päeva' },
+  'vacancy.vacancyDays': { min: 10, max: 90, unit: 'days' },
 };
 
 // Labels for recommended ranges (shown in Admin UI)
