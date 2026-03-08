@@ -245,7 +245,7 @@ const Print = () => {
               {results.emptyFields.slice(0, 10).map((field, idx) => (
                 <div key={idx} className="flex items-start gap-1">
                   <span className="text-yellow-600">•</span>
-                  <span className="text-gray-700">{field.label}</span>
+                  <span className="text-gray-700">{t(field.label as TranslationKey)}</span>
                 </div>
               ))}
               {results.emptyFields.length > 10 && (
