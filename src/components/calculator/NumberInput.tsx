@@ -50,6 +50,13 @@ export function NumberInput({
   const { inputRef, displayValue, handleFocus, handleChange } = useExcelInputBehavior(value);
   const { t } = useLanguage();
 
+  const translateUnit = (unit: string) => {
+    if (unit === 'months') return t('unitMonths');
+    if (unit === 'days') return t('unitDays');
+    if (unit === 'h') return t('unitHours');
+    return unit;
+  };
+
   return (
     <div className={cn('space-y-2', className)}>
       {(label || showDefaultIndicator) && (
@@ -107,7 +114,7 @@ export function NumberInput({
         </div>
       ) : rangeHint ? (
         <p className="text-xs text-muted-foreground">
-          {t('typicalRange', { min: rangeHint.min, max: rangeHint.max, unit: rangeHint.unit })}
+          {t('typicalRange', { min: rangeHint.min, max: rangeHint.max, unit: translateUnit(rangeHint.unit) })}
         </p>
       ) : hint ? (
         <p className="text-xs text-muted-foreground">{hint}</p>

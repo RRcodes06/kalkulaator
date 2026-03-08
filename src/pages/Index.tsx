@@ -15,7 +15,7 @@ import { useLanguage } from '@/i18n/LanguageContext';
 const PRINT_SNAPSHOT_KEY = 'recruitment-calc-print-snapshot';
 
 const Index = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const inputs = useAppStore((s) => s.inputs);
   const results = useAppStore((s) => s.results);
   const config = useAppStore((s) => s.config);
@@ -38,6 +38,7 @@ const Index = () => {
         HOURS_PER_MONTH: config.HOURS_PER_MONTH,
         EST_AVG_GROSS_WAGE: config.EST_AVG_GROSS_WAGE,
       },
+      language,
       generatedAt: new Date().toISOString(),
     };
 

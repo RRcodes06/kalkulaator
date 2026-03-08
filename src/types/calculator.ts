@@ -143,7 +143,7 @@ export interface CalculatorInputs {
 // CONFIG TYPES
 // ============================================================================
 
-export type RangeUnit = 'h' | '€' | 'päeva' | 'kuud' | '%';
+export type RangeUnit = 'h' | '€' | 'days' | 'months' | '%';
 
 export interface RecommendedRange {
   min: number;
