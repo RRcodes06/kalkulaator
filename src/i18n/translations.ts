@@ -364,6 +364,24 @@ export const translations = {
     configIndirectExplanation: 'Kaudsed kulud hõlmavad aega, mille kolleegid pühendavad uue töötaja abistamisele, koosolekutele ja muudele tegevustele, mis ei ole otseselt värbamisprotsess.',
     configFinalQuestion: 'Kas see number üllatas sind?',
     configCtaPlaceholder: 'Võta meiega ühendust, et arutada, kuidas värbamiskulusid optimeerida.',
+
+    // Empty field labels (used as translation keys in engine)
+    emptyHirePay: 'Värvatava töötaja palk',
+    emptyHrPay: 'Personalitöötaja palk',
+    emptyManagerPay: 'Juhi palk',
+    emptyTeamPay: 'Tiimi palk',
+    emptyStrategyHr: 'Strateegia: HR tunnid',
+    emptyStrategyManager: 'Strateegia: Juhi tunnid',
+    emptyAdsHr: 'Kuulutused: HR tunnid',
+    emptyAdsCosts: 'Kuulutuste kulud',
+    emptyCandidateHr: 'Kandidaadid: HR tunnid',
+    emptyInterviewsHr: 'Intervjuud: HR tunnid',
+    emptyInterviewsManager: 'Intervjuud: Juhi tunnid',
+    emptyDevicesCost: 'Seadmete kulu',
+    emptyOnboardingMonths: 'Sisseelamisperiood',
+    emptyProductivity: 'Keskmine tootlikkus',
+    emptyVacancyDays: 'Vakantsi kestus',
+    emptyDailyCost: 'Päevakulu',
   },
 
   eng: {
