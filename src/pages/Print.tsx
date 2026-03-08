@@ -463,7 +463,7 @@ const Print = () => {
         <h2 className="text-lg font-semibold mb-4 border-b border-gray-200 pb-2">{t('printRiskAnalysis')}</h2>
         
         <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
-          <p className="text-sm text-gray-700 mb-4">{config.riskExplanationText}</p>
+          <p className="text-sm text-gray-700 mb-4">{t('configRiskExplanation')}</p>
           <div className="grid grid-cols-2 gap-6">
             <div>
               <p className="text-sm text-gray-600">{t('printRiskRate')}</p>
