@@ -6,6 +6,7 @@ import { RolePaySection } from './RolePaySection';
 import { OtherServicesSection } from './OtherServicesSection';
 import { RiskSummarySection } from './RiskSummarySection';
 import { AccordionControllerProvider } from '@/hooks/useAccordionController';
+import { useLanguage } from '@/i18n/LanguageContext';
 import { 
   Briefcase, 
   Users, 
@@ -22,6 +23,7 @@ import { Label } from '@/components/ui/label';
 
 export function CalculatorForm() {
   const { inputs, results, updateInput, updateNestedInput, hasCalculated } = useAppStore();
+  const { t } = useLanguage();
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('et-EE', {
@@ -30,7 +32,6 @@ export function CalculatorForm() {
     }).format(Math.round(value));
   };
 
-  // Helper to find warning for a specific field
   const getWarningForField = (fieldName: string) => {
     const warning = results.rangeWarnings.find(w => w.field === fieldName);
     if (warning) {
@@ -39,7 +40,6 @@ export function CalculatorForm() {
     return undefined;
   };
 
-  // Helper to get range hint for a specific field
   const getRangeHintForField = (fieldName: string) => {
     const hint = results.rangeHints.find(h => h.field === fieldName);
     if (hint) {
@@ -54,24 +54,24 @@ export function CalculatorForm() {
       {/* Position & Hire Pay */}
       <CalculatorSection
         id="position"
-        title="Värvatava positsiooni põhiandmed"
+        title={t('sectionPosition')}
         icon={<Briefcase className="w-5 h-5" />}
         subtotal={results.normalizedHirePay.employerMonthlyCost}
         infoKey="position"
       >
         <div className="space-y-1.5">
-          <Label className="text-sm font-medium">Ametikoha nimetus</Label>
+          <Label className="text-sm font-medium">{t('positionTitle')}</Label>
           <Input
             value={inputs.positionTitle}
             onChange={(e) => updateInput('positionTitle', e.target.value)}
-            placeholder="nt. Tarkvaraarendaja"
+            placeholder={t('positionTitlePlaceholder')}
             className="bg-card"
           />
         </div>
         
         <div className="md:col-span-2">
           <PayInputGroup
-            label="Värvatava töötaja palk"
+            label={t('hirePay')}
             value={inputs.hirePay}
             onChange={(pay) => updateInput('hirePay', pay)}
             normalizedPay={results.normalizedHirePay}
@@ -87,13 +87,13 @@ export function CalculatorForm() {
       {/* Strategy & Prep */}
       <CalculatorSection
         id="strategy"
-        title="Ametiprofiili koostamine, nõuete määramine"
+        title={t('sectionStrategy')}
         icon={<Users className="w-5 h-5" />}
         subtotal={results.blockCosts.strategyPrep.total}
         infoKey="strategy"
       >
         <NumberInput
-          label="Personalitöötaja tunnid"
+          label={t('hrHours')}
           value={inputs.strategyPrep.hrHours}
           onChange={(v) => updateNestedInput('strategyPrep', 'hrHours', v)}
           suffix="h"
@@ -101,7 +101,7 @@ export function CalculatorForm() {
           rangeHint={getRangeHintForField('strategyPrep.hrHours')}
         />
         <NumberInput
-          label="Juhi tunnid"
+          label={t('managerHours')}
           value={inputs.strategyPrep.managerHours}
           onChange={(v) => updateNestedInput('strategyPrep', 'managerHours', v)}
           suffix="h"
@@ -109,7 +109,7 @@ export function CalculatorForm() {
           rangeHint={getRangeHintForField('strategyPrep.managerHours')}
         />
         <NumberInput
-          label="Tiimi tunnid"
+          label={t('teamHours')}
           value={inputs.strategyPrep.teamHours}
           onChange={(v) => updateNestedInput('strategyPrep', 'teamHours', v)}
           suffix="h"
@@ -121,13 +121,13 @@ export function CalculatorForm() {
       {/* Ads & Branding */}
       <CalculatorSection
         id="ads"
-        title="Töökuulutused, tööandja brändi materjalid"
+        title={t('sectionAds')}
         icon={<Megaphone className="w-5 h-5" />}
         subtotal={results.blockCosts.adsBranding.total}
         infoKey="ads"
       >
         <NumberInput
-          label="Personalitöötaja tunnid"
+          label={t('hrHours')}
           value={inputs.adsBranding.hrHours}
           onChange={(v) => updateNestedInput('adsBranding', 'hrHours', v)}
           suffix="h"
@@ -135,7 +135,7 @@ export function CalculatorForm() {
           rangeHint={getRangeHintForField('adsBranding.hrHours')}
         />
         <NumberInput
-          label="Juhi tunnid"
+          label={t('managerHours')}
           value={inputs.adsBranding.managerHours}
           onChange={(v) => updateNestedInput('adsBranding', 'managerHours', v)}
           suffix="h"
@@ -143,11 +143,11 @@ export function CalculatorForm() {
           rangeHint={getRangeHintForField('adsBranding.managerHours')}
         />
         <NumberInput
-          label="Kuulutuste ja brändingu kulud"
+          label={t('adsCosts')}
           value={inputs.adsBranding.directCosts}
           onChange={(v) => updateNestedInput('adsBranding', 'directCosts', v)}
           suffix="€"
-          hint="CV-Online, LinkedIn, materjalid"
+          hint={t('adsCostsHint')}
           warning={getWarningForField('adsBranding.directCosts')}
           rangeHint={getRangeHintForField('adsBranding.directCosts')}
         />
@@ -156,13 +156,13 @@ export function CalculatorForm() {
       {/* Candidate Management */}
       <CalculatorSection
         id="candidate"
-        title="CV-de läbivaatus, testid, suhtlus"
+        title={t('sectionCandidate')}
         icon={<UserCheck className="w-5 h-5" />}
         subtotal={results.blockCosts.candidateMgmt.total}
         infoKey="candidate"
       >
         <NumberInput
-          label="Personalitöötaja tunnid"
+          label={t('hrHours')}
           value={inputs.candidateMgmt.hrHours}
           onChange={(v) => updateNestedInput('candidateMgmt', 'hrHours', v)}
           suffix="h"
@@ -170,7 +170,7 @@ export function CalculatorForm() {
           rangeHint={getRangeHintForField('candidateMgmt.hrHours')}
         />
         <NumberInput
-          label="Juhi tunnid"
+          label={t('managerHours')}
           value={inputs.candidateMgmt.managerHours}
           onChange={(v) => updateNestedInput('candidateMgmt', 'managerHours', v)}
           suffix="h"
@@ -178,24 +178,24 @@ export function CalculatorForm() {
           rangeHint={getRangeHintForField('candidateMgmt.managerHours')}
         />
         <NumberInput
-          label="Hindamistestide kulud"
+          label={t('testsCost')}
           value={inputs.candidateMgmt.testsCost}
           onChange={(v) => updateNestedInput('candidateMgmt', 'testsCost', v)}
           suffix="€"
-          hint="Psühholoogilised testid, oskuste hindamine"
+          hint={t('testsCostHint')}
         />
       </CalculatorSection>
 
       {/* Interviews */}
       <CalculatorSection
         id="interviews"
-        title="Intervjuude läbiviimine ja koordineerimine"
+        title={t('sectionInterviews')}
         icon={<Clock className="w-5 h-5" />}
         subtotal={results.blockCosts.interviews.total}
         infoKey="interviews"
       >
         <NumberInput
-          label="Personalitöötaja tunnid"
+          label={t('hrHours')}
           value={inputs.interviews.hrHours}
           onChange={(v) => updateNestedInput('interviews', 'hrHours', v)}
           suffix="h"
@@ -203,7 +203,7 @@ export function CalculatorForm() {
           rangeHint={getRangeHintForField('interviews.hrHours')}
         />
         <NumberInput
-          label="Juhi tunnid"
+          label={t('managerHours')}
           value={inputs.interviews.managerHours}
           onChange={(v) => updateNestedInput('interviews', 'managerHours', v)}
           suffix="h"
@@ -211,20 +211,20 @@ export function CalculatorForm() {
           rangeHint={getRangeHintForField('interviews.managerHours')}
         />
         <NumberInput
-          label="Tiimi tunnid"
+          label={t('teamHours')}
           value={inputs.interviews.teamHours}
           onChange={(v) => updateNestedInput('interviews', 'teamHours', v)}
           suffix="h"
-          hint="Tiimikaaslaste kaasamine intervjuudele"
+          hint={t('teamHoursHint')}
           warning={getWarningForField('interviews.teamHours')}
           rangeHint={getRangeHintForField('interviews.teamHours')}
         />
         <NumberInput
-          label="Otsesed kulud"
+          label={t('directCosts')}
           value={inputs.interviews.directCosts}
           onChange={(v) => updateNestedInput('interviews', 'directCosts', v)}
           suffix="€"
-          hint="Reisikulud, ruumid"
+          hint={t('interviewDirectCostsHint')}
           warning={getWarningForField('interviews.directCosts')}
           rangeHint={getRangeHintForField('interviews.directCosts')}
         />
@@ -233,13 +233,13 @@ export function CalculatorForm() {
       {/* Background & Offer */}
       <CalculatorSection
         id="background"
-        title="Taustakontroll, lepingu koostamine"
+        title={t('sectionBackground')}
         icon={<Package className="w-5 h-5" />}
         subtotal={results.blockCosts.backgroundOffer.total}
         infoKey="background"
       >
         <NumberInput
-          label="Personalitöötaja tunnid"
+          label={t('hrHours')}
           value={inputs.backgroundOffer.hrHours}
           onChange={(v) => updateNestedInput('backgroundOffer', 'hrHours', v)}
           suffix="h"
@@ -247,7 +247,7 @@ export function CalculatorForm() {
           rangeHint={getRangeHintForField('backgroundOffer.hrHours')}
         />
         <NumberInput
-          label="Juhi tunnid"
+          label={t('managerHours')}
           value={inputs.backgroundOffer.managerHours}
           onChange={(v) => updateNestedInput('backgroundOffer', 'managerHours', v)}
           suffix="h"
@@ -255,11 +255,11 @@ export function CalculatorForm() {
           rangeHint={getRangeHintForField('backgroundOffer.managerHours')}
         />
         <NumberInput
-          label="Otsesed kulud"
+          label={t('backgroundDirectCosts')}
           value={inputs.backgroundOffer.directCosts}
           onChange={(v) => updateNestedInput('backgroundOffer', 'directCosts', v)}
           suffix="€"
-          hint="Taustakontroll, juriidilised tasud"
+          hint={t('backgroundDirectCostsHint')}
         />
       </CalculatorSection>
 
@@ -269,115 +269,115 @@ export function CalculatorForm() {
       {/* Preboarding */}
       <CalculatorSection
         id="preboarding"
-        title="Töökoha ettevalmistus, varustus"
+        title={t('sectionPreboarding')}
         icon={<Wrench className="w-5 h-5" />}
         subtotal={results.blockCosts.preboarding.total}
         infoKey="preboarding"
       >
         <NumberInput
-          label="Seadmete kulu"
+          label={t('devicesCost')}
           value={inputs.preboarding.devicesCost}
           onChange={(v) => updateNestedInput('preboarding', 'devicesCost', v)}
           suffix="€"
-          hint="Arvuti, telefon, monitor"
+          hint={t('devicesCostHint')}
         />
         <NumberInput
-          label="IT seadistamise tunnid"
+          label={t('itSetupHours')}
           value={inputs.preboarding.itSetupHours}
           onChange={(v) => updateNestedInput('preboarding', 'itSetupHours', v)}
           suffix="h"
-          hint="Kontode loomine, tarkvara paigaldus"
+          hint={t('itSetupHoursHint')}
         />
         <NumberInput
-          label="IT spetsialisti tunnipalk"
+          label={t('itHourlyRate')}
           value={inputs.preboarding.itHourlyRate}
           onChange={(v) => updateNestedInput('preboarding', 'itHourlyRate', v)}
           suffix="€/h"
-          hint="IT-töötaja brutotunnipalk"
+          hint={t('itHourlyRateHint')}
         />
         <NumberInput
-          label="HR ettevalmistuse tunnid"
+          label={t('prepHours')}
           value={inputs.preboarding.prepHours}
           onChange={(v) => updateNestedInput('preboarding', 'prepHours', v)}
           suffix="h"
-          hint="Dokumentide ettevalmistus"
+          hint={t('prepHoursHint')}
         />
       </CalculatorSection>
 
       {/* Onboarding */}
       <CalculatorSection
         id="onboarding"
-        title="Tootlikkuse kadu uue töötaja sisseelamisel"
+        title={t('sectionOnboarding')}
         icon={<GraduationCap className="w-5 h-5" />}
         subtotal={results.blockCosts.onboarding.total}
         infoKey="onboarding"
       >
         <NumberInput
-          label="Sisseelamisperiood"
+          label={t('onboardingMonths')}
           value={inputs.onboarding.onboardingMonths}
           onChange={(v) => updateNestedInput('onboarding', 'onboardingMonths', v)}
-          suffix="kuud"
+          suffix={t('onboardingMonthsSuffix')}
           min={0}
           max={24}
           warning={getWarningForField('onboarding.onboardingMonths')}
           rangeHint={getRangeHintForField('onboarding.onboardingMonths')}
         />
         <NumberInput
-          label="Keskmine tootlikkus"
+          label={t('productivityPct')}
           value={inputs.onboarding.productivityPct}
           onChange={(v) => updateNestedInput('onboarding', 'productivityPct', v)}
           suffix="%"
           min={0}
           max={100}
-          hint="Protsent täistootlikkusest"
+          hint={t('productivityPctHint')}
           warning={getWarningForField('onboarding.productivityPct')}
           rangeHint={getRangeHintForField('onboarding.productivityPct')}
         />
         <NumberInput
-          label="Lisakulud"
+          label={t('extraCosts')}
           value={inputs.onboarding.extraCosts}
           onChange={(v) => updateNestedInput('onboarding', 'extraCosts', v)}
           suffix="€"
-          hint="Koolitused, sertifikaadid"
+          hint={t('extraCostsHint')}
         />
       </CalculatorSection>
 
       {/* Vacancy Cost */}
       <CalculatorSection
         id="vacancy"
-        title="Kaotatud tootlikkus täitmata positsiooni tõttu"
+        title={t('sectionVacancy')}
         icon={<TrendingDown className="w-5 h-5" />}
         subtotal={results.blockCosts.vacancy.total}
         infoKey="vacancy"
       >
         <NumberInput
-          label="Vakantsi kestus"
+          label={t('vacancyDays')}
           value={inputs.vacancy.vacancyDays}
           onChange={(v) => updateNestedInput('vacancy', 'vacancyDays', v)}
-          suffix="päeva"
+          suffix={t('vacancyDaysSuffix')}
           min={0}
           warning={getWarningForField('vacancy.vacancyDays')}
           rangeHint={getRangeHintForField('vacancy.vacancyDays')}
         />
         <NumberInput
-          label="Päevakulu"
+          label={t('dailyCost')}
           value={inputs.vacancy.dailyCost}
           onChange={(v) => updateNestedInput('vacancy', 'dailyCost', v)}
-          suffix="€/päev"
-          hint="Kaotatud tulu või tootlikkus päevas"
+          suffix={t('dailyCostSuffix')}
+          hint={t('dailyCostHint')}
         />
       </CalculatorSection>
 
       {/* Indirect Costs */}
       <CalculatorSection
         id="indirect"
-        title="Tiimi ülekoormus, juhi tähelepanu hajumine, prioriteetide ümberjagamine"
+        title={t('sectionIndirect')}
         icon={<Users className="w-5 h-5" />}
         subtotal={results.blockCosts.indirectCosts.total}
         hideInfoButton
       >
         <NumberInput
-          label="Personalitöötaja tunnid"
+          label={t('hrHours')}
           value={inputs.indirectCosts.hrHours}
           onChange={(v) => updateNestedInput('indirectCosts', 'hrHours', v)}
           suffix="h"
@@ -385,7 +385,7 @@ export function CalculatorForm() {
           rangeHint={getRangeHintForField('indirectCosts.hrHours')}
         />
         <NumberInput
-          label="Juhi tunnid"
+          label={t('managerHours')}
           value={inputs.indirectCosts.managerHours}
           onChange={(v) => updateNestedInput('indirectCosts', 'managerHours', v)}
           suffix="h"
@@ -393,7 +393,7 @@ export function CalculatorForm() {
           rangeHint={getRangeHintForField('indirectCosts.managerHours')}
         />
         <NumberInput
-          label="Tiimi tunnid"
+          label={t('teamHours')}
           value={inputs.indirectCosts.teamHours}
           onChange={(v) => updateNestedInput('indirectCosts', 'teamHours', v)}
           suffix="h"

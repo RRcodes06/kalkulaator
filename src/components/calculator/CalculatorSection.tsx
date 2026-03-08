@@ -10,7 +10,8 @@ import { Check, Circle, HelpCircle, X } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useAccordionController, type SectionState } from '@/hooks/useAccordionController';
 import { useAppStore } from '@/store/appStore';
-import { SECTION_INFO } from '@/config/sectionInfo';
+import { useLanguage } from '@/i18n/LanguageContext';
+import type { TranslationKey } from '@/i18n/translations';
 
 interface CalculatorSectionProps {
   id: string;
@@ -18,9 +19,25 @@ interface CalculatorSectionProps {
   icon: ReactNode;
   children: ReactNode;
   subtotal?: number;
-  infoKey?: string; // key to look up in SECTION_INFO
-  hideInfoButton?: boolean; // hide the ? info button
+  infoKey?: string;
+  hideInfoButton?: boolean;
 }
+
+const SECTION_INFO_KEYS: Record<string, { desc: TranslationKey; guidance: TranslationKey }> = {
+  position: { desc: 'sectionInfoPosition', guidance: 'sectionInfoPositionGuidance' },
+  roles: { desc: 'sectionInfoRoles', guidance: 'sectionInfoRolesGuidance' },
+  strategy: { desc: 'sectionInfoStrategy', guidance: 'sectionInfoStrategyGuidance' },
+  ads: { desc: 'sectionInfoAds', guidance: 'sectionInfoAdsGuidance' },
+  candidate: { desc: 'sectionInfoCandidate', guidance: 'sectionInfoCandidateGuidance' },
+  interviews: { desc: 'sectionInfoInterviews', guidance: 'sectionInfoInterviewsGuidance' },
+  background: { desc: 'sectionInfoBackground', guidance: 'sectionInfoBackgroundGuidance' },
+  preboarding: { desc: 'sectionInfoPreboarding', guidance: 'sectionInfoPreboardingGuidance' },
+  onboarding: { desc: 'sectionInfoOnboarding', guidance: 'sectionInfoOnboardingGuidance' },
+  vacancy: { desc: 'sectionInfoVacancy', guidance: 'sectionInfoVacancyGuidance' },
+  indirect: { desc: 'sectionInfoIndirect', guidance: 'sectionInfoIndirectGuidance' },
+  other: { desc: 'sectionInfoOther', guidance: 'sectionInfoOtherGuidance' },
+  risk: { desc: 'sectionInfoRisk', guidance: 'sectionInfoRiskGuidance' },
+};
 
 function StateIndicator({ state }: { state: SectionState }) {
   switch (state) {
@@ -47,20 +64,21 @@ function StateIndicator({ state }: { state: SectionState }) {
 }
 
 function SectionInfoBox({ infoKey, onClose }: { infoKey: string; onClose: () => void }) {
-  const info = SECTION_INFO[infoKey];
-  if (!info) return null;
+  const { t } = useLanguage();
+  const keys = SECTION_INFO_KEYS[infoKey];
+  if (!keys) return null;
 
   return (
     <div className="mb-4 p-4 bg-muted/50 rounded-lg border border-border animate-fade-in">
       <div className="flex items-start justify-between gap-3">
         <div className="space-y-1 flex-1">
-          <p className="text-sm text-foreground">{info.description}</p>
-          <p className="text-xs text-muted-foreground">{info.guidance}</p>
+          <p className="text-sm text-foreground">{t(keys.desc)}</p>
+          <p className="text-xs text-muted-foreground">{t(keys.guidance)}</p>
         </div>
         <button
           onClick={onClose}
           className="p-1 rounded hover:bg-muted transition-colors flex-shrink-0"
-          aria-label="Sulge info"
+          aria-label={t('closeInfo')}
         >
           <X className="w-4 h-4 text-muted-foreground" />
         </button>
@@ -81,13 +99,9 @@ export function CalculatorSection({
   const { openSection, setOpenSection, getSectionState } = useAccordionController();
   const { hasCalculated } = useAppStore();
   const sectionState = getSectionState(id);
-  const resolvedInfoKeyEarly = infoKey || id;
-  const hasInfoEarly = Boolean(SECTION_INFO[resolvedInfoKeyEarly]) && !hideInfoButton;
-  const [showInfo, setShowInfo] = useState(hasInfoEarly);
-  
-  // Use provided infoKey or derive from id
   const resolvedInfoKey = infoKey || id;
-  const hasInfo = Boolean(SECTION_INFO[resolvedInfoKey]) && !hideInfoButton;
+  const hasInfo = Boolean(SECTION_INFO_KEYS[resolvedInfoKey]) && !hideInfoButton;
+  const [showInfo, setShowInfo] = useState(hasInfo);
   
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('et-EE', {
@@ -145,7 +159,7 @@ export function CalculatorSection({
                             ? "bg-primary/10 text-primary" 
                             : "text-muted-foreground hover:text-foreground hover:bg-muted"
                         )}
-                        aria-label="Näita infot"
+                        aria-label="ⓘ"
                       >
                         <HelpCircle className="w-4 h-4" />
                       </button>

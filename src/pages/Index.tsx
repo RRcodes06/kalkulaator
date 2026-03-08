@@ -3,17 +3,19 @@ import { CalculatorForm } from '@/components/calculator/CalculatorForm';
 import { SummarySidebar } from '@/components/calculator/SummarySidebar';
 import { ResetModal } from '@/components/calculator/ResetModal';
 import { PrivacyNotice } from '@/components/calculator/PrivacyNotice';
+import { LanguageToggle } from '@/components/calculator/LanguageToggle';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Printer, Settings, Eraser } from 'lucide-react';
 import { useAppStore } from '@/store/appStore';
 import { AccordionControllerProvider } from '@/hooks/useAccordionController';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 const PRINT_SNAPSHOT_KEY = 'recruitment-calc-print-snapshot';
 
 const Index = () => {
-  const disclaimer = useAppStore((s) => s.config.disclaimerText);
+  const { t } = useLanguage();
   const inputs = useAppStore((s) => s.inputs);
   const results = useAppStore((s) => s.results);
   const config = useAppStore((s) => s.config);
@@ -51,22 +53,23 @@ const Index = () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-foreground">
-                Värbamisprotsessi tegeliku kogukulu kalkulaator
+                {t('title')}
               </h1>
               <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
-                See kalkulaator annab ligikaudse hinnangu värbamisprotsessi kogukulule. Tegelikud kulud võivad varieeruda sõltuvalt konkreetsetest asjaoludest ja sisestatud andmetest. Kalkulaator hõlmab kõiki värbamisprotsessiga seotud otseseid, kaudseid ja varjatud kulusid. Kõik kulud on arvestatud proportsioonis kuu kogukuluga. Kui täpsed andmed puuduvad, kasuta soovituslikke vahemikke või funktsiooni „Täida keskmistega".
+                {t('subtitle')}
               </p>
             </div>
             <div className="flex items-center gap-3">
+              <LanguageToggle />
               <Button variant="outline" size="sm" onClick={handlePrint} className="gap-2">
                 <Printer className="w-4 h-4" />
-                Prindi aruanne (PDF)
+                {t('printReport')}
               </Button>
               <ResetModal />
               <Link to="/admin">
                 <Button variant="ghost" size="sm" className="gap-2">
                   <Settings className="w-4 h-4" />
-                  Admin
+                  {t('admin')}
                 </Button>
               </Link>
             </div>
@@ -89,15 +92,15 @@ const Index = () => {
                     onCheckedChange={toggleAutoFill}
                   />
                   <Label htmlFor="auto-fill-toggle" className="text-sm font-medium cursor-pointer">
-                    Täida keskmistega
+                    {t('fillAverages')}
                   </Label>
                 </div>
                 <Button variant="ghost" size="sm" onClick={resetInputs} className="gap-2 text-muted-foreground">
                   <Eraser className="w-4 h-4" />
-                  Tühjenda
+                  {t('clearFields')}
                 </Button>
                 <span className="text-xs text-muted-foreground">
-                  Täidab ainult tühjad väljad soovituslike vahemike keskmisega.
+                  {t('fillAveragesHint')}
                 </span>
               </div>
               <div className="mt-6">
@@ -121,7 +124,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="border-t border-border bg-card/30 py-6 mt-12">
         <div className="container max-w-7xl mx-auto px-6 text-center text-sm text-muted-foreground">
-          <p>© 2024 Värbamiskulude kalkulaator. Andmed põhinevad Eesti 2024. aasta maksumääradel.</p>
+          <p>{t('footer')}</p>
         </div>
       </footer>
     </div>

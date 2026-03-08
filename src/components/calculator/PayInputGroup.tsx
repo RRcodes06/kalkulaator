@@ -2,6 +2,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { NumberInput } from './NumberInput';
 import { Label } from '@/components/ui/label';
 import type { PayType, PayInput, NormalizedPay } from '@/types/calculator';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 interface PayInputGroupProps {
   label: string;
@@ -11,7 +12,7 @@ interface PayInputGroupProps {
   showCostBreakdown?: boolean;
   isDefaultUsed?: boolean;
   compact?: boolean;
-  defaultSalaryHint?: string; // e.g., "Kasutab Eesti värbaja keskmist brutopalka: 2860 €"
+  defaultSalaryHint?: string;
 }
 
 export function PayInputGroup({
@@ -24,6 +25,8 @@ export function PayInputGroup({
   compact = false,
   defaultSalaryHint,
 }: PayInputGroupProps) {
+  const { t } = useLanguage();
+
   const formatCurrency = (val: number) => {
     return new Intl.NumberFormat('et-EE', {
       minimumFractionDigits: 0,
@@ -57,9 +60,9 @@ export function PayInputGroup({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="unset">Vaikimisi</SelectItem>
-              <SelectItem value="monthly">Kuupalk</SelectItem>
-              <SelectItem value="hourly">Tunnipalk</SelectItem>
+              <SelectItem value="unset">{t('payTypeUnset')}</SelectItem>
+              <SelectItem value="monthly">{t('payTypeMonthly')}</SelectItem>
+              <SelectItem value="hourly">{t('payTypeHourly')}</SelectItem>
             </SelectContent>
           </Select>
 
@@ -67,7 +70,7 @@ export function PayInputGroup({
             <NumberInput
               value={value.payAmount}
               onChange={handlePayAmountChange}
-              suffix={value.payType === 'monthly' ? '€/kuu' : '€/h'}
+              suffix={value.payType === 'monthly' ? t('monthlySuffix') : t('hourlySuffix')}
               min={0}
               step={value.payType === 'monthly' ? 100 : 1}
             />
@@ -83,10 +86,10 @@ export function PayInputGroup({
 
         {value.payType === 'hourly' && (
           <NumberInput
-            label="Töötunde kuus"
+            label={t('hoursPerMonth')}
             value={value.hoursPerMonth ?? 168}
             onChange={handleHoursChange}
-            suffix="h/kuu"
+            suffix={t('hoursPerMonthSuffix')}
             min={1}
           />
         )}
@@ -97,25 +100,25 @@ export function PayInputGroup({
   return (
     <div className="space-y-5">
       <div className="space-y-2">
-        <Label className="text-sm font-medium">{label} - Palga tüüp</Label>
+        <Label className="text-sm font-medium">{label} - {t('payTypeLabel')}</Label>
         <Select value={value.payType} onValueChange={handlePayTypeChange}>
           <SelectTrigger className="bg-card h-11">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="unset">Määramata (kasuta keskmist)</SelectItem>
-            <SelectItem value="monthly">Kuupalk</SelectItem>
-            <SelectItem value="hourly">Tunnipalk</SelectItem>
+            <SelectItem value="unset">{t('payTypeUnsetFull')}</SelectItem>
+            <SelectItem value="monthly">{t('payTypeMonthly')}</SelectItem>
+            <SelectItem value="hourly">{t('payTypeHourly')}</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       {value.payType !== 'unset' && (
         <NumberInput
-          label={value.payType === 'monthly' ? 'Brutopalk' : 'Tunnipalk'}
+          label={value.payType === 'monthly' ? t('grossSalary') : t('hourlyWage')}
           value={value.payAmount}
           onChange={handlePayAmountChange}
-          suffix={value.payType === 'monthly' ? '€/kuu' : '€/h'}
+          suffix={value.payType === 'monthly' ? t('monthlySuffix') : t('hourlySuffix')}
           min={0}
           step={value.payType === 'monthly' ? 100 : 1}
         />
@@ -123,35 +126,35 @@ export function PayInputGroup({
 
       {value.payType === 'hourly' && (
         <NumberInput
-          label="Töötunde kuus"
+          label={t('hoursPerMonth')}
           value={value.hoursPerMonth ?? 168}
           onChange={handleHoursChange}
-          suffix="h/kuu"
+          suffix={t('hoursPerMonthSuffix')}
           min={1}
         />
       )}
 
       {showCostBreakdown && normalizedPay && (
         <div className="p-5 bg-muted rounded-lg">
-          <p className="text-sm text-muted-foreground mb-3">Tööandja kulu</p>
+          <p className="text-sm text-muted-foreground mb-3">{t('employerCost')}</p>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span>Brutopalk</span>
+              <span>{t('grossSalary')}</span>
               <span className="font-medium">{formatCurrency(normalizedPay.monthlyGross)} €</span>
             </div>
             <div className="flex justify-between">
-              <span>+ maksud (33.8%)</span>
+              <span>{t('taxes')}</span>
               <span className="font-medium">
                 {formatCurrency(normalizedPay.employerMonthlyCost - normalizedPay.monthlyGross)} €
               </span>
             </div>
             <div className="flex justify-between font-semibold pt-2 border-t border-border">
-              <span>Kokku tööjõukulu</span>
-              <span>{formatCurrency(normalizedPay.employerMonthlyCost)} €/kuu</span>
+              <span>{t('totalLabourCost')}</span>
+              <span>{formatCurrency(normalizedPay.employerMonthlyCost)} {t('monthlySuffix')}</span>
             </div>
           </div>
           {isDefaultUsed && (
-            <p className="text-sm text-warning mt-3">⚠ Kasutatakse Eesti keskmist palka</p>
+            <p className="text-sm text-warning mt-3">{t('usesEstonianAverage')}</p>
           )}
         </div>
       )}
