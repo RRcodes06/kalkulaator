@@ -107,7 +107,7 @@ export function NumberInput({
         </div>
       ) : rangeHint ? (
         <p className="text-xs text-muted-foreground">
-          {t('typicalRange', { min: rangeHint.min, max: rangeHint.max, unit: rangeHint.unit })}
+          {t('typicalRange', { min: rangeHint.min, max: rangeHint.max, unit: translateUnit(rangeHint.unit) })}
         </p>
       ) : hint ? (
         <p className="text-xs text-muted-foreground">{hint}</p>
