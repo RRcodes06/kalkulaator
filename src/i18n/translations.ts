@@ -143,6 +143,9 @@ export const translations = {
     // NumberInput
     defaultValue: 'vaikeväärtus',
     typicalRange: 'Tüüpiline vahemik: {min}–{max} {unit}.',
+    unitMonths: 'kuud',
+    unitDays: 'päeva',
+    unitHours: 'h',
 
     // Summary sidebar
     enterDataAndCalculate: 'Sisesta andmed ja vajuta ARVUTA',
