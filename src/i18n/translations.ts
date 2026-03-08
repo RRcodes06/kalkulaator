@@ -357,6 +357,13 @@ export const translations = {
     printUnnamed: 'Nimeta',
     printUnnamedService: 'Nimeta teenus',
     printNotSet: 'Määramata',
+
+    // Config text snippets (used in print and elsewhere)
+    configDisclaimer: 'See kalkulaator annab ligikaudse hinnangu värbamisprotsessi kogukulule. Tegelikud kulud võivad varieeruda sõltuvalt konkreetsetest asjaoludest.',
+    configRiskExplanation: 'Halva värbamisotsuse risk arvestab statistilist tõenäosust, et töötaja lahkub katseajal või osutub sobimatuks. Keskmine risk on 15% ning kulud hõlmavad kahe kuu palgakulusid.',
+    configIndirectExplanation: 'Kaudsed kulud hõlmavad aega, mille kolleegid pühendavad uue töötaja abistamisele, koosolekutele ja muudele tegevustele, mis ei ole otseselt värbamisprotsess.',
+    configFinalQuestion: 'Kas see number üllatas sind?',
+    configCtaPlaceholder: 'Võta meiega ühendust, et arutada, kuidas värbamiskulusid optimeerida.',
   },
 
   eng: {
