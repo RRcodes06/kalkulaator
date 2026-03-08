@@ -38,6 +38,7 @@ const Index = () => {
         HOURS_PER_MONTH: config.HOURS_PER_MONTH,
         EST_AVG_GROSS_WAGE: config.EST_AVG_GROSS_WAGE,
       },
+      language,
       generatedAt: new Date().toISOString(),
     };
 
