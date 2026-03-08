@@ -357,6 +357,31 @@ export const translations = {
     printUnnamed: 'Nimeta',
     printUnnamedService: 'Nimeta teenus',
     printNotSet: 'Määramata',
+
+    // Config text snippets (used in print and elsewhere)
+    configDisclaimer: 'See kalkulaator annab ligikaudse hinnangu värbamisprotsessi kogukulule. Tegelikud kulud võivad varieeruda sõltuvalt konkreetsetest asjaoludest.',
+    configRiskExplanation: 'Halva värbamisotsuse risk arvestab statistilist tõenäosust, et töötaja lahkub katseajal või osutub sobimatuks. Keskmine risk on 15% ning kulud hõlmavad kahe kuu palgakulusid.',
+    configIndirectExplanation: 'Kaudsed kulud hõlmavad aega, mille kolleegid pühendavad uue töötaja abistamisele, koosolekutele ja muudele tegevustele, mis ei ole otseselt värbamisprotsess.',
+    configFinalQuestion: 'Kas see number üllatas sind?',
+    configCtaPlaceholder: 'Võta meiega ühendust, et arutada, kuidas värbamiskulusid optimeerida.',
+
+    // Empty field labels (used as translation keys in engine)
+    emptyHirePay: 'Värvatava töötaja palk',
+    emptyHrPay: 'Personalitöötaja palk',
+    emptyManagerPay: 'Juhi palk',
+    emptyTeamPay: 'Tiimi palk',
+    emptyStrategyHr: 'Strateegia: HR tunnid',
+    emptyStrategyManager: 'Strateegia: Juhi tunnid',
+    emptyAdsHr: 'Kuulutused: HR tunnid',
+    emptyAdsCosts: 'Kuulutuste kulud',
+    emptyCandidateHr: 'Kandidaadid: HR tunnid',
+    emptyInterviewsHr: 'Intervjuud: HR tunnid',
+    emptyInterviewsManager: 'Intervjuud: Juhi tunnid',
+    emptyDevicesCost: 'Seadmete kulu',
+    emptyOnboardingMonths: 'Sisseelamisperiood',
+    emptyProductivity: 'Keskmine tootlikkus',
+    emptyVacancyDays: 'Vakantsi kestus',
+    emptyDailyCost: 'Päevakulu',
   },
 
   eng: {
@@ -715,6 +740,31 @@ export const translations = {
     printUnnamed: 'Unnamed',
     printUnnamedService: 'Unnamed service',
     printNotSet: 'Not set',
+
+    // Config text snippets
+    configDisclaimer: 'This calculator provides an approximate estimate of the total cost of the recruitment process. Actual costs may vary depending on specific circumstances.',
+    configRiskExplanation: 'The risk of a bad hiring decision accounts for the statistical probability that the employee leaves during the probationary period or turns out to be unsuitable. The average risk is 15% and the costs include two months of salary costs.',
+    configIndirectExplanation: 'Indirect costs include time that colleagues dedicate to helping the new employee, meetings, and other activities that are not directly part of the recruitment process.',
+    configFinalQuestion: 'Did this number surprise you?',
+    configCtaPlaceholder: 'Contact us to discuss how to optimize your recruitment costs.',
+
+    // Empty field labels
+    emptyHirePay: 'Hired employee salary',
+    emptyHrPay: 'HR specialist salary',
+    emptyManagerPay: 'Manager salary',
+    emptyTeamPay: 'Team salary',
+    emptyStrategyHr: 'Strategy: HR hours',
+    emptyStrategyManager: 'Strategy: Manager hours',
+    emptyAdsHr: 'Job ads: HR hours',
+    emptyAdsCosts: 'Job ads costs',
+    emptyCandidateHr: 'Candidates: HR hours',
+    emptyInterviewsHr: 'Interviews: HR hours',
+    emptyInterviewsManager: 'Interviews: Manager hours',
+    emptyDevicesCost: 'Devices cost',
+    emptyOnboardingMonths: 'Onboarding period',
+    emptyProductivity: 'Average productivity',
+    emptyVacancyDays: 'Vacancy duration',
+    emptyDailyCost: 'Daily cost',
   },
 } as const;
 
