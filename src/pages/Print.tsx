@@ -521,7 +521,7 @@ const Print = () => {
 
       {/* FOOTER */}
       <footer className="print-footer px-8 py-4 border-t border-gray-200 text-xs text-gray-500">
-        <p>{config.disclaimerText}</p>
+        <p>{t('configDisclaimer')}</p>
         <p className="mt-2">{t('printReportGenerated')} {formatDate(generatedAt)}</p>
       </footer>
 
