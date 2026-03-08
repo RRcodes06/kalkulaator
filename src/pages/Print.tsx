@@ -417,7 +417,7 @@ const Print = () => {
           <div className="page-break-inside-avoid bg-gray-50 p-3 rounded col-span-2">
             <h4 className="font-medium mb-2">{t('blockIndirectCosts')}</h4>
             <p>{t('printHr')}: {inputs.indirectCosts.hrHours}h, {t('printManager')}: {inputs.indirectCosts.managerHours}h, {t('printTeam')}: {inputs.indirectCosts.teamHours}h</p>
-            <p className="text-xs text-gray-500 mt-1">{config.indirectExplanationText}</p>
+            <p className="text-xs text-gray-500 mt-1">{t('configIndirectExplanation')}</p>
           </div>
         </div>
 
