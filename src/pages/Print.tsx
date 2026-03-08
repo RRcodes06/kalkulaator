@@ -505,8 +505,8 @@ const Print = () => {
       {/* CTA */}
       <section className="print-section px-8 py-6 page-break-inside-avoid">
         <div className="bg-primary/5 border border-primary/20 rounded-lg p-6 text-center">
-          <h2 className="text-xl font-semibold mb-3">{config.finalQuestionText}</h2>
-          <p className="text-gray-600 mb-4">{config.ctaPlaceholderText}</p>
+          <h2 className="text-xl font-semibold mb-3">{t('configFinalQuestion')}</h2>
+          <p className="text-gray-600 mb-4">{t('configCtaPlaceholder')}</p>
           <a
             href="https://www.manpower.ee/et/vaerbamisteenused"
             target="_blank"
