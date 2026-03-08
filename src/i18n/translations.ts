@@ -722,6 +722,13 @@ export const translations = {
     printUnnamed: 'Unnamed',
     printUnnamedService: 'Unnamed service',
     printNotSet: 'Not set',
+
+    // Config text snippets
+    configDisclaimer: 'This calculator provides an approximate estimate of the total cost of the recruitment process. Actual costs may vary depending on specific circumstances.',
+    configRiskExplanation: 'The risk of a bad hiring decision accounts for the statistical probability that the employee leaves during the probationary period or turns out to be unsuitable. The average risk is 15% and the costs include two months of salary costs.',
+    configIndirectExplanation: 'Indirect costs include time that colleagues dedicate to helping the new employee, meetings, and other activities that are not directly part of the recruitment process.',
+    configFinalQuestion: 'Did this number surprise you?',
+    configCtaPlaceholder: 'Contact us to discuss how to optimize your recruitment costs.',
   },
 } as const;
 
