@@ -15,7 +15,7 @@ import { useLanguage } from '@/i18n/LanguageContext';
 const PRINT_SNAPSHOT_KEY = 'recruitment-calc-print-snapshot';
 
 const Index = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const inputs = useAppStore((s) => s.inputs);
   const results = useAppStore((s) => s.results);
   const config = useAppStore((s) => s.config);
