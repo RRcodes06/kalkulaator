@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BLOCK_LABELS } from '@/config/defaults';
 import { PRINT_SNAPSHOT_KEY } from './Index';
 import type { CalculatorInputs, ComputedResult, BlockName } from '@/types/calculator';
+import type { Language, TranslationKey } from '@/i18n/translations';
+import { translations } from '@/i18n/translations';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
 // ============================================================================
@@ -25,12 +26,39 @@ interface PrintSnapshot {
   inputs: CalculatorInputs;
   results: ComputedResult;
   config: PrintConfig;
+  language?: Language;
   generatedAt: string;
 }
 
 // ============================================================================
 // HELPERS
 // ============================================================================
+
+function createT(lang: Language) {
+  return (key: TranslationKey, replacements?: Record<string, string | number>): string => {
+    let text: string = (translations[lang] as Record<string, string>)[key] ?? (translations.est as Record<string, string>)[key] ?? key;
+    if (replacements) {
+      for (const [k, v] of Object.entries(replacements)) {
+        text = text.replace(`{${k}}`, String(v));
+      }
+    }
+    return text;
+  };
+}
+
+const BLOCK_LABEL_KEYS: Record<string, TranslationKey> = {
+  strategyPrep: 'blockStrategyPrep',
+  adsBranding: 'blockAdsBranding',
+  candidateMgmt: 'blockCandidateMgmt',
+  interviews: 'blockInterviews',
+  backgroundOffer: 'blockBackgroundOffer',
+  otherServices: 'blockOtherServices',
+  preboarding: 'blockPreboarding',
+  onboarding: 'blockOnboarding',
+  vacancy: 'blockVacancy',
+  indirectCosts: 'blockIndirectCosts',
+  expectedRisk: 'blockExpectedRisk',
+};
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('et-EE', {
@@ -39,24 +67,6 @@ const formatCurrency = (value: number) => {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(Math.round(value));
-};
-
-const formatDate = (isoString: string) => {
-  return new Date(isoString).toLocaleDateString('et-EE', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-};
-
-const getPayTypeLabel = (payType: string) => {
-  switch (payType) {
-    case 'monthly': return 'Kuupalk';
-    case 'hourly': return 'Tunnipalk';
-    default: return 'Määramata';
-  }
 };
 
 const CHART_COLORS = [
@@ -74,10 +84,10 @@ const CHART_COLORS = [
 ];
 
 // ============================================================================
-// PRINT CHART (simplified for print)
+// PRINT CHART
 // ============================================================================
 
-function PrintChart({ results }: { results: ComputedResult }) {
+function PrintChart({ results, t }: { results: ComputedResult; t: ReturnType<typeof createT> }) {
   const blockOrder: BlockName[] = [
     'strategyPrep', 'adsBranding', 'candidateMgmt', 'interviews',
     'backgroundOffer', 'otherServices', 'preboarding', 'onboarding',
@@ -87,7 +97,7 @@ function PrintChart({ results }: { results: ComputedResult }) {
   const chartData = blockOrder
     .filter(key => results.blockCosts[key].total > 0)
     .map((key, index) => ({
-      name: BLOCK_LABELS[key] || key,
+      name: t(BLOCK_LABEL_KEYS[key] || 'blockStrategyPrep'),
       value: results.blockCosts[key].total,
       fill: CHART_COLORS[index % CHART_COLORS.length],
     }));
@@ -99,15 +109,7 @@ function PrintChart({ results }: { results: ComputedResult }) {
       <div className="w-48 h-48 flex-shrink-0">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
-            <Pie
-              data={chartData}
-              cx="50%"
-              cy="50%"
-              innerRadius={30}
-              outerRadius={70}
-              dataKey="value"
-              stroke="none"
-            >
+            <Pie data={chartData} cx="50%" cy="50%" innerRadius={30} outerRadius={70} dataKey="value" stroke="none">
               {chartData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.fill} />
               ))}
@@ -118,10 +120,7 @@ function PrintChart({ results }: { results: ComputedResult }) {
       <div className="flex-1 grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
         {chartData.map((item, index) => (
           <div key={index} className="flex items-center gap-2">
-            <div
-              className="w-3 h-3 rounded-sm flex-shrink-0"
-              style={{ backgroundColor: item.fill }}
-            />
+            <div className="w-3 h-3 rounded-sm flex-shrink-0" style={{ backgroundColor: item.fill }} />
             <span className="truncate">{item.name}</span>
           </div>
         ))}
@@ -134,19 +133,14 @@ function PrintChart({ results }: { results: ComputedResult }) {
 // MISSING SNAPSHOT VIEW
 // ============================================================================
 
-function MissingSnapshot() {
+function MissingSnapshot({ t }: { t: ReturnType<typeof createT> }) {
   return (
     <div className="min-h-screen flex items-center justify-center p-8">
       <div className="text-center max-w-md">
-        <h1 className="text-2xl font-bold mb-4">Puudub arvutuse snapshot</h1>
-        <p className="text-gray-600 mb-6">
-          Mine tagasi kalkulaatorisse ja klõpsa "Prindi aruanne (PDF)" nuppu.
-        </p>
-        <Link
-          to="/"
-          className="inline-block px-6 py-2 bg-primary text-white rounded-lg hover:opacity-90"
-        >
-          ← Tagasi kalkulaatorisse
+        <h1 className="text-2xl font-bold mb-4">{t('printMissingSnapshot')}</h1>
+        <p className="text-gray-600 mb-6">{t('printMissingDesc')}</p>
+        <Link to="/" className="inline-block px-6 py-2 bg-primary text-white rounded-lg hover:opacity-90">
+          {t('printBackToCalc')}
         </Link>
       </div>
     </div>
@@ -173,78 +167,80 @@ const Print = () => {
     setLoading(false);
   }, []);
 
+  const lang: Language = snapshot?.language || 'est';
+  const t = createT(lang);
+
+  const formatDate = (isoString: string) => {
+    return new Date(isoString).toLocaleDateString(lang === 'eng' ? 'en-GB' : 'et-EE', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  const getPayTypeLabel = (payType: string) => {
+    switch (payType) {
+      case 'monthly': return t('payTypeMonthly');
+      case 'hourly': return t('payTypeHourly');
+      default: return t('printNotSet');
+    }
+  };
+
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Laadimine...</div>;
+    return <div className="min-h-screen flex items-center justify-center">{t('printLoading')}</div>;
   }
 
   if (!snapshot) {
-    return <MissingSnapshot />;
+    return <MissingSnapshot t={t} />;
   }
 
   const { inputs, results, config, generatedAt } = snapshot;
 
-  // Prepare block cost lines for breakdown table
-  const blockCostLines = [
-    { key: 'strategyPrep', label: BLOCK_LABELS.strategyPrep, value: results.blockCosts.strategyPrep.total },
-    { key: 'adsBranding', label: BLOCK_LABELS.adsBranding, value: results.blockCosts.adsBranding.total },
-    { key: 'candidateMgmt', label: BLOCK_LABELS.candidateMgmt, value: results.blockCosts.candidateMgmt.total },
-    { key: 'interviews', label: BLOCK_LABELS.interviews, value: results.blockCosts.interviews.total },
-    { key: 'backgroundOffer', label: BLOCK_LABELS.backgroundOffer, value: results.blockCosts.backgroundOffer.total },
-    { key: 'otherServices', label: BLOCK_LABELS.otherServices, value: results.blockCosts.otherServices.total },
-    { key: 'preboarding', label: BLOCK_LABELS.preboarding, value: results.blockCosts.preboarding.total },
-    { key: 'onboarding', label: BLOCK_LABELS.onboarding, value: results.blockCosts.onboarding.total },
-    { key: 'vacancy', label: BLOCK_LABELS.vacancy, value: results.blockCosts.vacancy.total },
-    { key: 'indirectCosts', label: BLOCK_LABELS.indirectCosts, value: results.blockCosts.indirectCosts.total },
-  ].filter(item => item.value > 0);
+  const blockCostLines = (Object.keys(BLOCK_LABEL_KEYS) as string[])
+    .filter(key => key !== 'expectedRisk' && results.blockCosts[key as BlockName]?.total > 0)
+    .map(key => ({
+      key,
+      label: t(BLOCK_LABEL_KEYS[key]),
+      value: results.blockCosts[key as BlockName].total,
+    }));
 
-  // Repeated services
   const repeatedServices = inputs.otherServices.filter(s => s.repeatOnBadHire);
+  const riskPct = (config.BAD_HIRE_RISK_RATE * 100).toFixed(0);
 
   return (
     <div className="print-page min-h-screen bg-white text-black">
-      {/* ================================================================== */}
       {/* HEADER */}
-      {/* ================================================================== */}
       <header className="print-header px-8 pt-8 pb-4 border-b-2 border-gray-300">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            {/* Placeholder for Manpower logo */}
-            <div className="w-12 h-12 bg-primary rounded flex items-center justify-center text-white font-bold text-xl">
-              M
-            </div>
+            <div className="w-12 h-12 bg-primary rounded flex items-center justify-center text-white font-bold text-xl">M</div>
             <div>
-              <h1 className="text-xl font-bold">Värbamisprotsessi tegeliku kogukulu aruanne</h1>
-              <p className="text-sm text-gray-600">Genereeritud: {formatDate(generatedAt)}</p>
+              <h1 className="text-xl font-bold">{t('printTitle')}</h1>
+              <p className="text-sm text-gray-600">{t('printGenerated')} {formatDate(generatedAt)}</p>
             </div>
           </div>
           <div className="text-right text-sm text-gray-500">
-            <p>Ametikoht: <strong>{inputs.positionTitle || 'Määramata'}</strong></p>
+            <p>{t('printPosition')} <strong>{inputs.positionTitle || t('printNotSet')}</strong></p>
           </div>
         </div>
       </header>
 
-      {/* ================================================================== */}
-      {/* SUMMARY SECTION */}
-      {/* ================================================================== */}
+      {/* SUMMARY */}
       <section className="print-section px-8 py-6 page-break-inside-avoid">
-        <h2 className="text-lg font-semibold mb-4 border-b border-gray-200 pb-2">Kokkuvõte</h2>
+        <h2 className="text-lg font-semibold mb-4 border-b border-gray-200 pb-2">{t('printSummary')}</h2>
         
-        {/* Total Cost Highlight - EXCLUDES RISK (matches calculator UX) */}
         <div className="bg-gray-50 rounded-lg p-4 mb-6 text-center">
-          <p className="text-sm text-gray-600 mb-1">Värbamise kogukulu</p>
+          <p className="text-sm text-gray-600 mb-1">{t('printTotalCost')}</p>
           <p className="text-4xl font-bold text-primary">{formatCurrency(results.totalCost)}</p>
-          <p className="text-sm text-gray-500 mt-1">
-            Riskikulu on näidatud eraldi allpool.
-          </p>
+          <p className="text-sm text-gray-500 mt-1">{t('printRiskSeparate')}</p>
         </div>
 
-        {/* Empty Fields Notice - show which inputs were left empty */}
         {results.emptyFields && results.emptyFields.length > 0 && (
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-            <h3 className="font-medium text-sm text-yellow-800 mb-2">Täitmata jäetud väljad</h3>
-            <p className="text-xs text-yellow-700 mb-2">
-              Järgmised väljad olid tühjad või nullid. Arvutus põhineb kasutaja sisestatud andmetel.
-            </p>
+            <h3 className="font-medium text-sm text-yellow-800 mb-2">{t('printEmptyFieldsTitle')}</h3>
+            <p className="text-xs text-yellow-700 mb-2">{t('printEmptyFieldsDesc')}</p>
             <div className="grid grid-cols-2 gap-2 text-xs">
               {results.emptyFields.slice(0, 10).map((field, idx) => (
                 <div key={idx} className="flex items-start gap-1">
@@ -254,7 +250,7 @@ const Print = () => {
               ))}
               {results.emptyFields.length > 10 && (
                 <div className="col-span-2 text-gray-500 italic">
-                  ... ja veel {results.emptyFields.length - 10} välja
+                  {t('printAndMore', { count: results.emptyFields.length - 10 })}
                 </div>
               )}
             </div>
@@ -264,11 +260,11 @@ const Print = () => {
         {/* Breakdown Table */}
         <div className="grid grid-cols-2 gap-8">
           <div>
-            <h3 className="font-medium mb-2 text-sm text-gray-600">Kulude jaotus</h3>
+            <h3 className="font-medium mb-2 text-sm text-gray-600">{t('printCostBreakdown')}</h3>
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left py-1 font-medium">Kategooria</th>
+                  <th className="text-left py-1 font-medium">{t('printCategory')}</th>
                   <th className="text-right py-1 font-medium">€</th>
                   <th className="text-right py-1 font-medium">%</th>
                 </tr>
@@ -284,31 +280,29 @@ const Print = () => {
                   </tr>
                 ))}
                 <tr className="border-t-2 border-black font-bold text-lg">
-                  <td className="py-2">KOKKU</td>
+                  <td className="py-2">{t('printTotal')}</td>
                   <td className="py-2 text-right">{formatCurrency(results.totalCost)}</td>
                   <td className="py-2 text-right">100%</td>
                 </tr>
               </tbody>
             </table>
-            <p className="text-xs text-gray-500 mt-2 italic">
-              * Riskikulu ei ole kogukulu hulka arvestatud
-            </p>
+            <p className="text-xs text-gray-500 mt-2 italic">{t('printRiskNotIncluded')}</p>
           </div>
 
           <div>
-            <h3 className="font-medium mb-2 text-sm text-gray-600">Visuaalne jaotus</h3>
-            <PrintChart results={results} />
+            <h3 className="font-medium mb-2 text-sm text-gray-600">{t('printVisualBreakdown')}</h3>
+            <PrintChart results={results} t={t} />
           </div>
         </div>
 
         {/* Top Drivers */}
         {results.topDrivers.length > 0 && (
           <div className="mt-6 bg-gray-50 rounded-lg p-4">
-            <h3 className="font-medium mb-2 text-sm text-gray-600">Top 3 kuluallikat</h3>
+            <h3 className="font-medium mb-2 text-sm text-gray-600">{t('printTopDrivers')}</h3>
             <ol className="list-decimal list-inside space-y-1">
               {results.topDrivers.map((driver, idx) => (
                 <li key={idx} className="text-sm">
-                  <strong>{driver.label}</strong>
+                  <strong>{t(BLOCK_LABEL_KEYS[driver.block] || 'blockStrategyPrep')}</strong>
                   <span className="text-gray-600"> — {formatCurrency(driver.amount)} ({driver.percentage.toFixed(0)}%)</span>
                 </li>
               ))}
@@ -317,58 +311,55 @@ const Print = () => {
         )}
       </section>
 
-      {/* ================================================================== */}
-      {/* INPUTS SECTION */}
-      {/* ================================================================== */}
+      {/* INPUTS */}
       <section className="print-section px-8 py-6 page-break-before">
-        <h2 className="text-lg font-semibold mb-4 border-b border-gray-200 pb-2">Sisendandmed</h2>
+        <h2 className="text-lg font-semibold mb-4 border-b border-gray-200 pb-2">{t('printInputData')}</h2>
 
         {/* Position & Hire Pay */}
         <div className="mb-6 page-break-inside-avoid">
-          <h3 className="font-medium text-sm text-gray-600 mb-2">Värvatud töötaja</h3>
+          <h3 className="font-medium text-sm text-gray-600 mb-2">{t('printHiredEmployee')}</h3>
           <div className="grid grid-cols-3 gap-4 text-sm bg-gray-50 p-3 rounded">
             <div>
-              <p className="text-gray-500">Ametikoht</p>
-              <p className="font-medium">{inputs.positionTitle || 'Määramata'}</p>
+              <p className="text-gray-500">{t('positionTitle')}</p>
+              <p className="font-medium">{inputs.positionTitle || t('printNotSet')}</p>
             </div>
             <div>
-              <p className="text-gray-500">Palgatüüp</p>
+              <p className="text-gray-500">{t('printPayType')}</p>
               <p className="font-medium">{getPayTypeLabel(inputs.hirePay.payType)}</p>
             </div>
             <div>
-              <p className="text-gray-500">Brutopalk</p>
+              <p className="text-gray-500">{t('grossSalary')}</p>
               <p className="font-medium">
-                {inputs.hirePay.payType === 'hourly' 
+                {inputs.hirePay.payType === 'hourly'
                   ? `${inputs.hirePay.payAmount} €/h × ${inputs.hirePay.hoursPerMonth || config.HOURS_PER_MONTH}h`
-                  : `${formatCurrency(results.normalizedHirePay.monthlyGross)}/kuu`
+                  : `${formatCurrency(results.normalizedHirePay.monthlyGross)}${t('printPerMonth')}`
                 }
                 {results.defaultsUsed.hirePay && <span className="text-orange-600 ml-1">*</span>}
               </p>
             </div>
             <div>
-              <p className="text-gray-500">Tööandja kogukulu</p>
-              <p className="font-medium">{formatCurrency(results.normalizedHirePay.employerMonthlyCost)}/kuu</p>
+              <p className="text-gray-500">{t('printEmployerTotal')}</p>
+              <p className="font-medium">{formatCurrency(results.normalizedHirePay.employerMonthlyCost)}{t('printPerMonth')}</p>
             </div>
           </div>
           {results.defaultsUsed.hirePay && (
-            <p className="text-xs text-orange-600 mt-1">* Kasutatud Eesti keskmist brutopalk ({config.EST_AVG_GROSS_WAGE} €)</p>
+            <p className="text-xs text-orange-600 mt-1">* {t('printUsedAverage', { amount: config.EST_AVG_GROSS_WAGE })}</p>
           )}
         </div>
 
         {/* Roles */}
         <div className="mb-6 page-break-inside-avoid">
-          <h3 className="font-medium text-sm text-gray-600 mb-2">Värbamisprotsessis osalejad</h3>
+          <h3 className="font-medium text-sm text-gray-600 mb-2">{t('printParticipants')}</h3>
           <div className="grid grid-cols-3 gap-4 text-sm">
-            {['hr', 'manager', 'team'].map((role) => {
-              const roleData = inputs.roles[role as keyof typeof inputs.roles];
-              const normalized = results.normalizedRoles[role as keyof typeof results.normalizedRoles];
+            {(['hr', 'manager', 'team'] as const).map((role) => {
+              const roleData = inputs.roles[role];
+              const normalized = results.normalizedRoles[role];
               if (!roleData.enabled) return null;
+              const roleLabel = role === 'hr' ? t('printHr') : role === 'manager' ? t('printManager') : t('printTeam');
               return (
                 <div key={role} className="bg-gray-50 p-3 rounded">
-                  <p className="font-medium capitalize mb-1">
-                    {role === 'hr' ? 'HR' : role === 'manager' ? 'Juht' : 'Meeskond'}
-                  </p>
-                  <p className="text-gray-600">{formatCurrency(normalized.employerHourlyRate)}/h (tööandja kulu)</p>
+                  <p className="font-medium capitalize mb-1">{roleLabel}</p>
+                  <p className="text-gray-600">{formatCurrency(normalized.employerHourlyRate)}/h ({t('printEmployerCostPerHour')})</p>
                 </div>
               );
             })}
@@ -377,64 +368,55 @@ const Print = () => {
 
         {/* Block Inputs */}
         <div className="grid grid-cols-2 gap-6 text-sm">
-          {/* Strategy & Prep */}
           <div className="page-break-inside-avoid bg-gray-50 p-3 rounded">
-            <h4 className="font-medium mb-2">{BLOCK_LABELS.strategyPrep}</h4>
-            <p>HR: {inputs.strategyPrep.hrHours}h, Juht: {inputs.strategyPrep.managerHours}h, Meeskond: {inputs.strategyPrep.teamHours}h</p>
+            <h4 className="font-medium mb-2">{t('blockStrategyPrep')}</h4>
+            <p>{t('printHr')}: {inputs.strategyPrep.hrHours}h, {t('printManager')}: {inputs.strategyPrep.managerHours}h, {t('printTeam')}: {inputs.strategyPrep.teamHours}h</p>
           </div>
 
-          {/* Ads */}
           <div className="page-break-inside-avoid bg-gray-50 p-3 rounded">
-            <h4 className="font-medium mb-2">{BLOCK_LABELS.adsBranding}</h4>
-            <p>Otsekulu: {formatCurrency(inputs.adsBranding.directCosts)}</p>
-            <p>HR: {inputs.adsBranding.hrHours}h, Juht: {inputs.adsBranding.managerHours}h</p>
+            <h4 className="font-medium mb-2">{t('blockAdsBranding')}</h4>
+            <p>{t('printDirectCost')} {formatCurrency(inputs.adsBranding.directCosts)}</p>
+            <p>{t('printHr')}: {inputs.adsBranding.hrHours}h, {t('printManager')}: {inputs.adsBranding.managerHours}h</p>
           </div>
 
-          {/* Candidate Mgmt */}
           <div className="page-break-inside-avoid bg-gray-50 p-3 rounded">
-            <h4 className="font-medium mb-2">{BLOCK_LABELS.candidateMgmt}</h4>
-            <p>Testid: {formatCurrency(inputs.candidateMgmt.testsCost)}</p>
-            <p>HR: {inputs.candidateMgmt.hrHours}h, Juht: {inputs.candidateMgmt.managerHours}h</p>
+            <h4 className="font-medium mb-2">{t('blockCandidateMgmt')}</h4>
+            <p>{t('printTests')} {formatCurrency(inputs.candidateMgmt.testsCost)}</p>
+            <p>{t('printHr')}: {inputs.candidateMgmt.hrHours}h, {t('printManager')}: {inputs.candidateMgmt.managerHours}h</p>
           </div>
 
-          {/* Interviews */}
           <div className="page-break-inside-avoid bg-gray-50 p-3 rounded">
-            <h4 className="font-medium mb-2">{BLOCK_LABELS.interviews}</h4>
-            <p>Otsekulu: {formatCurrency(inputs.interviews.directCosts)}</p>
-            <p>HR: {inputs.interviews.hrHours}h, Juht: {inputs.interviews.managerHours}h, Meeskond: {inputs.interviews.teamHours}h</p>
+            <h4 className="font-medium mb-2">{t('blockInterviews')}</h4>
+            <p>{t('printDirectCost')} {formatCurrency(inputs.interviews.directCosts)}</p>
+            <p>{t('printHr')}: {inputs.interviews.hrHours}h, {t('printManager')}: {inputs.interviews.managerHours}h, {t('printTeam')}: {inputs.interviews.teamHours}h</p>
           </div>
 
-          {/* Background */}
           <div className="page-break-inside-avoid bg-gray-50 p-3 rounded">
-            <h4 className="font-medium mb-2">{BLOCK_LABELS.backgroundOffer}</h4>
-            <p>Otsekulu: {formatCurrency(inputs.backgroundOffer.directCosts)}</p>
-            <p>HR: {inputs.backgroundOffer.hrHours}h, Juht: {inputs.backgroundOffer.managerHours}h</p>
+            <h4 className="font-medium mb-2">{t('blockBackgroundOffer')}</h4>
+            <p>{t('printDirectCost')} {formatCurrency(inputs.backgroundOffer.directCosts)}</p>
+            <p>{t('printHr')}: {inputs.backgroundOffer.hrHours}h, {t('printManager')}: {inputs.backgroundOffer.managerHours}h</p>
           </div>
 
-          {/* Preboarding */}
           <div className="page-break-inside-avoid bg-gray-50 p-3 rounded">
-            <h4 className="font-medium mb-2">{BLOCK_LABELS.preboarding}</h4>
-            <p>Seadmed: {formatCurrency(inputs.preboarding.devicesCost)}</p>
-            <p>IT seadistus: {inputs.preboarding.itSetupHours}h, Ettevalmistus: {inputs.preboarding.prepHours}h</p>
+            <h4 className="font-medium mb-2">{t('blockPreboarding')}</h4>
+            <p>{t('printDevices')} {formatCurrency(inputs.preboarding.devicesCost)}</p>
+            <p>{t('printItSetup')} {inputs.preboarding.itSetupHours}h, {t('printPrep')} {inputs.preboarding.prepHours}h</p>
           </div>
 
-          {/* Onboarding */}
           <div className="page-break-inside-avoid bg-gray-50 p-3 rounded">
-            <h4 className="font-medium mb-2">{BLOCK_LABELS.onboarding}</h4>
-            <p>Kestus: {inputs.onboarding.onboardingMonths} kuud @ {inputs.onboarding.productivityPct}% tootlikkus</p>
-            <p>Lisakulud: {formatCurrency(inputs.onboarding.extraCosts)}</p>
+            <h4 className="font-medium mb-2">{t('blockOnboarding')}</h4>
+            <p>{t('printDuration')} {inputs.onboarding.onboardingMonths} {t('unitMonths')} @ {inputs.onboarding.productivityPct}% {t('printProductivity')}</p>
+            <p>{t('printAdditionalCosts')} {formatCurrency(inputs.onboarding.extraCosts)}</p>
           </div>
 
-          {/* Vacancy */}
           <div className="page-break-inside-avoid bg-gray-50 p-3 rounded">
-            <h4 className="font-medium mb-2">{BLOCK_LABELS.vacancy}</h4>
-            <p>Vakantne: {inputs.vacancy.vacancyDays} päeva × {formatCurrency(inputs.vacancy.dailyCost)}/päev</p>
+            <h4 className="font-medium mb-2">{t('blockVacancy')}</h4>
+            <p>{t('printVacant')} {inputs.vacancy.vacancyDays} {t('unitDays')} × {formatCurrency(inputs.vacancy.dailyCost)}{t('printPerDay')}</p>
           </div>
 
-          {/* Indirect */}
           <div className="page-break-inside-avoid bg-gray-50 p-3 rounded col-span-2">
-            <h4 className="font-medium mb-2">{BLOCK_LABELS.indirectCosts}</h4>
-            <p>HR: {inputs.indirectCosts.hrHours}h, Juht: {inputs.indirectCosts.managerHours}h, Meeskond: {inputs.indirectCosts.teamHours}h</p>
+            <h4 className="font-medium mb-2">{t('blockIndirectCosts')}</h4>
+            <p>{t('printHr')}: {inputs.indirectCosts.hrHours}h, {t('printManager')}: {inputs.indirectCosts.managerHours}h, {t('printTeam')}: {inputs.indirectCosts.teamHours}h</p>
             <p className="text-xs text-gray-500 mt-1">{config.indirectExplanationText}</p>
           </div>
         </div>
@@ -442,28 +424,28 @@ const Print = () => {
         {/* Other Services */}
         {inputs.otherServices.length > 0 && (
           <div className="mt-6 page-break-inside-avoid">
-            <h3 className="font-medium text-sm text-gray-600 mb-2">{BLOCK_LABELS.otherServices}</h3>
+            <h3 className="font-medium text-sm text-gray-600 mb-2">{t('blockOtherServices')}</h3>
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b text-left">
-                  <th className="py-1">Teenus</th>
-                  <th className="py-1">Tüüp</th>
-                  <th className="py-1 text-right">Hind/Info</th>
-                  <th className="py-1 text-right">Tunnid</th>
-                  <th className="py-1 text-center">Kordub?</th>
+                  <th className="py-1">{t('printService')}</th>
+                  <th className="py-1">{t('printType')}</th>
+                  <th className="py-1 text-right">{t('printPriceInfo')}</th>
+                  <th className="py-1 text-right">{t('printHours')}</th>
+                  <th className="py-1 text-center">{t('printRepeats')}</th>
                 </tr>
               </thead>
               <tbody>
                 {inputs.otherServices.map((service) => (
                   <tr key={service.id} className="border-b border-gray-100">
-                    <td className="py-1">{service.name || 'Nimeta'}</td>
+                    <td className="py-1">{service.name || t('printUnnamed')}</td>
                     <td className="py-1">
-                      {service.details.serviceType === 'inhouse' ? 'Sisemajanduslik' : 'Väline'}
+                      {service.details.serviceType === 'inhouse' ? t('printInhouse') : t('printExternal')}
                     </td>
                     <td className="py-1 text-right">
-                      {service.details.serviceType === 'outsourced' 
+                      {service.details.serviceType === 'outsourced'
                         ? `${formatCurrency(service.details.price)} (${service.details.billingType})`
-                        : `${service.details.payAmount} €/${service.details.payType === 'hourly' ? 'h' : 'kuu'}`
+                        : `${service.details.payAmount} €/${service.details.payType === 'hourly' ? 'h' : t('printPerMonth').replace('/', '')}`
                       }
                     </td>
                     <td className="py-1 text-right">{service.serviceHours}h</td>
@@ -476,34 +458,30 @@ const Print = () => {
         )}
       </section>
 
-      {/* ================================================================== */}
       {/* RISK SECTION */}
-      {/* ================================================================== */}
       <section className="print-section px-8 py-6 page-break-before">
-        <h2 className="text-lg font-semibold mb-4 border-b border-gray-200 pb-2">Riskianalüüs</h2>
+        <h2 className="text-lg font-semibold mb-4 border-b border-gray-200 pb-2">{t('printRiskAnalysis')}</h2>
         
         <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
           <p className="text-sm text-gray-700 mb-4">{config.riskExplanationText}</p>
-          
           <div className="grid grid-cols-2 gap-6">
             <div>
-              <p className="text-sm text-gray-600">Riskimäär</p>
-              <p className="text-2xl font-bold">{(config.BAD_HIRE_RISK_RATE * 100).toFixed(0)}%</p>
+              <p className="text-sm text-gray-600">{t('printRiskRate')}</p>
+              <p className="text-2xl font-bold">{riskPct}%</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Halva värbamise kulu (kuudes)</p>
-              <p className="text-2xl font-bold">{config.BAD_HIRE_PAY_MONTHS} kuud</p>
+              <p className="text-sm text-gray-600">{t('printBadHireCostMonths')}</p>
+              <p className="text-2xl font-bold">{config.BAD_HIRE_PAY_MONTHS} {t('unitMonths')}</p>
             </div>
           </div>
         </div>
 
-        {/* Repeated Services */}
         {repeatedServices.length > 0 && (
           <div className="mb-4 page-break-inside-avoid">
-            <h3 className="font-medium text-sm mb-2">Korduvad teenused halva värbamise korral:</h3>
+            <h3 className="font-medium text-sm mb-2">{t('printRepeatedServices')}</h3>
             <ul className="list-disc list-inside text-sm">
               {repeatedServices.map((s) => (
-                <li key={s.id}>{s.name || 'Nimeta teenus'}</li>
+                <li key={s.id}>{s.name || t('printUnnamedService')}</li>
               ))}
             </ul>
           </div>
@@ -511,22 +489,20 @@ const Print = () => {
 
         <div className="grid grid-cols-2 gap-4 text-center">
           <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-            <p className="text-sm text-gray-600 mb-1">Lisariski stsenaarium</p>
-            <p className="text-sm text-gray-500 mb-2">On {(config.BAD_HIRE_RISK_RATE * 100).toFixed(0)}% tõenäosus, et lisandub:</p>
+            <p className="text-sm text-gray-600 mb-1">{t('printRiskScenario')}</p>
+            <p className="text-sm text-gray-500 mb-2">{t('printRiskProbAdds', { pct: riskPct })}</p>
             <p className="text-2xl font-bold text-orange-700">+{formatCurrency(results.badHireExtraIfHappens)}</p>
-            <p className="text-xs text-gray-500 mt-2">See summa <strong>ei ole</strong> lisatud kogukulu hulka.</p>
+            <p className="text-xs text-gray-500 mt-2">{t('printNotInTotal')}</p>
           </div>
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-            <p className="text-sm text-gray-600 mb-1">Statistiline tõenäosus</p>
-            <p className="text-3xl font-bold text-gray-700">{(config.BAD_HIRE_RISK_RATE * 100).toFixed(0)}%</p>
-            <p className="text-xs text-gray-500 mt-2">et värbamine ebaõnnestub</p>
+            <p className="text-sm text-gray-600 mb-1">{t('printStatProbability')}</p>
+            <p className="text-3xl font-bold text-gray-700">{riskPct}%</p>
+            <p className="text-xs text-gray-500 mt-2">{t('printHiringFails')}</p>
           </div>
         </div>
       </section>
 
-      {/* ================================================================== */}
-      {/* INTERPRETATION & CTA */}
-      {/* ================================================================== */}
+      {/* CTA */}
       <section className="print-section px-8 py-6 page-break-inside-avoid">
         <div className="bg-primary/5 border border-primary/20 rounded-lg p-6 text-center">
           <h2 className="text-xl font-semibold mb-3">{config.finalQuestionText}</h2>
@@ -537,107 +513,50 @@ const Print = () => {
             rel="noopener noreferrer"
             className="inline-block px-6 py-2 bg-primary text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
           >
-            Võta ühendust →
+            {t('printContactButton')}
           </a>
           <p className="text-xs text-gray-500 mt-2">manpower.ee/et/vaerbamisteenused</p>
         </div>
       </section>
 
-      {/* ================================================================== */}
-      {/* FOOTER DISCLAIMER */}
-      {/* ================================================================== */}
+      {/* FOOTER */}
       <footer className="print-footer px-8 py-4 border-t border-gray-200 text-xs text-gray-500">
         <p>{config.disclaimerText}</p>
-        <p className="mt-2">Aruanne genereeritud: {formatDate(generatedAt)}</p>
+        <p className="mt-2">{t('printReportGenerated')} {formatDate(generatedAt)}</p>
       </footer>
 
-      {/* ================================================================== */}
-      {/* PRINT BUTTON (hidden in print) */}
-      {/* ================================================================== */}
+      {/* PRINT BUTTON */}
       <div className="no-print fixed bottom-6 right-6 flex gap-3">
-        <Link
-          to="/"
-          className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
-        >
-          ← Tagasi
+        <Link to="/" className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors">
+          {t('printBack')}
         </Link>
         <button
           onClick={() => window.print()}
           className="px-6 py-2 bg-primary text-white rounded-lg hover:opacity-90 transition-opacity font-medium"
         >
-          Prindi / Salvesta PDF
+          {t('printSavePdf')}
         </button>
       </div>
 
       {/* Print Styles */}
       <style>{`
         @media print {
-          .no-print {
-            display: none !important;
-          }
-          
-          body {
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-          }
-          
-          .print-page {
-            padding: 0;
-            margin: 0;
-          }
-          
-          .print-section {
-            break-inside: avoid;
-          }
-          
-          .page-break-before {
-            break-before: page;
-          }
-          
-          .page-break-inside-avoid {
-            break-inside: avoid;
-          }
-          
-          table tr {
-            break-inside: avoid;
-          }
-          
-          /* Minimal backgrounds for print */
-          .bg-gray-50 {
-            background-color: #f9fafb !important;
-          }
-          
-          .bg-orange-50 {
-            background-color: #fff7ed !important;
-          }
-          
-          .bg-red-50 {
-            background-color: #fef2f2 !important;
-          }
-          
-          .bg-yellow-50 {
-            background-color: #fefce8 !important;
-          }
-          
-          /* Header on every page */
-          .print-header {
-            position: running(header);
-          }
-          
-          @page {
-            margin: 1.5cm;
-            @top-center {
-              content: element(header);
-            }
-          }
+          .no-print { display: none !important; }
+          body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+          .print-page { padding: 0; margin: 0; }
+          .print-section { break-inside: avoid; }
+          .page-break-before { break-before: page; }
+          .page-break-inside-avoid { break-inside: avoid; }
+          table tr { break-inside: avoid; }
+          .bg-gray-50 { background-color: #f9fafb !important; }
+          .bg-orange-50 { background-color: #fff7ed !important; }
+          .bg-red-50 { background-color: #fef2f2 !important; }
+          .bg-yellow-50 { background-color: #fefce8 !important; }
+          .print-header { position: running(header); }
+          @page { margin: 1.5cm; @top-center { content: element(header); } }
         }
-        
         @media screen {
-          .print-page {
-            max-width: 800px;
-            margin: 0 auto;
-            padding-bottom: 100px;
-          }
+          .print-page { max-width: 800px; margin: 0 auto; padding-bottom: 100px; }
         }
       `}</style>
     </div>
