@@ -99,7 +99,7 @@ export function RiskSummarySection() {
   const sectionInfoGuidance = t('sectionInfoRiskGuidance');
   
   const missingInputs: MissingInputInfo[] = results.emptyFields.map(f => ({
-    label: f.label,
+    label: t(f.label as any),
     fieldType: f.fieldType,
   }));
 
