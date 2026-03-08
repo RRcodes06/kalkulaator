@@ -712,34 +712,34 @@ export function computeTotals(
   
   // Check hire pay
   if (inputs.hirePay.payType === 'unset' || inputs.hirePay.payAmount === 0) {
-    emptyFields.push({ sectionId: 'position', fieldKey: 'hirePay', label: 'Värvatava töötaja palk', fieldType: 'salary' });
+    emptyFields.push({ sectionId: 'position', fieldKey: 'hirePay', label: 'emptyHirePay', fieldType: 'salary' });
   }
   
   // Check role pays
   if (inputs.roles.hr.payType === 'unset' || inputs.roles.hr.payAmount === 0) {
-    emptyFields.push({ sectionId: 'roles', fieldKey: 'roles.hr', label: 'Personalitöötaja palk', fieldType: 'salary' });
+    emptyFields.push({ sectionId: 'roles', fieldKey: 'roles.hr', label: 'emptyHrPay', fieldType: 'salary' });
   }
   if (inputs.roles.manager.payType === 'unset' || inputs.roles.manager.payAmount === 0) {
-    emptyFields.push({ sectionId: 'roles', fieldKey: 'roles.manager', label: 'Juhi palk', fieldType: 'salary' });
+    emptyFields.push({ sectionId: 'roles', fieldKey: 'roles.manager', label: 'emptyManagerPay', fieldType: 'salary' });
   }
   if (inputs.roles.team.payType === 'unset' || inputs.roles.team.payAmount === 0) {
-    emptyFields.push({ sectionId: 'roles', fieldKey: 'roles.team', label: 'Tiimi palk', fieldType: 'salary' });
+    emptyFields.push({ sectionId: 'roles', fieldKey: 'roles.team', label: 'emptyTeamPay', fieldType: 'salary' });
   }
   
   // Check block inputs
   const blockFieldChecks: Array<{ sectionId: string; value: number; key: string; label: string; type: EmptyFieldInfo['fieldType'] }> = [
-    { sectionId: 'strategy', value: inputs.strategyPrep.hrHours, key: 'strategyPrep.hrHours', label: 'Strateegia: HR tunnid', type: 'hours' },
-    { sectionId: 'strategy', value: inputs.strategyPrep.managerHours, key: 'strategyPrep.managerHours', label: 'Strateegia: Juhi tunnid', type: 'hours' },
-    { sectionId: 'ads', value: inputs.adsBranding.hrHours, key: 'adsBranding.hrHours', label: 'Kuulutused: HR tunnid', type: 'hours' },
-    { sectionId: 'ads', value: inputs.adsBranding.directCosts, key: 'adsBranding.directCosts', label: 'Kuulutuste kulud', type: 'cost' },
-    { sectionId: 'candidate', value: inputs.candidateMgmt.hrHours, key: 'candidateMgmt.hrHours', label: 'Kandidaadid: HR tunnid', type: 'hours' },
-    { sectionId: 'interviews', value: inputs.interviews.hrHours, key: 'interviews.hrHours', label: 'Intervjuud: HR tunnid', type: 'hours' },
-    { sectionId: 'interviews', value: inputs.interviews.managerHours, key: 'interviews.managerHours', label: 'Intervjuud: Juhi tunnid', type: 'hours' },
-    { sectionId: 'preboarding', value: inputs.preboarding.devicesCost, key: 'preboarding.devicesCost', label: 'Seadmete kulu', type: 'cost' },
-    { sectionId: 'onboarding', value: inputs.onboarding.onboardingMonths, key: 'onboarding.onboardingMonths', label: 'Sisseelamisperiood', type: 'months' },
-    { sectionId: 'onboarding', value: inputs.onboarding.productivityPct, key: 'onboarding.productivityPct', label: 'Keskmine tootlikkus', type: 'percentage' },
-    { sectionId: 'vacancy', value: inputs.vacancy.vacancyDays, key: 'vacancy.vacancyDays', label: 'Vakantsi kestus', type: 'days' },
-    { sectionId: 'vacancy', value: inputs.vacancy.dailyCost, key: 'vacancy.dailyCost', label: 'Päevakulu', type: 'cost' },
+    { sectionId: 'strategy', value: inputs.strategyPrep.hrHours, key: 'strategyPrep.hrHours', label: 'emptyStrategyHr', type: 'hours' },
+    { sectionId: 'strategy', value: inputs.strategyPrep.managerHours, key: 'strategyPrep.managerHours', label: 'emptyStrategyManager', type: 'hours' },
+    { sectionId: 'ads', value: inputs.adsBranding.hrHours, key: 'adsBranding.hrHours', label: 'emptyAdsHr', type: 'hours' },
+    { sectionId: 'ads', value: inputs.adsBranding.directCosts, key: 'adsBranding.directCosts', label: 'emptyAdsCosts', type: 'cost' },
+    { sectionId: 'candidate', value: inputs.candidateMgmt.hrHours, key: 'candidateMgmt.hrHours', label: 'emptyCandidateHr', type: 'hours' },
+    { sectionId: 'interviews', value: inputs.interviews.hrHours, key: 'interviews.hrHours', label: 'emptyInterviewsHr', type: 'hours' },
+    { sectionId: 'interviews', value: inputs.interviews.managerHours, key: 'interviews.managerHours', label: 'emptyInterviewsManager', type: 'hours' },
+    { sectionId: 'preboarding', value: inputs.preboarding.devicesCost, key: 'preboarding.devicesCost', label: 'emptyDevicesCost', type: 'cost' },
+    { sectionId: 'onboarding', value: inputs.onboarding.onboardingMonths, key: 'onboarding.onboardingMonths', label: 'emptyOnboardingMonths', type: 'months' },
+    { sectionId: 'onboarding', value: inputs.onboarding.productivityPct, key: 'onboarding.productivityPct', label: 'emptyProductivity', type: 'percentage' },
+    { sectionId: 'vacancy', value: inputs.vacancy.vacancyDays, key: 'vacancy.vacancyDays', label: 'emptyVacancyDays', type: 'days' },
+    { sectionId: 'vacancy', value: inputs.vacancy.dailyCost, key: 'vacancy.dailyCost', label: 'emptyDailyCost', type: 'cost' },
   ];
   
   for (const check of blockFieldChecks) {
