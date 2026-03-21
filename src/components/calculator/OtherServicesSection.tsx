@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Briefcase, Plus, Trash2, Scale, Monitor, Palette } from 'lucide-react';
+import { Briefcase, Plus, Trash2, Scale, Monitor, Building2 } from 'lucide-react';
 import type { ServiceType, BillingType, PayType, ServiceDetails } from '@/types/calculator';
 import { useLanguage } from '@/i18n/LanguageContext';
 import type { TranslationKey } from '@/i18n/translations';
