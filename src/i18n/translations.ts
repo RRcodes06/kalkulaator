@@ -769,8 +769,8 @@ export const translations = {
     emptyDailyCost: 'Daily cost',
 
     // Help box
-    helpTitle: 'Help',
-    helpText: 'Need help? Contact us and we\'ll help find a solution to your hiring challenge.',
+    helpTitle: 'Need help with the calculation?',
+    helpText: 'Contact us and we\'ll find a solution to your hiring challenge.',
     helpCta: 'Contact us',
   },
 } as const;
