@@ -4,7 +4,7 @@ import type { CalculatorConfig, RecommendedRanges } from '@/types/calculator';
 export const ADMIN_PASSWORD = 'CHANGE_ME';
 
 // Config storage version for migrations
-export const CONFIG_VERSION = 'v2';
+export const CONFIG_VERSION = 'v3';
 
 // ============================================================================
 // ROLE-SPECIFIC DEFAULT SALARIES (Estonian averages, gross)
@@ -52,17 +52,18 @@ export const DEFAULT_RECOMMENDED_RANGES: RecommendedRanges = {
   'backgroundOffer.hrHours': { min: 1, max: 6, unit: 'h' },
   'backgroundOffer.managerHours': { min: 0, max: 4, unit: 'h' },
   
-  // Indirect Costs
-  'indirectCosts.hrHours': { min: 2, max: 12, unit: 'h' },
-  'indirectCosts.managerHours': { min: 1, max: 10, unit: 'h' },
-  'indirectCosts.teamHours': { min: 0, max: 8, unit: 'h' },
-  
   // Onboarding
   'onboarding.onboardingMonths': { min: 1, max: 12, unit: 'months' },
   'onboarding.productivityPct': { min: 20, max: 80, unit: '%' },
   
-  // Vacancy
-  'vacancy.vacancyDays': { min: 10, max: 90, unit: 'days' },
+  // Vacant Position Impact - Mode A (uncovered)
+  'vacantPositionImpact.percentageUndone': { min: 20, max: 80, unit: '%' },
+  'vacantPositionImpact.monthlyPositionValue': { min: 2000, max: 8000, unit: '€' },
+  
+  // Vacant Position Impact - Mode B (team coverage)
+  'vacantPositionImpact.additionalHours': { min: 10, max: 60, unit: 'h' },
+  'vacantPositionImpact.avgHourlyCost': { min: 10, max: 35, unit: '€' },
+  'vacantPositionImpact.overtimeMultiplier': { min: 1, max: 2, unit: 'x' },
 };
 
 // Labels for recommended ranges (shown in Admin UI)
@@ -81,12 +82,13 @@ export const RANGE_LABELS: Record<string, string> = {
   'interviews.directCosts': 'Intervjuude kulud',
   'backgroundOffer.hrHours': 'Taustakontroll: HR tunnid',
   'backgroundOffer.managerHours': 'Taustakontroll: Juhi tunnid',
-  'indirectCosts.hrHours': 'Kaudsed: HR tunnid',
-  'indirectCosts.managerHours': 'Kaudsed: Juhi tunnid',
-  'indirectCosts.teamHours': 'Kaudsed: Tiimi tunnid',
   'onboarding.onboardingMonths': 'Sisseelamisperiood',
   'onboarding.productivityPct': 'Keskmine tootlikkus',
-  'vacancy.vacancyDays': 'Vakantsi kestus',
+  'vacantPositionImpact.percentageUndone': 'Täitmata töö osakaal',
+  'vacantPositionImpact.monthlyPositionValue': 'Positsiooni kuine väärtus',
+  'vacantPositionImpact.additionalHours': 'Lisatunnid kuus',
+  'vacantPositionImpact.avgHourlyCost': 'Keskmine tunnikulu',
+  'vacantPositionImpact.overtimeMultiplier': 'Ületunni koefitsient',
 };
 
 export const DEFAULT_CONFIG: CalculatorConfig = {
@@ -134,7 +136,6 @@ export const BLOCK_LABELS: Record<string, string> = {
   otherServices: 'Muud teenused',
   preboarding: 'Ettevalmistus enne alustamist',
   onboarding: 'Sisseelamine',
-  vacancy: 'Vaba ametikoha kulu',
-  indirectCosts: 'Kaudsed kulud',
+  vacantImpact: 'Täitmata positsiooni mõju',
   expectedRisk: 'Oodatav riskikulu',
 };
