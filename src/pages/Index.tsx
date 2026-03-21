@@ -122,19 +122,37 @@ const Index = () => {
         </AccordionControllerProvider>
       </main>
 
-      {/* Help Box */}
-      <div className="container max-w-7xl mx-auto px-6 mt-10">
-        <div className="flex items-start gap-4 p-5 rounded-lg border border-border bg-card shadow-sm max-w-md">
-          <HelpCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-          <div className="space-y-2">
-            <h4 className="font-semibold text-sm text-foreground">{t('helpTitle')}</h4>
-            <p className="text-sm text-muted-foreground">{t('helpText')}</p>
+      {/* Sticky Help Box */}
+      <div className="fixed bottom-6 left-6 z-40 hidden md:block">
+        <div className="flex items-start gap-5 p-6 rounded-xl border border-border bg-card shadow-lg max-w-sm w-80">
+          <HelpCircle className="w-7 h-7 text-primary mt-0.5 flex-shrink-0" />
+          <div className="space-y-3">
+            <h4 className="font-semibold text-base text-foreground">{t('helpTitle')}</h4>
+            <p className="text-sm text-muted-foreground leading-relaxed">{t('helpText')}</p>
             <a
               href="https://www.manpower.ee/et/vaerbamisteenused"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button size="sm" className="mt-1">{t('helpCta')}</Button>
+              <Button size="default" className="mt-1 w-full">{t('helpCta')}</Button>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Help Box (above footer, not sticky) */}
+      <div className="md:hidden container max-w-7xl mx-auto px-6 mt-10">
+        <div className="flex items-start gap-5 p-6 rounded-xl border border-border bg-card shadow-sm">
+          <HelpCircle className="w-7 h-7 text-primary mt-0.5 flex-shrink-0" />
+          <div className="space-y-3">
+            <h4 className="font-semibold text-base text-foreground">{t('helpTitle')}</h4>
+            <p className="text-sm text-muted-foreground leading-relaxed">{t('helpText')}</p>
+            <a
+              href="https://www.manpower.ee/et/vaerbamisteenused"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button size="default" className="mt-1">{t('helpCta')}</Button>
             </a>
           </div>
         </div>

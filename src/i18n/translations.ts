@@ -380,8 +380,8 @@ export const translations = {
     emptyProductivity: 'Keskmine tootlikkus',
 
     // Help box
-    helpTitle: 'Abi',
-    helpText: 'Jääd arvutamisel hätta? Võta meiega ühendust ja leiame lahenduse su personalimurele.',
+    helpTitle: 'Jääd arvutamisel hätta?',
+    helpText: 'Võta meiega ühendust ja leiame su personalimurele lahenduse.',
     helpCta: 'Võta ühendust',
   },
 
@@ -769,8 +769,8 @@ export const translations = {
     emptyDailyCost: 'Daily cost',
 
     // Help box
-    helpTitle: 'Help',
-    helpText: 'Need help? Contact us and we\'ll help find a solution to your hiring challenge.',
+    helpTitle: 'Need help with the calculation?',
+    helpText: 'Contact us and we\'ll find a solution to your hiring challenge.',
     helpCta: 'Contact us',
   },
 } as const;
