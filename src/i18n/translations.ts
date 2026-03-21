@@ -65,12 +65,17 @@ export const translations = {
     extraCosts: 'Lisakulud',
     extraCostsHint: 'Koolitused, sertifikaadid',
 
-    // Vacancy
-    vacancyDays: 'Vakantsi kestus',
-    vacancyDaysSuffix: 'päeva',
-    dailyCost: 'Päevakulu',
-    dailyCostSuffix: '€/päev',
-    dailyCostHint: 'Kaotatud tulu või tootlikkus päevas',
+    // Vacant Position Impact
+    vacantImpactDescription: 'Vali, kas töö jääb osaliselt või täielikult tegemata või kaetakse olemasoleva tiimi poolt. Sama mõju ei arvestata mõlemas korraga.',
+    vacantModeUncovered: 'Töö jääb osaliselt või täielikult katmata',
+    vacantModeTeamCoverage: 'Töö kaetakse olemasoleva tiimi poolt',
+    vacantPercentageUndone: 'Kui suur osa tööst jääb tegemata?',
+    vacantMonthlyPositionValue: 'Positsiooni hinnanguline kuine väärtus',
+    vacantAdditionalHours: 'Lisatunnid kuus',
+    vacantAvgHourlyCost: 'Keskmine tunnikulu',
+    vacantOvertimeMultiplier: 'Ületunni koefitsient',
+    vacantLostProductivityCost: 'Kaotatud tootlikkuse kulu',
+    vacantTeamCoverageCost: 'Töö katmise lisakulu',
 
     // Pay input group
     payTypeLabel: 'Palga tüüp',
