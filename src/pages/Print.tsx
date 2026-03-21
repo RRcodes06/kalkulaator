@@ -90,7 +90,7 @@ function PrintChart({ results, t }: { results: ComputedResult; t: ReturnType<typ
   const blockOrder: BlockName[] = [
     'strategyPrep', 'adsBranding', 'candidateMgmt', 'interviews',
     'backgroundOffer', 'otherServices', 'preboarding', 'onboarding',
-    'vacancy', 'indirectCosts', 'expectedRisk'
+    'vacantImpact', 'expectedRisk'
   ];
 
   const chartData = blockOrder
