@@ -31,8 +31,7 @@ const BLOCK_LABEL_KEYS: Record<string, TranslationKey> = {
   otherServices: 'blockOtherServices',
   preboarding: 'blockPreboarding',
   onboarding: 'blockOnboarding',
-  vacancy: 'blockVacancy',
-  indirectCosts: 'blockIndirectCosts',
+  vacantImpact: 'blockVacantImpact',
   expectedRisk: 'blockExpectedRisk',
 };
 
@@ -45,8 +44,7 @@ const SHORT_LABEL_KEYS: Record<string, TranslationKey> = {
   otherServices: 'chartOtherServices',
   preboarding: 'chartPreboarding',
   onboarding: 'chartOnboarding',
-  vacancy: 'chartVacancy',
-  indirectCosts: 'chartIndirect',
+  vacantImpact: 'chartVacantImpact',
   expectedRisk: 'chartRisk',
 };
 

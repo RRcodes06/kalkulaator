@@ -41,7 +41,6 @@ export function RiskSummarySection() {
       { condition: inputs.candidateMgmt.hrHours === 0, sectionId: 'candidate', fieldName: 'candidateMgmt', label: t('fieldCandidateMgmt') },
       { condition: inputs.interviews.hrHours === 0 && inputs.interviews.managerHours === 0, sectionId: 'interviews', fieldName: 'interviews', label: t('fieldInterviews') },
       { condition: inputs.onboarding.onboardingMonths === 0, sectionId: 'onboarding', fieldName: 'onboarding', label: t('fieldOnboarding') },
-      { condition: inputs.vacancy.vacancyDays === 0, sectionId: 'vacancy', fieldName: 'vacancy', label: t('fieldVacancy') },
     ];
     
     for (const check of checks) {

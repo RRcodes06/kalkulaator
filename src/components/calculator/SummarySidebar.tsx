@@ -16,8 +16,7 @@ const BLOCK_LABEL_KEYS: Record<string, TranslationKey> = {
   otherServices: 'blockOtherServices',
   preboarding: 'blockPreboarding',
   onboarding: 'blockOnboarding',
-  vacancy: 'blockVacancy',
-  indirectCosts: 'blockIndirectCosts',
+  vacantImpact: 'blockVacantImpact',
   expectedRisk: 'blockExpectedRisk',
 };
 
@@ -26,11 +25,10 @@ const INSIGHT_KEYS: Record<string, TranslationKey> = {
   costOnly: 'insightCostOnly',
   timeCost: 'insightTimeCost',
   onboarding: 'insightOnboarding',
-  vacancy: 'insightVacancy',
+  vacantImpact: 'insightVacantImpact',
   expectedRisk: 'insightRisk',
 };
 
-// Block metadata inline
 const BLOCK_META: Record<string, { isTimeBased: boolean; isCostBased: boolean }> = {
   strategyPrep: { isTimeBased: true, isCostBased: false },
   adsBranding: { isTimeBased: true, isCostBased: true },
@@ -40,8 +38,7 @@ const BLOCK_META: Record<string, { isTimeBased: boolean; isCostBased: boolean }>
   otherServices: { isTimeBased: false, isCostBased: true },
   preboarding: { isTimeBased: true, isCostBased: true },
   onboarding: { isTimeBased: false, isCostBased: false },
-  vacancy: { isTimeBased: false, isCostBased: false },
-  indirectCosts: { isTimeBased: true, isCostBased: false },
+  vacantImpact: { isTimeBased: false, isCostBased: true },
   expectedRisk: { isTimeBased: false, isCostBased: false },
 };
 
@@ -68,7 +65,7 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
     if (meta.isCostBased && !meta.isTimeBased) return `${base} ${t('insightCostOnly')}`;
     if (meta.isTimeBased && meta.isCostBased) return `${base} ${t('insightTimeCost')}`;
     if (blockKey === 'onboarding') return `${base} ${t('insightOnboarding')}`;
-    if (blockKey === 'vacancy') return `${base} ${t('insightVacancy')}`;
+    if (blockKey === 'vacantImpact') return `${base} ${t('insightVacantImpact')}`;
     if (blockKey === 'expectedRisk') return `${base} ${t('insightRisk')}`;
     return base;
   };
@@ -82,8 +79,7 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
     { label: getBlockLabel('otherServices'), value: results.blockCosts.otherServices.total },
     { label: getBlockLabel('preboarding'), value: results.blockCosts.preboarding.total },
     { label: getBlockLabel('onboarding'), value: results.blockCosts.onboarding.total },
-    { label: getBlockLabel('vacancy'), value: results.blockCosts.vacancy.total },
-    { label: getBlockLabel('indirectCosts'), value: results.blockCosts.indirectCosts.total },
+    { label: getBlockLabel('vacantImpact'), value: results.blockCosts.vacantImpact.total },
   ].filter(item => item.value > 0);
 
   const warningsCount = results.rangeWarnings.length + results.missingPayWarnings.length;

@@ -55,8 +55,7 @@ const BLOCK_LABEL_KEYS: Record<string, TranslationKey> = {
   otherServices: 'blockOtherServices',
   preboarding: 'blockPreboarding',
   onboarding: 'blockOnboarding',
-  vacancy: 'blockVacancy',
-  indirectCosts: 'blockIndirectCosts',
+  vacantImpact: 'blockVacantImpact',
   expectedRisk: 'blockExpectedRisk',
 };
 
@@ -91,7 +90,7 @@ function PrintChart({ results, t }: { results: ComputedResult; t: ReturnType<typ
   const blockOrder: BlockName[] = [
     'strategyPrep', 'adsBranding', 'candidateMgmt', 'interviews',
     'backgroundOffer', 'otherServices', 'preboarding', 'onboarding',
-    'vacancy', 'indirectCosts', 'expectedRisk'
+    'vacantImpact', 'expectedRisk'
   ];
 
   const chartData = blockOrder
@@ -409,15 +408,13 @@ const Print = () => {
             <p>{t('printAdditionalCosts')} {formatCurrency(inputs.onboarding.extraCosts)}</p>
           </div>
 
-          <div className="page-break-inside-avoid bg-gray-50 p-3 rounded">
-            <h4 className="font-medium mb-2">{t('blockVacancy')}</h4>
-            <p>{t('printVacant')} {inputs.vacancy.vacancyDays} {t('unitDays')} × {formatCurrency(inputs.vacancy.dailyCost)}{t('printPerDay')}</p>
-          </div>
-
           <div className="page-break-inside-avoid bg-gray-50 p-3 rounded col-span-2">
-            <h4 className="font-medium mb-2">{t('blockIndirectCosts')}</h4>
-            <p>{t('printHr')}: {inputs.indirectCosts.hrHours}h, {t('printManager')}: {inputs.indirectCosts.managerHours}h, {t('printTeam')}: {inputs.indirectCosts.teamHours}h</p>
-            <p className="text-xs text-gray-500 mt-1">{t('configIndirectExplanation')}</p>
+            <h4 className="font-medium mb-2">{t('blockVacantImpact')}</h4>
+            {inputs.vacantPositionImpact.mode === 'uncovered' ? (
+              <p>{inputs.vacantPositionImpact.percentageUndone}% × {formatCurrency(inputs.vacantPositionImpact.monthlyPositionValue)}</p>
+            ) : (
+              <p>{inputs.vacantPositionImpact.additionalHours}h × {formatCurrency(inputs.vacantPositionImpact.avgHourlyCost)} × {inputs.vacantPositionImpact.overtimeMultiplier}x</p>
+            )}
           </div>
         </div>
 

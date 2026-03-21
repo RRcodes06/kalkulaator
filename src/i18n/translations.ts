@@ -27,8 +27,7 @@ export const translations = {
     sectionOtherServices: 'Värbamisagentuurid, peatöövõtjad, konsultandid',
     sectionPreboarding: 'Töökoha ettevalmistus, varustus',
     sectionOnboarding: 'Tootlikkuse kadu uue töötaja sisseelamisel',
-    sectionVacancy: 'Kaotatud tootlikkus täitmata positsiooni tõttu',
-    sectionIndirect: 'Tiimi ülekoormus, juhi tähelepanu hajumine, prioriteetide ümberjagamine',
+    sectionVacantImpact: 'Täitmata positsiooni mõju või töö katmise lisakulu',
 
     // Field labels
     positionTitle: 'Ametikoha nimetus',
@@ -66,12 +65,17 @@ export const translations = {
     extraCosts: 'Lisakulud',
     extraCostsHint: 'Koolitused, sertifikaadid',
 
-    // Vacancy
-    vacancyDays: 'Vakantsi kestus',
-    vacancyDaysSuffix: 'päeva',
-    dailyCost: 'Päevakulu',
-    dailyCostSuffix: '€/päev',
-    dailyCostHint: 'Kaotatud tulu või tootlikkus päevas',
+    // Vacant Position Impact
+    vacantImpactDescription: 'Vali, kas töö jääb osaliselt või täielikult tegemata või kaetakse olemasoleva tiimi poolt. Sama mõju ei arvestata mõlemas korraga.',
+    vacantModeUncovered: 'Töö jääb osaliselt või täielikult katmata',
+    vacantModeTeamCoverage: 'Töö kaetakse olemasoleva tiimi poolt',
+    vacantPercentageUndone: 'Kui suur osa tööst jääb tegemata?',
+    vacantMonthlyPositionValue: 'Positsiooni hinnanguline kuine väärtus',
+    vacantAdditionalHours: 'Lisatunnid kuus',
+    vacantAvgHourlyCost: 'Keskmine tunnikulu',
+    vacantOvertimeMultiplier: 'Ületunni koefitsient',
+    vacantLostProductivityCost: 'Kaotatud tootlikkuse kulu',
+    vacantTeamCoverageCost: 'Töö katmise lisakulu',
 
     // Pay input group
     payTypeLabel: 'Palga tüüp',
@@ -214,10 +218,8 @@ export const translations = {
     sectionInfoPreboardingGuidance: 'Mõtle, mis tuleb teha enne esimest tööpäeva.',
     sectionInfoOnboarding: 'Periood, kus töötaja tootlikkus on madalam, sest ta õpib rolle ja süsteeme.',
     sectionInfoOnboardingGuidance: 'Keerukamad rollid nõuavad pikemat sisseelamisaega.',
-    sectionInfoVacancy: 'Mõju, kui roll on täitmata ja töö jääb tegemata või jaotub teistele.',
-    sectionInfoVacancyGuidance: 'Hinda, kui palju päevas kaotad, kui koht on täitmata.',
-    sectionInfoIndirect: 'Fookuse kadu ja lisatöö, mis ei kajastu otsestes arvetes.',
-    sectionInfoIndirectGuidance: 'Tiimi ülekoormus, juhi tähelepanu hajumine, prioriteetide ümberjagamine.',
+    sectionInfoVacantImpact: 'Täitmata positsiooni mõju äri tulemuslikkusele.',
+    sectionInfoVacantImpactGuidance: 'Vali, kas töö jääb tegemata või kaetakse tiimi poolt. Mõlemat korraga ei arvestata.',
     sectionInfoOther: 'Välised või sisemised teenused, mida kasutatakse värbamisprotsessis.',
     sectionInfoOtherGuidance: 'Näiteks jurist, IT, värbamisagentuur, taustauuringute pakkuja.',
     sectionInfoRisk: 'Statistiline tõenäosus, et värbamine ebaõnnestub.',
@@ -229,7 +231,7 @@ export const translations = {
     insightCostOnly: 'Kulu suurus sõltub valitud lahendustest ja teenuse mahust.',
     insightTimeCost: 'Sisaldab nii ajakulu kui otseseid kulusid.',
     insightOnboarding: 'Mõju tuleneb tootlikkuse kaost sisseelamisperioodil.',
-    insightVacancy: 'Täitmata positsioon mõjutab otseselt äri jõudlust.',
+    insightVacantImpact: 'Täitmata positsioon mõjutab otseselt äri jõudlust.',
     insightRisk: 'See on riskiga kaalutud hinnang halva värbamise kulule.',
 
     // Block labels
@@ -241,8 +243,7 @@ export const translations = {
     blockOtherServices: 'Muud teenused',
     blockPreboarding: 'Ettevalmistus enne alustamist',
     blockOnboarding: 'Sisseelamine',
-    blockVacancy: 'Vaba ametikoha kulu',
-    blockIndirectCosts: 'Kaudsed kulud',
+    blockVacantImpact: 'Täitmata positsiooni mõju',
     blockExpectedRisk: 'Oodatav riskikulu',
 
     // Chart short labels
@@ -254,8 +255,7 @@ export const translations = {
     chartOtherServices: 'Muud teenused',
     chartPreboarding: 'Ettevalmistus',
     chartOnboarding: 'Sisseelamine',
-    chartVacancy: 'Vakants',
-    chartIndirect: 'Kaudsed',
+    chartVacantImpact: 'Täitmata pos.',
     chartRisk: 'Risk',
 
     // Chart
@@ -272,7 +272,6 @@ export const translations = {
     fieldCandidateMgmt: 'Kandidaatide haldus',
     fieldInterviews: 'Intervjuud',
     fieldOnboarding: 'Sisseelamisperiood',
-    fieldVacancy: 'Vakantsi kestus',
 
     // Missing inputs typical guidance
     guidanceHirePay: 'Tavaliselt {min} – 4000 € kuus',
@@ -284,8 +283,6 @@ export const translations = {
     guidanceTeamHours: 'Tavaliselt 0–8 tundi',
     guidanceOnboardingMonths: 'Tavaliselt 1–6 kuud',
     guidanceProductivity: 'Tavaliselt 40–70%',
-    guidanceVacancyDays: 'Tavaliselt 20–60 päeva',
-    guidanceDailyCost: 'Sõltub ametikohast',
     guidanceDevicesCost: 'Tavaliselt 500–2000 €',
     guidanceItRate: 'Tavaliselt 20–35 €/h',
 
@@ -381,8 +378,6 @@ export const translations = {
     emptyDevicesCost: 'Seadmete kulu',
     emptyOnboardingMonths: 'Sisseelamisperiood',
     emptyProductivity: 'Keskmine tootlikkus',
-    emptyVacancyDays: 'Vakantsi kestus',
-    emptyDailyCost: 'Päevakulu',
   },
 
   eng: {

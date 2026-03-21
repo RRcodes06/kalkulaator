@@ -103,13 +103,21 @@ export interface OnboardingInput {
   extraCosts: number; // training materials, courses
 }
 
-export interface VacancyInput {
-  vacancyDays: number;
-  dailyCost: number; // estimated daily cost of unfilled position
-}
+// ============================================================================
+// VACANT POSITION IMPACT (replaces old Vacancy + IndirectCosts)
+// ============================================================================
 
-export interface IndirectCostsInput extends BlockHoursInput {
-  // These are calculated using gross hourly rates (no employer taxes)
+export type VacantImpactMode = 'uncovered' | 'teamCoverage';
+
+export interface VacantPositionImpactInput {
+  mode: VacantImpactMode;
+  // Mode A: Work remains uncovered
+  percentageUndone: number;       // 0-100
+  monthlyPositionValue: number;   // € estimated monthly value
+  // Mode B: Work covered by team
+  additionalHours: number;        // hours per month
+  avgHourlyCost: number;          // € per hour
+  overtimeMultiplier: number;     // >= 1.0
 }
 
 // ============================================================================
@@ -135,15 +143,14 @@ export interface CalculatorInputs {
   otherServices: ServiceRow[];
   preboarding: PreboardingInput;
   onboarding: OnboardingInput;
-  vacancy: VacancyInput;
-  indirectCosts: IndirectCostsInput;
+  vacantPositionImpact: VacantPositionImpactInput;
 }
 
 // ============================================================================
 // CONFIG TYPES
 // ============================================================================
 
-export type RangeUnit = 'h' | '€' | 'days' | 'months' | '%';
+export type RangeUnit = 'h' | '€' | 'days' | 'months' | '%' | 'x';
 
 export interface RecommendedRange {
   min: number;
@@ -204,8 +211,7 @@ export interface BlockCostsMap {
   otherServices: BlockCost;
   preboarding: BlockCost;
   onboarding: BlockCost;
-  vacancy: BlockCost;
-  indirectCosts: BlockCost;
+  vacantImpact: BlockCost;
   expectedRisk: BlockCost;
 }
 
@@ -305,5 +311,5 @@ export interface EmptyFieldInfo {
   sectionId: string;
   fieldKey: string;
   label: string;
-  fieldType: 'salary' | 'hours' | 'cost' | 'months' | 'percentage' | 'days' | 'rate';
+  fieldType: 'salary' | 'hours' | 'cost' | 'months' | 'percentage' | 'days' | 'rate' | 'multiplier';
 }
