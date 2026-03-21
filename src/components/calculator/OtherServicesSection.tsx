@@ -16,9 +16,9 @@ export function OtherServicesSection() {
   const { t } = useLanguage();
 
   const QUICK_ADD_PRESETS = [
+    { name: t('presetRecruitmentAgency'), label: t('addRecruitmentAgency'), icon: <Building2 className="w-4 h-4" /> },
     { name: t('presetLawyer'), label: t('addLawyer'), icon: <Scale className="w-4 h-4" /> },
     { name: t('presetIT'), label: t('addIT'), icon: <Monitor className="w-4 h-4" /> },
-    { name: t('presetMarketing'), label: t('addMarketing'), icon: <Palette className="w-4 h-4" /> },
     { name: '', label: t('addOther'), icon: <Plus className="w-4 h-4" /> },
   ];
 

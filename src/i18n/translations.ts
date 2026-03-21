@@ -495,13 +495,13 @@ export const translations = {
     serviceHoursHint: 'Time this service takes',
     repeatOnBadHire: 'Recurring cost in case of bad hire',
     noServices: 'No other services. Add a service using the buttons above.',
+    addRecruitmentAgency: 'Add recruitment agency',
     addLawyer: 'Add lawyer',
     addIT: 'Add IT',
-    addMarketing: 'Add marketing',
     addOther: 'Add other',
+    presetRecruitmentAgency: 'Recruitment agency',
     presetLawyer: 'Lawyer',
     presetIT: 'IT support',
-    presetMarketing: 'Marketing/branding',
 
     // Monthly suffix
     monthlySuffix: '€/mo',
