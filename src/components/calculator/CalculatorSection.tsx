@@ -33,8 +33,7 @@ const SECTION_INFO_KEYS: Record<string, { desc: TranslationKey; guidance: Transl
   background: { desc: 'sectionInfoBackground', guidance: 'sectionInfoBackgroundGuidance' },
   preboarding: { desc: 'sectionInfoPreboarding', guidance: 'sectionInfoPreboardingGuidance' },
   onboarding: { desc: 'sectionInfoOnboarding', guidance: 'sectionInfoOnboardingGuidance' },
-  vacancy: { desc: 'sectionInfoVacancy', guidance: 'sectionInfoVacancyGuidance' },
-  indirect: { desc: 'sectionInfoIndirect', guidance: 'sectionInfoIndirectGuidance' },
+  vacantImpact: { desc: 'sectionInfoVacantImpact', guidance: 'sectionInfoVacantImpactGuidance' },
   other: { desc: 'sectionInfoOther', guidance: 'sectionInfoOtherGuidance' },
   risk: { desc: 'sectionInfoRisk', guidance: 'sectionInfoRiskGuidance' },
 };

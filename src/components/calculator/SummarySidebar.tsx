@@ -79,8 +79,7 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
     { label: getBlockLabel('otherServices'), value: results.blockCosts.otherServices.total },
     { label: getBlockLabel('preboarding'), value: results.blockCosts.preboarding.total },
     { label: getBlockLabel('onboarding'), value: results.blockCosts.onboarding.total },
-    { label: getBlockLabel('vacancy'), value: results.blockCosts.vacancy.total },
-    { label: getBlockLabel('indirectCosts'), value: results.blockCosts.indirectCosts.total },
+    { label: getBlockLabel('vacantImpact'), value: results.blockCosts.vacantImpact.total },
   ].filter(item => item.value > 0);
 
   const warningsCount = results.rangeWarnings.length + results.missingPayWarnings.length;

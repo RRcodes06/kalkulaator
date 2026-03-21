@@ -44,8 +44,7 @@ const SHORT_LABEL_KEYS: Record<string, TranslationKey> = {
   otherServices: 'chartOtherServices',
   preboarding: 'chartPreboarding',
   onboarding: 'chartOnboarding',
-  vacancy: 'chartVacancy',
-  indirectCosts: 'chartIndirect',
+  vacantImpact: 'chartVacantImpact',
   expectedRisk: 'chartRisk',
 };
 
