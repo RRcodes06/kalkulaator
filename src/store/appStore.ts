@@ -25,6 +25,7 @@ interface AppState {
   toggleAutoFill: (enabled: boolean) => void;
 
   addServiceRow: (prefilledName?: string) => void;
+  fillSectionWithAverages: (sectionId: string) => void;
   updateServiceRow: (id: string, updates: Partial<ServiceRow>) => void;
   removeServiceRow: (id: string) => void;
 
