@@ -10,7 +10,7 @@ import {
   grossHourlyRate,
   normalizeHirePay,
   onboardingProductivityLossCost,
-  vacancyCost,
+  computeVacantImpactCost,
   computeServicesCost,
   computeBadHireScenario,
   computeTotals,
