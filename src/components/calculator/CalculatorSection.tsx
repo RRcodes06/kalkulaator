@@ -6,12 +6,13 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { cn } from '@/lib/utils';
-import { Check, Circle, HelpCircle, X } from 'lucide-react';
+import { Check, Circle, HelpCircle, X, Sparkles } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useAccordionController, type SectionState } from '@/hooks/useAccordionController';
 import { useAppStore } from '@/store/appStore';
 import { useLanguage } from '@/i18n/LanguageContext';
 import type { TranslationKey } from '@/i18n/translations';
+import { Button } from '@/components/ui/button';
 
 interface CalculatorSectionProps {
   id: string;
