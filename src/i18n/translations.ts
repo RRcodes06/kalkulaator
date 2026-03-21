@@ -43,7 +43,8 @@ export const translations = {
     testsCost: 'Hindamistestide kulud',
     testsCostHint: 'Psühholoogilised testid, oskuste hindamine',
     teamHoursHint: 'Tiimikaaslaste kaasamine intervjuudele',
-    interviewDirectCostsHint: 'Reisikulud, ruumid',
+    interviewDirectCostsHint: 'Näiteks kandidaadi transpordi hüvitamine.',
+    interviewDirectCostsTooltip: 'Siia kuuluvad kandidaadiga seotud otsesed kulud, näiteks transpordi kompenseerimine, majutus, toitlustus või muud intervjuuga seotud välised kulud.',
     backgroundDirectCosts: 'Otsesed kulud',
     backgroundDirectCostsHint: 'Taustakontroll, juriidilised tasud',
 
@@ -426,7 +427,8 @@ export const translations = {
     testsCost: 'Assessment test costs',
     testsCostHint: 'Psychological tests, skills assessment',
     teamHoursHint: 'Team involvement in interviews',
-    interviewDirectCostsHint: 'Travel costs, facilities',
+    interviewDirectCostsHint: 'For example, reimbursing candidate travel.',
+    interviewDirectCostsTooltip: 'Includes direct candidate-related costs such as travel reimbursement, accommodation, meals, or other external expenses related to the interview process.',
     backgroundDirectCosts: 'Direct costs',
     backgroundDirectCostsHint: 'Background checks, legal fees',
 

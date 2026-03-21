@@ -225,6 +225,7 @@ export function CalculatorForm() {
           onChange={(v) => updateNestedInput('interviews', 'directCosts', v)}
           suffix="€"
           hint={t('interviewDirectCostsHint')}
+          tooltip={t('interviewDirectCostsTooltip')}
           warning={getWarningForField('interviews.directCosts')}
           rangeHint={getRangeHintForField('interviews.directCosts')}
         />

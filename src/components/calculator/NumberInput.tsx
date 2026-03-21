@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import { AlertTriangle, Info } from 'lucide-react';
+import { AlertTriangle, HelpCircle, Info } from 'lucide-react';
 import { useExcelInputBehavior } from '@/hooks/useExcelInputBehavior';
 import { useLanguage } from '@/i18n/LanguageContext';
 
@@ -29,6 +30,7 @@ export interface NumberInputProps {
   warning?: NumberInputWarning;
   rangeHint?: NumberInputRangeHint;
   showDefaultIndicator?: boolean;
+  tooltip?: string;
   className?: string;
 }
 
@@ -45,8 +47,10 @@ export function NumberInput({
   warning,
   rangeHint,
   showDefaultIndicator,
+  tooltip,
   className,
 }: NumberInputProps) {
+  const [showTooltip, setShowTooltip] = useState(false);
   const { inputRef, displayValue, handleFocus, handleBlur, handleChange } = useExcelInputBehavior(value);
   const { t } = useLanguage();
 
@@ -61,12 +65,36 @@ export function NumberInput({
     <div className={cn('min-w-0 flex-1 space-y-2', className)}>
       {(label || showDefaultIndicator) && (
         <div className="flex items-center justify-between gap-2">
-          {label && <Label className="text-sm font-medium text-foreground">{label}</Label>}
+          {label && (
+            <div className="flex items-center gap-1.5">
+              <Label className="text-sm font-medium text-foreground">{label}</Label>
+              {tooltip && (
+                <button
+                  type="button"
+                  onClick={() => setShowTooltip(!showTooltip)}
+                  className={cn(
+                    'rounded-full p-0.5 transition-colors',
+                    showTooltip
+                      ? 'bg-primary/10 text-primary'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                  )}
+                  aria-label="Info"
+                >
+                  <HelpCircle className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
+          )}
           {showDefaultIndicator && (
             <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
               {t('defaultValue')}
             </span>
           )}
+        </div>
+      )}
+      {showTooltip && tooltip && (
+        <div className="rounded-md border border-border bg-muted/50 px-3 py-2 text-xs text-muted-foreground animate-fade-in">
+          {tooltip}
         </div>
       )}
       <div className="relative min-w-0">
