@@ -7,7 +7,7 @@ import { LanguageToggle } from '@/components/calculator/LanguageToggle';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Printer, Settings, Eraser, HelpCircle } from 'lucide-react';
+import { Printer, Settings, Eraser, HelpCircle, Sparkles } from 'lucide-react';
 import { useAppStore } from '@/store/appStore';
 import { AccordionControllerProvider } from '@/hooks/useAccordionController';
 import { useLanguage } from '@/i18n/LanguageContext';
