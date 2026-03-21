@@ -243,8 +243,7 @@ export const translations = {
     blockOtherServices: 'Muud teenused',
     blockPreboarding: 'Ettevalmistus enne alustamist',
     blockOnboarding: 'Sisseelamine',
-    blockVacancy: 'Vaba ametikoha kulu',
-    blockIndirectCosts: 'Kaudsed kulud',
+    blockVacantImpact: 'Täitmata positsiooni mõju',
     blockExpectedRisk: 'Oodatav riskikulu',
 
     // Chart short labels
