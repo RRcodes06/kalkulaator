@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import { AlertTriangle, Info } from 'lucide-react';
+import { AlertTriangle, HelpCircle, Info } from 'lucide-react';
 import { useExcelInputBehavior } from '@/hooks/useExcelInputBehavior';
 import { useLanguage } from '@/i18n/LanguageContext';
 
