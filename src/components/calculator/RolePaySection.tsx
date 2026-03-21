@@ -28,8 +28,8 @@ export function RolePaySection() {
       hideInfoButton
     >
       {/* HR Role */}
-      <div className="space-y-5 p-5 bg-muted/30 rounded-lg">
-        <Label className="font-medium text-base">{t('hrRole')}</Label>
+      <div className="min-w-0 space-y-5 rounded-lg bg-muted/30 p-5">
+        <Label className="text-base font-medium">{t('hrRole')}</Label>
         <PayInputGroup
           label={t('hrPayLabel')}
           value={{
@@ -52,8 +52,8 @@ export function RolePaySection() {
       </div>
 
       {/* Manager Role */}
-      <div className="space-y-5 p-5 bg-muted/30 rounded-lg">
-        <Label className="font-medium text-base">{t('managerRole')}</Label>
+      <div className="min-w-0 space-y-5 rounded-lg bg-muted/30 p-5">
+        <Label className="text-base font-medium">{t('managerRole')}</Label>
         <PayInputGroup
           label={t('managerPayLabel')}
           value={{
@@ -76,9 +76,9 @@ export function RolePaySection() {
       </div>
 
       {/* Team Role */}
-      <div className="space-y-5 p-5 bg-muted/30 rounded-lg">
-        <Label className="font-medium text-base">{t('teamRole')}</Label>
-        <p className="text-sm text-muted-foreground -mt-2">
+      <div className="min-w-0 space-y-5 rounded-lg bg-muted/30 p-5">
+        <Label className="text-base font-medium">{t('teamRole')}</Label>
+        <p className="-mt-2 text-sm text-muted-foreground">
           {t('teamRoleDescription')}
         </p>
         <PayInputGroup

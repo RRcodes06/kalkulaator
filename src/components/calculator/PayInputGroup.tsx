@@ -52,11 +52,12 @@ export function PayInputGroup({
 
   if (compact) {
     return (
-      <div className="space-y-4">
+      <div className="min-w-0 space-y-4">
         <Label className="text-sm font-medium">{label}</Label>
-        <div className="grid grid-cols-2 gap-3">
+
+        <div className="min-w-0 space-y-3">
           <Select value={value.payType} onValueChange={handlePayTypeChange}>
-            <SelectTrigger className="bg-card h-11">
+            <SelectTrigger className="h-11 w-full min-w-0 bg-card">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -73,14 +74,15 @@ export function PayInputGroup({
               suffix={value.payType === 'monthly' ? t('monthlySuffix') : t('hourlySuffix')}
               min={0}
               step={value.payType === 'monthly' ? 100 : 1}
+              className="min-w-0"
             />
           )}
         </div>
 
         {isDefaultUsed && defaultSalaryHint && (
-          <div className="flex items-start gap-2 px-4 py-3 bg-warning/10 border border-warning/20 rounded-md">
-            <span className="text-warning shrink-0">⚠</span>
-            <p className="text-sm text-warning leading-relaxed">{defaultSalaryHint}</p>
+          <div className="flex items-start gap-2 rounded-md border border-warning/20 bg-warning/10 px-4 py-3">
+            <span className="shrink-0 text-warning">⚠</span>
+            <p className="text-sm leading-relaxed text-warning">{defaultSalaryHint}</p>
           </div>
         )}
 
@@ -91,6 +93,7 @@ export function PayInputGroup({
             onChange={handleHoursChange}
             suffix={t('hoursPerMonthSuffix')}
             min={1}
+            className="min-w-0"
           />
         )}
       </div>
