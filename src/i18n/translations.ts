@@ -427,7 +427,8 @@ export const translations = {
     testsCost: 'Assessment test costs',
     testsCostHint: 'Psychological tests, skills assessment',
     teamHoursHint: 'Team involvement in interviews',
-    interviewDirectCostsHint: 'Travel costs, facilities',
+    interviewDirectCostsHint: 'For example, reimbursing candidate travel.',
+    interviewDirectCostsTooltip: 'Includes direct candidate-related costs such as travel reimbursement, accommodation, meals, or other external expenses related to the interview process.',
     backgroundDirectCosts: 'Direct costs',
     backgroundDirectCostsHint: 'Background checks, legal fees',
 
