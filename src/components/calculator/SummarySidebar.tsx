@@ -25,11 +25,10 @@ const INSIGHT_KEYS: Record<string, TranslationKey> = {
   costOnly: 'insightCostOnly',
   timeCost: 'insightTimeCost',
   onboarding: 'insightOnboarding',
-  vacancy: 'insightVacancy',
+  vacantImpact: 'insightVacantImpact',
   expectedRisk: 'insightRisk',
 };
 
-// Block metadata inline
 const BLOCK_META: Record<string, { isTimeBased: boolean; isCostBased: boolean }> = {
   strategyPrep: { isTimeBased: true, isCostBased: false },
   adsBranding: { isTimeBased: true, isCostBased: true },
@@ -39,8 +38,7 @@ const BLOCK_META: Record<string, { isTimeBased: boolean; isCostBased: boolean }>
   otherServices: { isTimeBased: false, isCostBased: true },
   preboarding: { isTimeBased: true, isCostBased: true },
   onboarding: { isTimeBased: false, isCostBased: false },
-  vacancy: { isTimeBased: false, isCostBased: false },
-  indirectCosts: { isTimeBased: true, isCostBased: false },
+  vacantImpact: { isTimeBased: false, isCostBased: true },
   expectedRisk: { isTimeBased: false, isCostBased: false },
 };
 
