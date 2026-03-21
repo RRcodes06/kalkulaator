@@ -87,6 +87,8 @@ function SectionInfoBox({ infoKey, onClose }: { infoKey: string; onClose: () => 
   );
 }
 
+const FILLABLE_SECTIONS = new Set(['strategy', 'ads', 'candidate', 'interviews', 'background', 'onboarding', 'vacantImpact']);
+
 export function CalculatorSection({
   id,
   title,
@@ -97,7 +99,8 @@ export function CalculatorSection({
   hideInfoButton,
 }: CalculatorSectionProps) {
   const { openSection, setOpenSection, getSectionState } = useAccordionController();
-  const { hasCalculated } = useAppStore();
+  const { hasCalculated, fillSectionWithAverages } = useAppStore();
+  const { t } = useLanguage();
   const sectionState = getSectionState(id);
   const resolvedInfoKey = infoKey || id;
   const hasInfo = Boolean(SECTION_INFO_KEYS[resolvedInfoKey]) && !hideInfoButton;
