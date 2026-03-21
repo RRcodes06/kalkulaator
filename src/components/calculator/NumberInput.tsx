@@ -47,7 +47,7 @@ export function NumberInput({
   showDefaultIndicator,
   className,
 }: NumberInputProps) {
-  const { inputRef, displayValue, handleFocus, handleChange } = useExcelInputBehavior(value);
+  const { inputRef, displayValue, handleFocus, handleBlur, handleChange } = useExcelInputBehavior(value);
   const { t } = useLanguage();
 
   const translateUnit = (unit: string) => {
