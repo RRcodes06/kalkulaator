@@ -111,13 +111,13 @@ export const translations = {
     serviceHoursHint: 'Aeg, mis see teenus võtab',
     repeatOnBadHire: 'Korduv kulu halva värbamise korral',
     noServices: 'Muud teenused puuduvad. Lisa teenus ülalolevate nuppudega.',
+    addRecruitmentAgency: 'Lisa värbamisagentuur',
     addLawyer: 'Lisa jurist',
     addIT: 'Lisa IT',
-    addMarketing: 'Lisa turundus',
     addOther: 'Lisa muu',
+    presetRecruitmentAgency: 'Värbamisagentuur',
     presetLawyer: 'Jurist',
     presetIT: 'IT tugi',
-    presetMarketing: 'Turundus/bränding',
 
     // Monthlly suffix
     monthlySuffix: '€/kuu',
