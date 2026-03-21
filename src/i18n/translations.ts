@@ -378,6 +378,11 @@ export const translations = {
     emptyDevicesCost: 'Seadmete kulu',
     emptyOnboardingMonths: 'Sisseelamisperiood',
     emptyProductivity: 'Keskmine tootlikkus',
+
+    // Help box
+    helpTitle: 'Abi',
+    helpText: 'Jääd arvutamisel hätta? Võta meiega ühendust ja leiame lahenduse su personalimurele.',
+    helpCta: 'Võta ühendust',
   },
 
   eng: {
