@@ -231,7 +231,7 @@ export const translations = {
     insightCostOnly: 'Kulu suurus sõltub valitud lahendustest ja teenuse mahust.',
     insightTimeCost: 'Sisaldab nii ajakulu kui otseseid kulusid.',
     insightOnboarding: 'Mõju tuleneb tootlikkuse kaost sisseelamisperioodil.',
-    insightVacancy: 'Täitmata positsioon mõjutab otseselt äri jõudlust.',
+    insightVacantImpact: 'Täitmata positsioon mõjutab otseselt äri jõudlust.',
     insightRisk: 'See on riskiga kaalutud hinnang halva värbamise kulule.',
 
     // Block labels
