@@ -11,7 +11,7 @@ export const translations = {
     fillAverages: 'Täida keskmistega',
     clearFields: 'Tühjenda',
     fillAveragesHint: 'Täidab ainult tühjad väljad soovituslike vahemike keskmisega.',
-    fillAveragesPromo: 'Kui täpsed andmed puuduvad, saad kalkulaatori täita keskmiste väärtustega.',
+    fillAveragesPromo: 'Kui täpsed andmed puuduvad, saad täita ainult täitmata väljad soovituslike keskmiste väärtustega.',
     footer: '© 2024 Värbamiskulude kalkulaator. Andmed põhinevad Eesti 2024. aasta maksumääradel.',
 
     // Privacy
@@ -396,7 +396,7 @@ export const translations = {
     fillAverages: 'Fill with averages',
     clearFields: 'Clear',
     fillAveragesHint: 'Fills only empty fields with the midpoint of recommended ranges.',
-    fillAveragesPromo: 'If exact data is unavailable, you can fill the calculator with average values.',
+    fillAveragesPromo: 'If exact data is unavailable, only empty fields will be filled with recommended average values.',
     footer: '© 2024 Recruitment Cost Calculator. Data is based on Estonian 2024 tax rates.',
 
     // Privacy
