@@ -77,15 +77,14 @@ export function NumberInput({
         )}
         <Input
           ref={inputRef}
-          type="number"
+          type="text"
+          inputMode="decimal"
           value={displayValue}
           onChange={(e) => handleChange(e, onChange)}
           onFocus={handleFocus}
-          min={min}
-          max={max}
-          step={step}
+          onBlur={handleBlur}
           className={cn(
-            'h-11 text-base text-right pr-4 bg-card',
+            'h-11 text-base text-right pr-4 bg-card [appearance:textfield]',
             prefix && 'pl-10',
             suffix && 'pr-14',
             warning && warning.severity === 'warning' && 'border-warning focus-visible:ring-warning',
