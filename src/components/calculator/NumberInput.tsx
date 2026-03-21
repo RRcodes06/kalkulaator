@@ -65,7 +65,26 @@ export function NumberInput({
     <div className={cn('min-w-0 flex-1 space-y-2', className)}>
       {(label || showDefaultIndicator) && (
         <div className="flex items-center justify-between gap-2">
-          {label && <Label className="text-sm font-medium text-foreground">{label}</Label>}
+          {label && (
+            <div className="flex items-center gap-1.5">
+              <Label className="text-sm font-medium text-foreground">{label}</Label>
+              {tooltip && (
+                <button
+                  type="button"
+                  onClick={() => setShowTooltip(!showTooltip)}
+                  className={cn(
+                    'rounded-full p-0.5 transition-colors',
+                    showTooltip
+                      ? 'bg-primary/10 text-primary'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                  )}
+                  aria-label="Info"
+                >
+                  <HelpCircle className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
+          )}
           {showDefaultIndicator && (
             <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
               {t('defaultValue')}
