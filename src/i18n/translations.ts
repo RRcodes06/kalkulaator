@@ -272,7 +272,6 @@ export const translations = {
     fieldCandidateMgmt: 'Kandidaatide haldus',
     fieldInterviews: 'Intervjuud',
     fieldOnboarding: 'Sisseelamisperiood',
-    fieldVacancy: 'Vakantsi kestus',
 
     // Missing inputs typical guidance
     guidanceHirePay: 'Tavaliselt {min} – 4000 € kuus',
