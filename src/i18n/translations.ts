@@ -396,6 +396,7 @@ export const translations = {
     fillAverages: 'Fill with averages',
     clearFields: 'Clear',
     fillAveragesHint: 'Fills only empty fields with the midpoint of recommended ranges.',
+    fillAveragesPromo: 'If exact data is unavailable, you can fill the calculator with average values.',
     footer: '© 2024 Recruitment Cost Calculator. Data is based on Estonian 2024 tax rates.',
 
     // Privacy
