@@ -27,8 +27,7 @@ export const translations = {
     sectionOtherServices: 'Värbamisagentuurid, peatöövõtjad, konsultandid',
     sectionPreboarding: 'Töökoha ettevalmistus, varustus',
     sectionOnboarding: 'Tootlikkuse kadu uue töötaja sisseelamisel',
-    sectionVacancy: 'Kaotatud tootlikkus täitmata positsiooni tõttu',
-    sectionIndirect: 'Tiimi ülekoormus, juhi tähelepanu hajumine, prioriteetide ümberjagamine',
+    sectionVacantImpact: 'Täitmata positsiooni mõju või töö katmise lisakulu',
 
     // Field labels
     positionTitle: 'Ametikoha nimetus',
