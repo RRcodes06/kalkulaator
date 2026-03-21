@@ -378,8 +378,6 @@ export const translations = {
     emptyDevicesCost: 'Seadmete kulu',
     emptyOnboardingMonths: 'Sisseelamisperiood',
     emptyProductivity: 'Keskmine tootlikkus',
-    emptyVacancyDays: 'Vakantsi kestus',
-    emptyDailyCost: 'Päevakulu',
   },
 
   eng: {
