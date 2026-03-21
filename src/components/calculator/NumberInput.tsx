@@ -30,6 +30,7 @@ export interface NumberInputProps {
   warning?: NumberInputWarning;
   rangeHint?: NumberInputRangeHint;
   showDefaultIndicator?: boolean;
+  tooltip?: string;
   className?: string;
 }
 
