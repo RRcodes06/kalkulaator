@@ -283,8 +283,6 @@ export const translations = {
     guidanceTeamHours: 'Tavaliselt 0–8 tundi',
     guidanceOnboardingMonths: 'Tavaliselt 1–6 kuud',
     guidanceProductivity: 'Tavaliselt 40–70%',
-    guidanceVacancyDays: 'Tavaliselt 20–60 päeva',
-    guidanceDailyCost: 'Sõltub ametikohast',
     guidanceDevicesCost: 'Tavaliselt 500–2000 €',
     guidanceItRate: 'Tavaliselt 20–35 €/h',
 
