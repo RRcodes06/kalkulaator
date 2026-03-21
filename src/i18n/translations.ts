@@ -11,6 +11,7 @@ export const translations = {
     fillAverages: 'Täida keskmistega',
     clearFields: 'Tühjenda',
     fillAveragesHint: 'Täidab ainult tühjad väljad soovituslike vahemike keskmisega.',
+    fillAveragesPromo: 'Kui täpsed andmed puuduvad, saad kalkulaatori täita keskmiste väärtustega.',
     footer: '© 2024 Värbamiskulude kalkulaator. Andmed põhinevad Eesti 2024. aasta maksumääradel.',
 
     // Privacy
