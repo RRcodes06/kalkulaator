@@ -140,17 +140,17 @@ describe('onboardingProductivityLossCost', () => {
   });
 });
 
-describe('vacancyCost', () => {
-  it('calculates correctly', () => {
-    expect(vacancyCost(100, 30)).toBe(3000);
+describe('computeVacantImpactCost', () => {
+  it('calculates uncovered mode correctly', () => {
+    expect(computeVacantImpactCost({ mode: 'uncovered', percentageUndone: 50, monthlyPositionValue: 4000, additionalHours: 0, avgHourlyCost: 0, overtimeMultiplier: 1.5 })).toBe(2000);
   });
 
-  it('handles zero days', () => {
-    expect(vacancyCost(100, 0)).toBe(0);
+  it('calculates team coverage mode correctly', () => {
+    expect(computeVacantImpactCost({ mode: 'teamCoverage', percentageUndone: 0, monthlyPositionValue: 0, additionalHours: 20, avgHourlyCost: 15, overtimeMultiplier: 1.5 })).toBe(450);
   });
 
-  it('handles negative days as zero', () => {
-    expect(vacancyCost(100, -5)).toBe(0);
+  it('handles zero values', () => {
+    expect(computeVacantImpactCost({ mode: 'uncovered', percentageUndone: 0, monthlyPositionValue: 4000, additionalHours: 0, avgHourlyCost: 0, overtimeMultiplier: 1.5 })).toBe(0);
   });
 });
 
