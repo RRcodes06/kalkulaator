@@ -35,6 +35,7 @@ export function VacantPositionImpactSection() {
       icon={<TrendingDown className="w-5 h-5" />}
       subtotal={results.blockCosts.vacantImpact.total}
       infoKey="vacantImpact"
+      hideInfoButton
     >
       <div className="col-span-full">
         <p className="text-sm text-muted-foreground mb-4">
