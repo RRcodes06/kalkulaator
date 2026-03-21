@@ -47,8 +47,10 @@ export function NumberInput({
   warning,
   rangeHint,
   showDefaultIndicator,
+  tooltip,
   className,
 }: NumberInputProps) {
+  const [showTooltip, setShowTooltip] = useState(false);
   const { inputRef, displayValue, handleFocus, handleBlur, handleChange } = useExcelInputBehavior(value);
   const { t } = useLanguage();
 
