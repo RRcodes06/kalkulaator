@@ -288,6 +288,51 @@ export const useAppStore = create<AppState>((set, get) => {
       }
     },
 
+    fillSectionWithAverages: (sectionId: string) => {
+      const SECTION_FIELD_MAP: Record<string, { inputKey: string; fields: string[] }> = {
+        strategy: { inputKey: 'strategyPrep', fields: ['hrHours', 'managerHours', 'teamHours'] },
+        ads: { inputKey: 'adsBranding', fields: ['hrHours', 'managerHours', 'directCosts'] },
+        candidate: { inputKey: 'candidateMgmt', fields: ['hrHours', 'managerHours'] },
+        interviews: { inputKey: 'interviews', fields: ['hrHours', 'managerHours', 'teamHours', 'directCosts'] },
+        background: { inputKey: 'backgroundOffer', fields: ['hrHours', 'managerHours'] },
+        onboarding: { inputKey: 'onboarding', fields: ['onboardingMonths', 'productivityPct'] },
+      };
+
+      const { inputs, config } = get();
+      const vals = buildAutoFillValues(config);
+      const inp: CalculatorInputs = JSON.parse(JSON.stringify(inputs));
+
+      if (sectionId === 'vacantImpact') {
+        const vpiObj = inp.vacantPositionImpact as unknown as Record<string, unknown>;
+        const mode = inp.vacantPositionImpact.mode;
+        const paths = mode === 'uncovered'
+          ? ['vacantPositionImpact.percentageUndone', 'vacantPositionImpact.monthlyPositionValue']
+          : ['vacantPositionImpact.additionalHours', 'vacantPositionImpact.avgHourlyCost', 'vacantPositionImpact.overtimeMultiplier'];
+        for (const path of paths) {
+          const field = path.split('.')[1];
+          if (vals[path] !== undefined && isFieldEmpty(vpiObj[field])) {
+            vpiObj[field] = vals[path];
+          }
+        }
+        set({ inputs: inp, results: computeTotals(inp, config) });
+        return;
+      }
+
+      const mapping = SECTION_FIELD_MAP[sectionId];
+      if (!mapping) return;
+
+      const obj = (inp as unknown as Record<string, Record<string, unknown>>)[mapping.inputKey];
+      if (!obj) return;
+
+      for (const field of mapping.fields) {
+        const path = `${mapping.inputKey}.${field}`;
+        if (vals[path] !== undefined && isFieldEmpty(obj[field])) {
+          obj[field] = vals[path];
+        }
+      }
+      set({ inputs: inp, results: computeTotals(inp, config) });
+    },
+
     addServiceRow: (prefilledName?: string) => {
       set((state) => {
         const newRow = createServiceRow(`service-${++serviceRowCounter}`, prefilledName);

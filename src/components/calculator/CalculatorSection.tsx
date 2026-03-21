@@ -183,12 +183,27 @@ export function CalculatorSection({
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-6 pb-8 pt-4">
-            {showInfo && hasInfo && (
-              <SectionInfoBox 
-                infoKey={resolvedInfoKey} 
-                onClose={() => setShowInfo(false)} 
-              />
-            )}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex-1">
+                {showInfo && hasInfo && (
+                  <SectionInfoBox 
+                    infoKey={resolvedInfoKey} 
+                    onClose={() => setShowInfo(false)} 
+                  />
+                )}
+              </div>
+              {FILLABLE_SECTIONS.has(id) && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => fillSectionWithAverages(id)}
+                  className="gap-1.5 text-xs text-muted-foreground hover:text-foreground flex-shrink-0 ml-4"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  {t('fillAverages')}
+                </Button>
+              )}
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {children}
             </div>
