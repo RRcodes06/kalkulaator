@@ -6,12 +6,13 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { cn } from '@/lib/utils';
-import { Check, Circle, HelpCircle, X } from 'lucide-react';
+import { Check, Circle, HelpCircle, X, Sparkles } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useAccordionController, type SectionState } from '@/hooks/useAccordionController';
 import { useAppStore } from '@/store/appStore';
 import { useLanguage } from '@/i18n/LanguageContext';
 import type { TranslationKey } from '@/i18n/translations';
+import { Button } from '@/components/ui/button';
 
 interface CalculatorSectionProps {
   id: string;
@@ -86,6 +87,8 @@ function SectionInfoBox({ infoKey, onClose }: { infoKey: string; onClose: () => 
   );
 }
 
+const FILLABLE_SECTIONS = new Set(['strategy', 'ads', 'candidate', 'interviews', 'background', 'onboarding', 'vacantImpact']);
+
 export function CalculatorSection({
   id,
   title,
@@ -96,7 +99,8 @@ export function CalculatorSection({
   hideInfoButton,
 }: CalculatorSectionProps) {
   const { openSection, setOpenSection, getSectionState } = useAccordionController();
-  const { hasCalculated } = useAppStore();
+  const { hasCalculated, fillSectionWithAverages } = useAppStore();
+  const { t } = useLanguage();
   const sectionState = getSectionState(id);
   const resolvedInfoKey = infoKey || id;
   const hasInfo = Boolean(SECTION_INFO_KEYS[resolvedInfoKey]) && !hideInfoButton;
@@ -179,12 +183,27 @@ export function CalculatorSection({
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-6 pb-8 pt-4">
-            {showInfo && hasInfo && (
-              <SectionInfoBox 
-                infoKey={resolvedInfoKey} 
-                onClose={() => setShowInfo(false)} 
-              />
-            )}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex-1">
+                {showInfo && hasInfo && (
+                  <SectionInfoBox 
+                    infoKey={resolvedInfoKey} 
+                    onClose={() => setShowInfo(false)} 
+                  />
+                )}
+              </div>
+              {FILLABLE_SECTIONS.has(id) && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => fillSectionWithAverages(id)}
+                  className="gap-1.5 text-xs text-muted-foreground hover:text-foreground flex-shrink-0 ml-4"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  {t('fillAverages')}
+                </Button>
+              )}
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {children}
             </div>
