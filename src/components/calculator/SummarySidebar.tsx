@@ -65,7 +65,7 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
     if (meta.isCostBased && !meta.isTimeBased) return `${base} ${t('insightCostOnly')}`;
     if (meta.isTimeBased && meta.isCostBased) return `${base} ${t('insightTimeCost')}`;
     if (blockKey === 'onboarding') return `${base} ${t('insightOnboarding')}`;
-    if (blockKey === 'vacancy') return `${base} ${t('insightVacancy')}`;
+    if (blockKey === 'vacantImpact') return `${base} ${t('insightVacantImpact')}`;
     if (blockKey === 'expectedRisk') return `${base} ${t('insightRisk')}`;
     return base;
   };
