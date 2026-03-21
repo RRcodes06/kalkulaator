@@ -380,8 +380,8 @@ export const translations = {
     emptyProductivity: 'Keskmine tootlikkus',
 
     // Help box
-    helpTitle: 'Abi',
-    helpText: 'Jääd arvutamisel hätta? Võta meiega ühendust ja leiame lahenduse su personalimurele.',
+    helpTitle: 'Jääd arvutamisel hätta?',
+    helpText: 'Võta meiega ühendust ja leiame su personalimurele lahenduse.',
     helpCta: 'Võta ühendust',
   },
 
