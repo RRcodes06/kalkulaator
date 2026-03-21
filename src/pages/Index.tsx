@@ -7,7 +7,7 @@ import { LanguageToggle } from '@/components/calculator/LanguageToggle';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Printer, Settings, Eraser } from 'lucide-react';
+import { Printer, Settings, Eraser, HelpCircle } from 'lucide-react';
 import { useAppStore } from '@/store/appStore';
 import { AccordionControllerProvider } from '@/hooks/useAccordionController';
 import { useLanguage } from '@/i18n/LanguageContext';
@@ -121,6 +121,24 @@ const Index = () => {
           </div>
         </AccordionControllerProvider>
       </main>
+
+      {/* Help Box */}
+      <div className="container max-w-7xl mx-auto px-6 mt-10">
+        <div className="flex items-start gap-4 p-5 rounded-lg border border-border bg-card shadow-sm max-w-md">
+          <HelpCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+          <div className="space-y-2">
+            <h4 className="font-semibold text-sm text-foreground">{t('helpTitle')}</h4>
+            <p className="text-sm text-muted-foreground">{t('helpText')}</p>
+            <a
+              href="https://www.manpower.ee/et/vaerbamisteenused"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button size="sm" className="mt-1">{t('helpCta')}</Button>
+            </a>
+          </div>
+        </div>
+      </div>
 
       {/* Footer */}
       <footer className="border-t border-border bg-card/30 py-6 mt-12">
