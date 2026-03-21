@@ -13,11 +13,9 @@ interface AppState {
   results: ComputedResult;
   hasCalculated: boolean;
 
-  // Auto-fill toggle state
   autoFillEnabled: boolean;
-  autoFilledFields: Set<string>; // field paths still owned by auto-fill
+  autoFilledFields: Set<string>;
 
-  // Input actions
   updateInput: <K extends keyof CalculatorInputs>(key: K, value: CalculatorInputs[K]) => void;
   updateNestedInput: <
     K extends keyof CalculatorInputs,
@@ -26,19 +24,14 @@ interface AppState {
   resetInputs: () => void;
   toggleAutoFill: (enabled: boolean) => void;
 
-  // Service row actions
   addServiceRow: (prefilledName?: string) => void;
   updateServiceRow: (id: string, updates: Partial<ServiceRow>) => void;
   removeServiceRow: (id: string) => void;
 
-  // Config actions
   updateConfig: <K extends keyof CalculatorConfig>(key: K, value: CalculatorConfig[K]) => void;
   resetConfig: () => void;
 
-  // Calculation trigger
   triggerCalculation: () => void;
-
-  // Recompute results
   recompute: () => void;
 }
 
@@ -49,9 +42,7 @@ interface AppState {
 const loadConfigFromStorage = (): CalculatorConfig => {
   try {
     const stored = localStorage.getItem(STORAGE_KEYS.CONFIG);
-    if (stored) {
-      return { ...DEFAULT_CONFIG, ...JSON.parse(stored) };
-    }
+    if (stored) return { ...DEFAULT_CONFIG, ...JSON.parse(stored) };
   } catch (e) {
     console.warn('Failed to load config from localStorage:', e);
   }
@@ -70,65 +61,48 @@ const saveConfigToStorage = (config: CalculatorConfig): void => {
 // AUTO-FILL HELPERS
 // ============================================================================
 
-/** Round by unit: hours → nearest 0.5, everything else → nearest integer */
 function roundByUnit(value: number, unit: string): number {
   if (unit === 'h') return Math.round(value * 2) / 2;
   return Math.round(value);
 }
 
-/**
- * Build a map of field-path → midpoint value from recommended ranges.
- * Also includes salary defaults for role fields.
- */
 function buildAutoFillValues(config: CalculatorConfig): Record<string, number> {
   const vals: Record<string, number> = {};
   const ranges = config.recommendedRanges;
-
   for (const [key, range] of Object.entries(ranges)) {
     if (!range) continue;
     const mid = (range.min + range.max) / 2;
     vals[key] = roundByUnit(mid, range.unit);
   }
-
-  // Role salary defaults (fill when salary fields are empty)
   vals['roles.hr.payAmount'] = ROLE_DEFAULT_SALARIES.hr;
   vals['roles.manager.payAmount'] = ROLE_DEFAULT_SALARIES.manager;
   vals['roles.team.payAmount'] = ROLE_DEFAULT_SALARIES.team;
   vals['hirePay.payAmount'] = ROLE_DEFAULT_SALARIES.team;
-
   return vals;
 }
 
-/** Check if a numeric field is "empty" (undefined, null, NaN, blank string, or 0). */
 function isFieldEmpty(value: unknown): boolean {
   if (value === undefined || value === null || value === '') return true;
   if (typeof value === 'number' && value === 0) return true;
   return false;
 }
 
-/**
- * Given current inputs, apply auto-fill values only to empty fields.
- * Returns { newInputs, filledPaths }.
- */
 function applyAutoFill(
   currentInputs: CalculatorInputs,
   config: CalculatorConfig,
 ): { newInputs: CalculatorInputs; filledPaths: Set<string> } {
   const vals = buildAutoFillValues(config);
   const filledPaths = new Set<string>();
-
-  // Deep-clone inputs
   const inp: CalculatorInputs = JSON.parse(JSON.stringify(currentInputs));
 
-  // Helper to set nested value by dot-path if the current value is empty
   const maybeSet = (path: string, target: Record<string, unknown>, key: string) => {
     if (vals[path] === undefined) return;
-    if (!isFieldEmpty(target[key])) return; // not empty → skip
+    if (!isFieldEmpty(target[key])) return;
     target[key] = vals[path];
     filledPaths.add(path);
   };
 
-  // Salary fields – also need to set payType to 'monthly' when filling
+  // Salary fields
   const salaryFields: Array<{ path: string; obj: Record<string, unknown>; key: string; payTypeKey: string }> = [
     { path: 'hirePay.payAmount', obj: inp.hirePay as unknown as Record<string, unknown>, key: 'payAmount', payTypeKey: 'payType' },
     { path: 'roles.hr.payAmount', obj: inp.roles.hr as unknown as Record<string, unknown>, key: 'payAmount', payTypeKey: 'payType' },
@@ -139,7 +113,6 @@ function applyAutoFill(
   for (const sf of salaryFields) {
     const currentPayType = sf.obj[sf.payTypeKey];
     const currentAmount = sf.obj[sf.key] as number;
-    // "Empty" salary = payType is 'unset' OR payAmount is empty
     if (currentPayType === 'unset' && isFieldEmpty(currentAmount)) {
       sf.obj[sf.key] = vals[sf.path];
       sf.obj[sf.payTypeKey] = 'monthly';
@@ -150,16 +123,14 @@ function applyAutoFill(
     }
   }
 
-  // Block hour/cost fields mapped by dot-path
+  // Block hour/cost fields
   const blockMappings: Array<{ section: string; obj: Record<string, unknown>; fields: string[] }> = [
     { section: 'strategyPrep', obj: inp.strategyPrep as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours'] },
     { section: 'adsBranding', obj: inp.adsBranding as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours', 'directCosts'] },
     { section: 'candidateMgmt', obj: inp.candidateMgmt as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours'] },
     { section: 'interviews', obj: inp.interviews as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours', 'directCosts'] },
     { section: 'backgroundOffer', obj: inp.backgroundOffer as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours'] },
-    { section: 'indirectCosts', obj: inp.indirectCosts as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours'] },
     { section: 'onboarding', obj: inp.onboarding as unknown as Record<string, unknown>, fields: ['onboardingMonths', 'productivityPct'] },
-    { section: 'vacancy', obj: inp.vacancy as unknown as Record<string, unknown>, fields: ['vacancyDays'] },
   ];
 
   for (const bm of blockMappings) {
@@ -169,23 +140,34 @@ function applyAutoFill(
     }
   }
 
+  // Vacant position impact - only fill fields for the active mode
+  const vpiObj = inp.vacantPositionImpact as unknown as Record<string, unknown>;
+  const activeMode = inp.vacantPositionImpact.mode;
+  
+  if (activeMode === 'uncovered') {
+    maybeSet('vacantPositionImpact.percentageUndone', vpiObj, 'percentageUndone');
+    maybeSet('vacantPositionImpact.monthlyPositionValue', vpiObj, 'monthlyPositionValue');
+  } else {
+    maybeSet('vacantPositionImpact.additionalHours', vpiObj, 'additionalHours');
+    maybeSet('vacantPositionImpact.avgHourlyCost', vpiObj, 'avgHourlyCost');
+    // Don't auto-fill overtimeMultiplier if it already has a value (default 1.5)
+    if (isFieldEmpty(vpiObj['overtimeMultiplier']) || vpiObj['overtimeMultiplier'] === 0) {
+      maybeSet('vacantPositionImpact.overtimeMultiplier', vpiObj, 'overtimeMultiplier');
+    }
+  }
+
   return { newInputs: inp, filledPaths };
 }
 
-/**
- * Remove auto-filled values: set them back to 0 (or 'unset' for salary fields).
- */
 function removeAutoFill(
   currentInputs: CalculatorInputs,
   autoFilledFields: Set<string>,
   config: CalculatorConfig,
 ): CalculatorInputs {
   if (autoFilledFields.size === 0) return currentInputs;
-
   const inp: CalculatorInputs = JSON.parse(JSON.stringify(currentInputs));
 
   for (const path of autoFilledFields) {
-    // Salary fields
     if (path === 'hirePay.payAmount') {
       (inp.hirePay as unknown as Record<string, unknown>).payAmount = 0;
       (inp.hirePay as unknown as Record<string, unknown>).payType = 'unset';
@@ -198,13 +180,17 @@ function removeAutoFill(
       (inp.roles[role] as unknown as Record<string, unknown>).payType = 'unset';
       continue;
     }
-    // Regular nested fields (section.field)
     const parts = path.split('.');
     if (parts.length === 2) {
       const [section, field] = parts;
       const obj = (inp as unknown as Record<string, Record<string, unknown>>)[section];
       if (obj && field in obj) {
-        obj[field] = 0;
+        // For overtimeMultiplier, reset to default 1.5 instead of 0
+        if (field === 'overtimeMultiplier') {
+          obj[field] = 1.5;
+        } else {
+          obj[field] = 0;
+        }
       }
     }
   }
@@ -234,7 +220,6 @@ export const useAppStore = create<AppState>((set, get) => {
     updateInput: (key, value) => {
       set((state) => {
         const newInputs = { ...state.inputs, [key]: value };
-        // Mark all nested fields of this key as user-owned
         const newAutoFilled = new Set(state.autoFilledFields);
         for (const path of state.autoFilledFields) {
           if (path.startsWith(`${String(key)}.`)) {
@@ -255,7 +240,6 @@ export const useAppStore = create<AppState>((set, get) => {
         if (typeof currentValue === 'object' && currentValue !== null) {
           const newNested = { ...currentValue, [nestedKey]: value };
           const newInputs = { ...state.inputs, [key]: newNested };
-          // Mark this specific field as user-owned
           const fieldPath = `${String(key)}.${String(nestedKey)}`;
           const newAutoFilled = new Set(state.autoFilledFields);
           newAutoFilled.delete(fieldPath);
@@ -283,11 +267,8 @@ export const useAppStore = create<AppState>((set, get) => {
 
     toggleAutoFill: (enabled: boolean) => {
       const { inputs, config, autoFilledFields } = get();
-
       if (enabled) {
-        // Toggle ON: fill only empty fields
         const { newInputs, filledPaths } = applyAutoFill(inputs, config);
-        // Merge with any existing auto-filled paths (shouldn't happen but be safe)
         const merged = new Set([...autoFilledFields, ...filledPaths]);
         set({
           inputs: newInputs,
@@ -296,7 +277,6 @@ export const useAppStore = create<AppState>((set, get) => {
           autoFilledFields: merged,
         });
       } else {
-        // Toggle OFF: remove only fields still marked as auto-filled
         const newInputs = removeAutoFill(inputs, autoFilledFields, config);
         set({
           inputs: newInputs,
@@ -312,10 +292,7 @@ export const useAppStore = create<AppState>((set, get) => {
         const newRow = createServiceRow(`service-${++serviceRowCounter}`, prefilledName);
         const newServices = [...state.inputs.otherServices, newRow];
         const newInputs = { ...state.inputs, otherServices: newServices };
-        return {
-          inputs: newInputs,
-          results: computeTotals(newInputs, state.config),
-        };
+        return { inputs: newInputs, results: computeTotals(newInputs, state.config) };
       });
     },
 
@@ -325,10 +302,7 @@ export const useAppStore = create<AppState>((set, get) => {
           row.id === id ? { ...row, ...updates } : row
         );
         const newInputs = { ...state.inputs, otherServices: newServices };
-        return {
-          inputs: newInputs,
-          results: computeTotals(newInputs, state.config),
-        };
+        return { inputs: newInputs, results: computeTotals(newInputs, state.config) };
       });
     },
 
@@ -336,10 +310,7 @@ export const useAppStore = create<AppState>((set, get) => {
       set((state) => {
         const newServices = state.inputs.otherServices.filter((row) => row.id !== id);
         const newInputs = { ...state.inputs, otherServices: newServices };
-        return {
-          inputs: newInputs,
-          results: computeTotals(newInputs, state.config),
-        };
+        return { inputs: newInputs, results: computeTotals(newInputs, state.config) };
       });
     },
 
@@ -347,10 +318,7 @@ export const useAppStore = create<AppState>((set, get) => {
       set((state) => {
         const newConfig = { ...state.config, [key]: value };
         saveConfigToStorage(newConfig);
-        return {
-          config: newConfig,
-          results: computeTotals(state.inputs, newConfig),
-        };
+        return { config: newConfig, results: computeTotals(state.inputs, newConfig) };
       });
     },
 
@@ -364,10 +332,7 @@ export const useAppStore = create<AppState>((set, get) => {
 
     triggerCalculation: () => {
       const { inputs, config } = get();
-      set({
-        results: computeTotals(inputs, config),
-        hasCalculated: true,
-      });
+      set({ results: computeTotals(inputs, config), hasCalculated: true });
     },
 
     recompute: () => {
