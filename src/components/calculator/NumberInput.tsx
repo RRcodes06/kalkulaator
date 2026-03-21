@@ -91,6 +91,7 @@ export function NumberInput({
             </span>
           )}
         </div>
+      )}
       {showTooltip && tooltip && (
         <div className="rounded-md border border-border bg-muted/50 px-3 py-2 text-xs text-muted-foreground animate-fade-in">
           {tooltip}
