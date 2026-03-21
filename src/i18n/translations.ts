@@ -255,8 +255,7 @@ export const translations = {
     chartOtherServices: 'Muud teenused',
     chartPreboarding: 'Ettevalmistus',
     chartOnboarding: 'Sisseelamine',
-    chartVacancy: 'Vakants',
-    chartIndirect: 'Kaudsed',
+    chartVacantImpact: 'Täitmata pos.',
     chartRisk: 'Risk',
 
     // Chart
