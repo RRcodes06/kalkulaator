@@ -767,6 +767,11 @@ export const translations = {
     emptyProductivity: 'Average productivity',
     emptyVacancyDays: 'Vacancy duration',
     emptyDailyCost: 'Daily cost',
+
+    // Help box
+    helpTitle: 'Help',
+    helpText: 'Need help? Contact us and we\'ll help find a solution to your hiring challenge.',
+    helpCta: 'Contact us',
   },
 } as const;
 
