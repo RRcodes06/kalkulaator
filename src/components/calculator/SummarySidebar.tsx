@@ -16,8 +16,7 @@ const BLOCK_LABEL_KEYS: Record<string, TranslationKey> = {
   otherServices: 'blockOtherServices',
   preboarding: 'blockPreboarding',
   onboarding: 'blockOnboarding',
-  vacancy: 'blockVacancy',
-  indirectCosts: 'blockIndirectCosts',
+  vacantImpact: 'blockVacantImpact',
   expectedRisk: 'blockExpectedRisk',
 };
 
