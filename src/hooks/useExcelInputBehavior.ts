@@ -1,39 +1,75 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 
 /**
+ * Format number with space as thousand separator (e.g. 15000 → "15 000")
+ */
+function formatWithSeparators(value: number): string {
+  if (value === 0) return '';
+  // Use non-breaking space as thousand separator
+  return value.toLocaleString('et-EE', { maximumFractionDigits: 10, useGrouping: true }).replace(/\u00A0/g, ' ');
+}
+
+/**
+ * Strip formatting to get raw numeric string
+ */
+function stripFormatting(str: string): string {
+  return str.replace(/\s/g, '').replace(/,/g, '.');
+}
+
+/**
  * Hook for Excel-like input behavior:
- * - On focus, select all content
+ * - On focus, select all content and show raw number for editing
+ * - On blur, format with thousand separators
  * - First keystroke replaces entire value
  * - Empty string during editing = 0 for calculations
  */
 export function useExcelInputBehavior(externalValue: number) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [isEditing, setIsEditing] = useState(false);
   const [displayValue, setDisplayValue] = useState<string>(
-    externalValue === 0 ? '' : externalValue.toString()
+    formatWithSeparators(externalValue)
   );
 
   // Sync display value when external value changes (but not during editing)
   useEffect(() => {
-    if (document.activeElement !== inputRef.current) {
-      setDisplayValue(externalValue === 0 ? '' : externalValue.toString());
+    if (!isEditing) {
+      setDisplayValue(formatWithSeparators(externalValue));
     }
-  }, [externalValue]);
+  }, [externalValue, isEditing]);
 
   const handleFocus = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
-    // Always select all on focus - Excel-like behavior
-    // First keystroke will replace the entire value
-    e.target.select();
+    setIsEditing(true);
+    // Show raw number for editing
+    const raw = stripFormatting(e.target.value);
+    setDisplayValue(raw === '0' ? '' : raw);
+    // Select all after state update
+    requestAnimationFrame(() => {
+      e.target.select();
+    });
   }, []);
+
+  const handleBlur = useCallback(() => {
+    setIsEditing(false);
+    // Re-format on blur
+    const numeric = stripFormatting(displayValue);
+    const val = numeric === '' ? 0 : parseFloat(numeric);
+    if (!isNaN(val)) {
+      setDisplayValue(formatWithSeparators(val));
+    }
+  }, [displayValue]);
 
   const handleChange = useCallback((
     e: React.ChangeEvent<HTMLInputElement>,
     onChange: (value: number) => void
   ) => {
     const rawValue = e.target.value;
-    setDisplayValue(rawValue);
-    
+    // Allow digits, dots, commas, minus, and spaces
+    const cleaned = rawValue.replace(/[^0-9.,\-\s]/g, '');
+    setDisplayValue(cleaned);
+
     // Parse and propagate to parent - empty string becomes 0
-    const numericValue = rawValue === '' ? 0 : parseFloat(rawValue);
+    const stripped = stripFormatting(cleaned);
+    const numericValue = stripped === '' ? 0 : parseFloat(stripped);
     if (!isNaN(numericValue)) {
       onChange(numericValue);
     }
@@ -43,6 +79,7 @@ export function useExcelInputBehavior(externalValue: number) {
     inputRef,
     displayValue,
     handleFocus,
+    handleBlur,
     handleChange,
     setDisplayValue,
   };
