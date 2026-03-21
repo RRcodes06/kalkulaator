@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Briefcase, Plus, Trash2, Scale, Monitor, Palette } from 'lucide-react';
+import { Briefcase, Plus, Trash2, Scale, Monitor, Building2 } from 'lucide-react';
 import type { ServiceType, BillingType, PayType, ServiceDetails } from '@/types/calculator';
 import { useLanguage } from '@/i18n/LanguageContext';
 import type { TranslationKey } from '@/i18n/translations';
@@ -16,9 +16,9 @@ export function OtherServicesSection() {
   const { t } = useLanguage();
 
   const QUICK_ADD_PRESETS = [
+    { name: t('presetRecruitmentAgency'), label: t('addRecruitmentAgency'), icon: <Building2 className="w-4 h-4" /> },
     { name: t('presetLawyer'), label: t('addLawyer'), icon: <Scale className="w-4 h-4" /> },
     { name: t('presetIT'), label: t('addIT'), icon: <Monitor className="w-4 h-4" /> },
-    { name: t('presetMarketing'), label: t('addMarketing'), icon: <Palette className="w-4 h-4" /> },
     { name: '', label: t('addOther'), icon: <Plus className="w-4 h-4" /> },
   ];
 
