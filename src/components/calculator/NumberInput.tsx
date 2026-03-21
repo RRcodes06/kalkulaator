@@ -58,20 +58,20 @@ export function NumberInput({
   };
 
   return (
-    <div className={cn('space-y-2', className)}>
+    <div className={cn('min-w-0 flex-1 space-y-2', className)}>
       {(label || showDefaultIndicator) && (
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           {label && <Label className="text-sm font-medium text-foreground">{label}</Label>}
           {showDefaultIndicator && (
-            <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+            <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
               {t('defaultValue')}
             </span>
           )}
         </div>
       )}
-      <div className="relative">
+      <div className="relative min-w-0">
         {prefix && (
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
+          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 whitespace-nowrap text-sm text-muted-foreground">
             {prefix}
           </span>
         )}
@@ -84,30 +84,32 @@ export function NumberInput({
           onFocus={handleFocus}
           onBlur={handleBlur}
           className={cn(
-            'h-11 text-base text-right pr-4 bg-card [appearance:textfield]',
+            'h-11 w-full min-w-0 overflow-x-hidden bg-card pr-3 text-right text-base [text-overflow:clip] [appearance:textfield]',
             prefix && 'pl-10',
-            suffix && 'pr-14',
+            suffix && 'pr-16 sm:pr-20',
             warning && warning.severity === 'warning' && 'border-warning focus-visible:ring-warning',
             warning && warning.severity === 'info' && 'border-muted-foreground/50'
           )}
         />
         {suffix && (
-          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
+          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 whitespace-nowrap text-sm text-muted-foreground">
             {suffix}
           </span>
         )}
       </div>
       {warning ? (
-        <div className={cn(
-          "flex items-start gap-1.5 text-xs",
-          warning.severity === 'warning' && "text-warning",
-          warning.severity === 'info' && "text-muted-foreground",
-          warning.severity === 'error' && "text-destructive"
-        )}>
+        <div
+          className={cn(
+            'flex items-start gap-1.5 text-xs',
+            warning.severity === 'warning' && 'text-warning',
+            warning.severity === 'info' && 'text-muted-foreground',
+            warning.severity === 'error' && 'text-destructive'
+          )}
+        >
           {warning.severity === 'warning' ? (
-            <AlertTriangle className="w-3 h-3 mt-0.5 flex-shrink-0" />
+            <AlertTriangle className="mt-0.5 h-3 w-3 flex-shrink-0" />
           ) : (
-            <Info className="w-3 h-3 mt-0.5 flex-shrink-0" />
+            <Info className="mt-0.5 h-3 w-3 flex-shrink-0" />
           )}
           <span>{warning.message}</span>
         </div>
