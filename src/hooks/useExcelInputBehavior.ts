@@ -2,10 +2,10 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 
 /**
  * Format number with space as thousand separator (e.g. 15000 → "15 000")
+ * When showZero is true, 0 renders as "0" instead of "".
  */
-function formatWithSeparators(value: number): string {
-  if (value === 0) return '';
-  // Use non-breaking space as thousand separator
+function formatWithSeparators(value: number, showZero = false): string {
+  if (value === 0) return showZero ? '0' : '';
   return value.toLocaleString('et-EE', { maximumFractionDigits: 10, useGrouping: true }).replace(/\u00A0/g, ' ');
 }
 
@@ -22,18 +22,20 @@ function stripFormatting(str: string): string {
  * - On blur, format with thousand separators
  * - First keystroke replaces entire value
  * - Empty string during editing = 0 for calculations
+ * - If user explicitly types 0, it stays visible after blur
  */
 export function useExcelInputBehavior(externalValue: number) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const userHasTyped = useRef(false);
   const [displayValue, setDisplayValue] = useState<string>(
-    formatWithSeparators(externalValue)
+    formatWithSeparators(externalValue, false)
   );
 
   // Sync display value when external value changes (but not during editing)
   useEffect(() => {
     if (!isEditing) {
-      setDisplayValue(formatWithSeparators(externalValue));
+      setDisplayValue(formatWithSeparators(externalValue, userHasTyped.current));
     }
   }, [externalValue, isEditing]);
 
@@ -41,7 +43,7 @@ export function useExcelInputBehavior(externalValue: number) {
     setIsEditing(true);
     // Show raw number for editing
     const raw = stripFormatting(e.target.value);
-    setDisplayValue(raw === '0' ? '' : raw);
+    setDisplayValue(raw === '0' && !userHasTyped.current ? '' : raw);
     // Select all after state update
     requestAnimationFrame(() => {
       e.target.select();
@@ -52,9 +54,16 @@ export function useExcelInputBehavior(externalValue: number) {
     setIsEditing(false);
     // Re-format on blur
     const numeric = stripFormatting(displayValue);
-    const val = numeric === '' ? 0 : parseFloat(numeric);
-    if (!isNaN(val)) {
-      setDisplayValue(formatWithSeparators(val));
+    if (numeric === '') {
+      // User cleared the field — treat as untouched empty
+      userHasTyped.current = false;
+      setDisplayValue('');
+    } else {
+      const val = parseFloat(numeric);
+      if (!isNaN(val)) {
+        userHasTyped.current = true;
+        setDisplayValue(formatWithSeparators(val, true));
+      }
     }
   }, [displayValue]);
 
