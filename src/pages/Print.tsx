@@ -104,8 +104,8 @@ function PrintChart({ results, t }: { results: ComputedResult; t: ReturnType<typ
   if (chartData.length === 0) return null;
 
   return (
-    <div className="flex items-start gap-6">
-      <div className="w-48 h-48 flex-shrink-0">
+    <div>
+      <div className="w-44 h-44 mx-auto mb-4">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie data={chartData} cx="50%" cy="50%" innerRadius={30} outerRadius={70} dataKey="value" stroke="none">
@@ -116,11 +116,11 @@ function PrintChart({ results, t }: { results: ComputedResult; t: ReturnType<typ
           </PieChart>
         </ResponsiveContainer>
       </div>
-      <div className="flex-1 grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+      <div className="grid grid-cols-2 gap-x-6 gap-y-1.5 text-xs">
         {chartData.map((item, index) => (
           <div key={index} className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-sm flex-shrink-0" style={{ backgroundColor: item.fill }} />
-            <span className="truncate">{item.name}</span>
+            <span>{item.name}</span>
           </div>
         ))}
       </div>
