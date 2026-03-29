@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import manpowerLogo from '@/assets/manpower-logo.png';
 import { CalculatorForm } from '@/components/calculator/CalculatorForm';
 import { SummarySidebar } from '@/components/calculator/SummarySidebar';
 import { ResetModal } from '@/components/calculator/ResetModal';
