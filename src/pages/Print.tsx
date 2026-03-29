@@ -5,6 +5,7 @@ import type { CalculatorInputs, ComputedResult, BlockName } from '@/types/calcul
 import type { Language, TranslationKey } from '@/i18n/translations';
 import { translations } from '@/i18n/translations';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import manpowerLogo from '@/assets/manpower-logo.png';
 
 // ============================================================================
 // TYPES
