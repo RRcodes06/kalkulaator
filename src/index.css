@@ -126,12 +126,12 @@
   }
   
   .summary-scrollbar::-webkit-scrollbar-thumb {
-    background: hsl(var(--summary-muted) / 0.3);
+    background: hsl(0 0% 100% / 0.5);
     border-radius: 3px;
   }
   
   .summary-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--summary-muted) / 0.5);
+    background: hsl(0 0% 100% / 0.7);
   }
 }
 
