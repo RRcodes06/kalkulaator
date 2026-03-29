@@ -77,6 +77,8 @@ const Index = () => {
                   {t('admin')}
                 </Button>
               </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>
