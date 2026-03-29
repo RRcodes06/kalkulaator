@@ -51,34 +51,32 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card/50">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center gap-6">
-            <img src={manpowerLogo} alt="Manpower" className="h-10 md:h-12 w-auto flex-shrink-0" />
-            <div className="flex-1 min-w-0">
-              <div className="flex items-start justify-between gap-4">
-                <div className="min-w-0">
-                  <h1 className="text-2xl font-bold text-foreground">
-                    {t('title')}
-                  </h1>
-                  <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
-                    {t('subtitle')}
-                  </p>
-                </div>
-                <div className="flex items-center gap-3 flex-shrink-0">
-                  <LanguageToggle />
-                  <Button variant="outline" size="sm" onClick={handlePrint} className="gap-2">
-                    <Printer className="w-4 h-4" />
-                    {t('printReport')}
-                  </Button>
-                  <ResetModal />
-                  <Link to="/admin">
-                    <Button variant="ghost" size="sm" className="gap-2">
-                      <Settings className="w-4 h-4" />
-                      {t('admin')}
-                    </Button>
-                  </Link>
-                </div>
+        <div className="container max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <img src={manpowerLogo} alt="Manpower" className="h-16 md:h-20 w-auto" />
+              <div>
+                <h1 className="text-2xl font-bold text-foreground">
+                  {t('title')}
+                </h1>
+                <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
+                  {t('subtitle')}
+                </p>
               </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <LanguageToggle />
+              <Button variant="outline" size="sm" onClick={handlePrint} className="gap-2">
+                <Printer className="w-4 h-4" />
+                {t('printReport')}
+              </Button>
+              <ResetModal />
+              <Link to="/admin">
+                <Button variant="ghost" size="sm" className="gap-2">
+                  <Settings className="w-4 h-4" />
+                  {t('admin')}
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
