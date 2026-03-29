@@ -48,6 +48,87 @@ const SHORT_LABEL_KEYS: Record<string, TranslationKey> = {
   expectedRisk: 'chartRisk',
 };
 
+const RADIAN = Math.PI / 180;
+
+interface CustomLabelProps {
+  cx: number;
+  cy: number;
+  midAngle: number;
+  innerRadius: number;
+  outerRadius: number;
+  percent: number;
+  index: number;
+  shortName: string;
+  color: string;
+}
+
+function renderCustomLabel({
+  cx,
+  cy,
+  midAngle,
+  outerRadius,
+  percent,
+  shortName,
+  color,
+}: CustomLabelProps) {
+  // Skip very small slices
+  if (percent < 0.03) return null;
+
+  const sin = Math.sin(-RADIAN * midAngle);
+  const cos = Math.cos(-RADIAN * midAngle);
+
+  // Point on the outer edge of the pie
+  const sx = cx + outerRadius * cos;
+  const sy = cy + outerRadius * sin;
+
+  // Elbow point
+  const mx = cx + (outerRadius + 12) * cos;
+  const my = cy + (outerRadius + 12) * sin;
+
+  // End point for text
+  const ex = mx + (cos >= 0 ? 1 : -1) * 16;
+  const ey = my;
+
+  const textAnchor = cos >= 0 ? 'start' : 'end';
+
+  return (
+    <g>
+      {/* Leader line */}
+      <path
+        d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`}
+        stroke={color}
+        strokeWidth={1}
+        fill="none"
+        opacity={0.6}
+      />
+      {/* Small dot at the end of leader line */}
+      <circle cx={ex} cy={ey} r={2} fill={color} />
+      {/* Label text */}
+      <text
+        x={ex + (cos >= 0 ? 4 : -4)}
+        y={ey}
+        textAnchor={textAnchor}
+        fill="hsl(0, 0%, 85%)"
+        fontSize={9}
+        dominantBaseline="central"
+      >
+        {shortName}
+      </text>
+      {/* Percentage */}
+      <text
+        x={ex + (cos >= 0 ? 4 : -4)}
+        y={ey + 11}
+        textAnchor={textAnchor}
+        fill="hsl(0, 0%, 60%)"
+        fontSize={8}
+        dominantBaseline="central"
+      >
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+    </g>
+  );
+}
+
 export function CostBreakdownChart({ blockCosts, totalCost }: CostBreakdownChartProps) {
   const { t } = useLanguage();
 
@@ -80,18 +161,20 @@ export function CostBreakdownChart({ blockCosts, totalCost }: CostBreakdownChart
   };
 
   return (
-    <div className="space-y-3">
-      <div className="h-40">
+    <div>
+      <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
               data={data}
               cx="50%"
               cy="50%"
-              innerRadius={35}
-              outerRadius={60}
+              innerRadius={30}
+              outerRadius={55}
               paddingAngle={2}
               dataKey="value"
+              label={(props) => renderCustomLabel(props as CustomLabelProps)}
+              labelLine={false}
             >
               {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
@@ -111,29 +194,6 @@ export function CostBreakdownChart({ blockCosts, totalCost }: CostBreakdownChart
           </PieChart>
         </ResponsiveContainer>
       </div>
-
-      <div className="grid grid-cols-2 gap-x-2 gap-y-1">
-        {data.slice(0, 6).map((item) => (
-          <div key={item.name} className="flex items-center gap-1.5 text-xs">
-            <span
-              className="w-2 h-2 rounded-full flex-shrink-0"
-              style={{ backgroundColor: item.color }}
-            />
-            <span className="text-summary-muted truncate" title={item.name}>
-              {item.shortName}
-            </span>
-            <span className="text-summary-foreground ml-auto flex-shrink-0">
-              {item.percentage.toFixed(0)}%
-            </span>
-          </div>
-        ))}
-      </div>
-      
-      {data.length > 6 && (
-        <p className="text-xs text-summary-muted text-center">
-          {t('moreCategories', { count: data.length - 6 })}
-        </p>
-      )}
     </div>
   );
 }
