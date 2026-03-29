@@ -86,6 +86,79 @@ const CHART_COLORS = [
 // PRINT CHART
 // ============================================================================
 
+const RADIAN = Math.PI / 180;
+
+interface PrintLabelProps {
+  cx: number;
+  cy: number;
+  midAngle: number;
+  innerRadius: number;
+  outerRadius: number;
+  percent: number;
+  index: number;
+  name: string;
+  fill: string;
+}
+
+function renderPrintLabel({
+  cx,
+  cy,
+  midAngle,
+  outerRadius,
+  percent,
+  name,
+  fill,
+}: PrintLabelProps) {
+  if (percent < 0.03) return null;
+
+  const sin = Math.sin(-RADIAN * midAngle);
+  const cos = Math.cos(-RADIAN * midAngle);
+
+  const sx = cx + outerRadius * cos;
+  const sy = cy + outerRadius * sin;
+
+  const mx = cx + (outerRadius + 14) * cos;
+  const my = cy + (outerRadius + 14) * sin;
+
+  const ex = mx + (cos >= 0 ? 1 : -1) * 18;
+  const ey = my;
+
+  const textAnchor = cos >= 0 ? 'start' : 'end';
+
+  return (
+    <g>
+      <path
+        d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`}
+        stroke={fill}
+        strokeWidth={1}
+        fill="none"
+        opacity={0.6}
+      />
+      <circle cx={ex} cy={ey} r={2} fill={fill} />
+      <text
+        x={ex + (cos >= 0 ? 4 : -4)}
+        y={ey}
+        textAnchor={textAnchor}
+        fill="#333"
+        fontSize={8}
+        dominantBaseline="central"
+      >
+        {name}
+      </text>
+      <text
+        x={ex + (cos >= 0 ? 4 : -4)}
+        y={ey + 10}
+        textAnchor={textAnchor}
+        fill="#888"
+        fontSize={7}
+        dominantBaseline="central"
+      >
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+    </g>
+  );
+}
+
 function PrintChart({ results, t }: { results: ComputedResult; t: ReturnType<typeof createT> }) {
   const blockOrder: BlockName[] = [
     'strategyPrep', 'adsBranding', 'candidateMgmt', 'interviews',
@@ -104,26 +177,26 @@ function PrintChart({ results, t }: { results: ComputedResult; t: ReturnType<typ
   if (chartData.length === 0) return null;
 
   return (
-    <div>
-      <div className="w-44 h-44 mx-auto mb-4">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie data={chartData} cx="50%" cy="50%" innerRadius={30} outerRadius={70} dataKey="value" stroke="none">
-              {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.fill} />
-              ))}
-            </Pie>
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
-      <div className="grid grid-cols-2 gap-x-6 gap-y-1.5 text-xs">
-        {chartData.map((item, index) => (
-          <div key={index} className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-sm flex-shrink-0" style={{ backgroundColor: item.fill }} />
-            <span>{item.name}</span>
-          </div>
-        ))}
-      </div>
+    <div className="w-full" style={{ height: '280px' }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <PieChart>
+          <Pie
+            data={chartData}
+            cx="50%"
+            cy="50%"
+            innerRadius={30}
+            outerRadius={70}
+            dataKey="value"
+            stroke="none"
+            label={(props) => renderPrintLabel(props as PrintLabelProps)}
+            labelLine={false}
+          >
+            {chartData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={entry.fill} />
+            ))}
+          </Pie>
+        </PieChart>
+      </ResponsiveContainer>
     </div>
   );
 }

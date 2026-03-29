@@ -35,100 +35,6 @@ const BLOCK_LABEL_KEYS: Record<string, TranslationKey> = {
   expectedRisk: 'blockExpectedRisk',
 };
 
-const SHORT_LABEL_KEYS: Record<string, TranslationKey> = {
-  strategyPrep: 'chartStrategy',
-  adsBranding: 'chartAds',
-  candidateMgmt: 'chartCandidates',
-  interviews: 'chartInterviews',
-  backgroundOffer: 'chartBackground',
-  otherServices: 'chartOtherServices',
-  preboarding: 'chartPreboarding',
-  onboarding: 'chartOnboarding',
-  vacantImpact: 'chartVacantImpact',
-  expectedRisk: 'chartRisk',
-};
-
-const RADIAN = Math.PI / 180;
-
-interface CustomLabelProps {
-  cx: number;
-  cy: number;
-  midAngle: number;
-  innerRadius: number;
-  outerRadius: number;
-  percent: number;
-  index: number;
-  shortName: string;
-  color: string;
-}
-
-function renderCustomLabel({
-  cx,
-  cy,
-  midAngle,
-  outerRadius,
-  percent,
-  shortName,
-  color,
-}: CustomLabelProps) {
-  // Skip very small slices
-  if (percent < 0.03) return null;
-
-  const sin = Math.sin(-RADIAN * midAngle);
-  const cos = Math.cos(-RADIAN * midAngle);
-
-  // Point on the outer edge of the pie
-  const sx = cx + outerRadius * cos;
-  const sy = cy + outerRadius * sin;
-
-  // Elbow point
-  const mx = cx + (outerRadius + 12) * cos;
-  const my = cy + (outerRadius + 12) * sin;
-
-  // End point for text
-  const ex = mx + (cos >= 0 ? 1 : -1) * 16;
-  const ey = my;
-
-  const textAnchor = cos >= 0 ? 'start' : 'end';
-
-  return (
-    <g>
-      {/* Leader line */}
-      <path
-        d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`}
-        stroke={color}
-        strokeWidth={1}
-        fill="none"
-        opacity={0.6}
-      />
-      {/* Small dot at the end of leader line */}
-      <circle cx={ex} cy={ey} r={2} fill={color} />
-      {/* Label text */}
-      <text
-        x={ex + (cos >= 0 ? 4 : -4)}
-        y={ey}
-        textAnchor={textAnchor}
-        fill="hsl(0, 0%, 85%)"
-        fontSize={9}
-        dominantBaseline="central"
-      >
-        {shortName}
-      </text>
-      {/* Percentage */}
-      <text
-        x={ex + (cos >= 0 ? 4 : -4)}
-        y={ey + 11}
-        textAnchor={textAnchor}
-        fill="hsl(0, 0%, 60%)"
-        fontSize={8}
-        dominantBaseline="central"
-      >
-        {`${(percent * 100).toFixed(0)}%`}
-      </text>
-    </g>
-  );
-}
-
 export function CostBreakdownChart({ blockCosts, totalCost }: CostBreakdownChartProps) {
   const { t } = useLanguage();
 
@@ -136,7 +42,6 @@ export function CostBreakdownChart({ blockCosts, totalCost }: CostBreakdownChart
     .filter(([key, cost]) => key !== 'expectedRisk' && cost.total > 0)
     .map(([key, cost], index) => ({
       name: t(BLOCK_LABEL_KEYS[key] || 'blockStrategyPrep'),
-      shortName: t(SHORT_LABEL_KEYS[key] || 'chartStrategy'),
       value: Math.round(cost.total),
       percentage: totalCost > 0 ? (cost.total / totalCost) * 100 : 0,
       color: CHART_COLORS[index % CHART_COLORS.length],
@@ -162,7 +67,7 @@ export function CostBreakdownChart({ blockCosts, totalCost }: CostBreakdownChart
 
   return (
     <div>
-      <div className="h-64">
+      <div className="h-48">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
@@ -173,8 +78,6 @@ export function CostBreakdownChart({ blockCosts, totalCost }: CostBreakdownChart
               outerRadius={55}
               paddingAngle={2}
               dataKey="value"
-              label={(props) => renderCustomLabel(props as CustomLabelProps)}
-              labelLine={false}
             >
               {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
@@ -193,6 +96,21 @@ export function CostBreakdownChart({ blockCosts, totalCost }: CostBreakdownChart
             />
           </PieChart>
         </ResponsiveContainer>
+      </div>
+      {/* Legend */}
+      <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 mt-2">
+        {data.map((item, index) => (
+          <div key={index} className="flex items-center gap-2 text-xs">
+            <div
+              className="w-2.5 h-2.5 rounded-sm flex-shrink-0"
+              style={{ backgroundColor: item.color }}
+            />
+            <span className="text-summary-muted truncate">{item.name}</span>
+            <span className="text-summary-foreground ml-auto font-medium">
+              {item.percentage.toFixed(0)}%
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );
