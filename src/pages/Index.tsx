@@ -53,7 +53,8 @@ const Index = () => {
       <header className="border-b border-border bg-card/50">
         <div className="container max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div>
+            <div className="flex items-center gap-4">
+              <img src={manpowerLogo} alt="Manpower" className="h-10 w-auto" />
               <h1 className="text-2xl font-bold text-foreground">
                 {t('title')}
               </h1>
