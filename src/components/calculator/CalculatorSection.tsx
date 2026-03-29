@@ -194,10 +194,9 @@ export function CalculatorSection({
               </div>
               {FILLABLE_SECTIONS.has(id) && (
                 <Button
-                  variant="ghost"
                   size="sm"
                   onClick={() => fillSectionWithAverages(id)}
-                  className="gap-1.5 text-xs text-muted-foreground hover:text-foreground flex-shrink-0 ml-4"
+                  className="gap-1.5 text-xs font-semibold flex-shrink-0 ml-4 bg-amber-500 text-white hover:bg-amber-600 border-0 shadow-sm"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   {t('fillAverages')}
