@@ -5,6 +5,7 @@ import type { CalculatorInputs, ComputedResult, BlockName } from '@/types/calcul
 import type { Language, TranslationKey } from '@/i18n/translations';
 import { translations } from '@/i18n/translations';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import manpowerLogo from '@/assets/manpower-logo.png';
 
 // ============================================================================
 // TYPES
@@ -287,7 +288,7 @@ const Print = () => {
       <header className="print-header px-8 pt-8 pb-4 border-b-2 border-gray-300">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-primary rounded flex items-center justify-center text-white font-bold text-xl">M</div>
+            <img src={manpowerLogo} alt="Manpower" className="h-12 w-auto" />
             <div>
               <h1 className="text-xl font-bold">{t('printTitle')}</h1>
               <p className="text-sm text-gray-600">{t('printGenerated')} {formatDate(generatedAt)}</p>

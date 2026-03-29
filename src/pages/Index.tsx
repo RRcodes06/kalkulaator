@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import manpowerLogo from '@/assets/manpower-logo.png';
 import { CalculatorForm } from '@/components/calculator/CalculatorForm';
 import { SummarySidebar } from '@/components/calculator/SummarySidebar';
 import { ResetModal } from '@/components/calculator/ResetModal';
@@ -52,13 +53,16 @@ const Index = () => {
       <header className="border-b border-border bg-card/50">
         <div className="container max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">
-                {t('title')}
-              </h1>
-              <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
-                {t('subtitle')}
-              </p>
+            <div className="flex items-center gap-4">
+              <img src={manpowerLogo} alt="Manpower" className="h-10 w-auto" />
+              <div>
+                <h1 className="text-2xl font-bold text-foreground">
+                  {t('title')}
+                </h1>
+                <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
+                  {t('subtitle')}
+                </p>
+              </div>
             </div>
             <div className="flex items-center gap-3">
               <LanguageToggle />
