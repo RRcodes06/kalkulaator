@@ -52,11 +52,11 @@ const Index = () => {
       {/* Header */}
       <header className="border-b border-border bg-card/50">
         <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-start gap-4">
-            <img src={manpowerLogo} alt="Manpower" className="h-12 md:h-14 w-auto flex-shrink-0 mt-1" />
+          <div className="flex items-center gap-6">
+            <img src={manpowerLogo} alt="Manpower" className="h-10 md:h-12 w-auto flex-shrink-0" />
             <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between gap-4">
-                <div>
+                <div className="min-w-0">
                   <h1 className="text-2xl font-bold text-foreground">
                     {t('title')}
                   </h1>
@@ -64,19 +64,19 @@ const Index = () => {
                     {t('subtitle')}
                   </p>
                 </div>
-                <div className="flex items-center gap-3 flex-shrink-0 pt-1">
-              <LanguageToggle />
-              <Button variant="outline" size="sm" onClick={handlePrint} className="gap-2">
-                <Printer className="w-4 h-4" />
-                {t('printReport')}
-              </Button>
-              <ResetModal />
-              <Link to="/admin">
-                <Button variant="ghost" size="sm" className="gap-2">
-                  <Settings className="w-4 h-4" />
-                  {t('admin')}
-                </Button>
-              </Link>
+                <div className="flex items-center gap-3 flex-shrink-0">
+                  <LanguageToggle />
+                  <Button variant="outline" size="sm" onClick={handlePrint} className="gap-2">
+                    <Printer className="w-4 h-4" />
+                    {t('printReport')}
+                  </Button>
+                  <ResetModal />
+                  <Link to="/admin">
+                    <Button variant="ghost" size="sm" className="gap-2">
+                      <Settings className="w-4 h-4" />
+                      {t('admin')}
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </div>
