@@ -382,7 +382,7 @@ export const translations = {
 
     // Help box
     helpTitle: 'Jääd arvutamisel hätta?',
-    helpText: 'Võta meiega ühendust ja leiame su personalimurele lahenduse.',
+    helpText: 'Võta meiega ühendust ja leiame Sinu personalimurele lahenduse.',
     helpCta: 'Võta ühendust',
   },
 
