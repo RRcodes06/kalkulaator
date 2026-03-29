@@ -55,12 +55,14 @@ const Index = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <img src={manpowerLogo} alt="Manpower" className="h-10 w-auto" />
-              <h1 className="text-2xl font-bold text-foreground">
-                {t('title')}
-              </h1>
-              <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
-                {t('subtitle')}
-              </p>
+              <div>
+                <h1 className="text-2xl font-bold text-foreground">
+                  {t('title')}
+                </h1>
+                <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
+                  {t('subtitle')}
+                </p>
+              </div>
             </div>
             <div className="flex items-center gap-3">
               <LanguageToggle />
