@@ -51,7 +51,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card/50">
-        <div className="relative mx-auto max-w-7xl px-6 py-4">
+        <div className="relative mx-auto max-w-7xl px-6 py-4 laptop-compact-header">
           {/* Logo positioned to the left of the content area */}
           <img
             src={manpowerLogo}
@@ -90,7 +90,7 @@ const Index = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container max-w-7xl mx-auto px-6 py-8">
+      <main className="container max-w-7xl mx-auto px-6 py-8 laptop-compact-main">
         <AccordionControllerProvider>
           <div className="flex gap-8">
             {/* Calculator Form */}
@@ -141,7 +141,7 @@ const Index = () => {
       </main>
 
       {/* Sticky Help Box */}
-      <div className="fixed bottom-6 left-6 z-40 hidden md:block">
+      <div className="fixed bottom-6 left-6 z-40 hidden md:block laptop-compact-help">
         <div className="flex items-start gap-5 p-6 rounded-xl border border-border bg-card shadow-lg max-w-sm w-80">
           <HelpCircle className="w-7 h-7 text-primary mt-0.5 flex-shrink-0" />
           <div className="space-y-3">

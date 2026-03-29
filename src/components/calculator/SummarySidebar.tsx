@@ -88,7 +88,7 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
 
   return (
     // @ts-ignore - ref forwarding
-    <aside ref={ref} className="w-80 bg-summary text-summary-foreground rounded-xl shadow-summary p-6 sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto summary-scrollbar">
+    <aside ref={ref} className="w-80 bg-summary text-summary-foreground rounded-xl shadow-summary p-6 sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto summary-scrollbar laptop-compact-sidebar">
       {!hasCalculated && (
         <div className="text-center py-8 space-y-4">
           <div className="w-16 h-16 mx-auto rounded-full bg-white/10 flex items-center justify-center">
