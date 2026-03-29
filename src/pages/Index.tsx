@@ -51,7 +51,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card/50">
-        <div className="relative mx-auto max-w-7xl px-6 py-4">
+        <div className="relative mx-auto max-w-7xl px-6 py-4 laptop-compact-header">
           {/* Logo positioned to the left of the content area */}
           <img
             src={manpowerLogo}
