@@ -51,10 +51,17 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card/50">
-        <div className="container max-w-7xl mx-auto px-6 py-4">
+        <div className="relative mx-auto max-w-7xl px-6 py-4">
+          {/* Logo positioned to the left of the content area */}
+          <img
+            src={manpowerLogo}
+            alt="Manpower"
+            className="absolute right-full mr-4 top-1/2 -translate-y-1/2 h-16 md:h-20 w-auto hidden xl:block"
+          />
           <div className="flex items-center justify-between">
+            {/* Mobile-only logo (inline) */}
             <div className="flex items-center gap-4">
-              <img src={manpowerLogo} alt="Manpower" className="h-16 md:h-20 w-auto" />
+              <img src={manpowerLogo} alt="Manpower" className="h-16 md:h-20 w-auto xl:hidden" />
               <div>
                 <h1 className="text-2xl font-bold text-foreground">
                   {t('title')}
