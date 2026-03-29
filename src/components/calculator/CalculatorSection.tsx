@@ -197,7 +197,7 @@ export function CalculatorSection({
                   variant="ghost"
                   size="sm"
                   onClick={() => fillSectionWithAverages(id)}
-                  className="gap-1.5 text-xs text-muted-foreground hover:text-foreground flex-shrink-0 ml-4"
+                  className="gap-1.5 text-xs text-orange-600 hover:text-orange-700 hover:bg-orange-50 flex-shrink-0 ml-4"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   {t('fillAverages')}
