@@ -51,20 +51,20 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card/50">
-        <div className="container max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <img src={manpowerLogo} alt="Manpower" className="h-12 md:h-14 w-auto flex-shrink-0" />
-              <div>
-                <h1 className="text-2xl font-bold text-foreground">
-                  {t('title')}
-                </h1>
-                <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
-                  {t('subtitle')}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-start gap-4">
+            <img src={manpowerLogo} alt="Manpower" className="h-12 md:h-14 w-auto flex-shrink-0 mt-1" />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h1 className="text-2xl font-bold text-foreground">
+                    {t('title')}
+                  </h1>
+                  <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
+                    {t('subtitle')}
+                  </p>
+                </div>
+                <div className="flex items-center gap-3 flex-shrink-0 pt-1">
               <LanguageToggle />
               <Button variant="outline" size="sm" onClick={handlePrint} className="gap-2">
                 <Printer className="w-4 h-4" />
