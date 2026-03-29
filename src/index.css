@@ -140,6 +140,51 @@
     text-wrap: balance;
   }
 
+  /* Laptop-specific compact optimizations (1024px–1440px) */
+  @media (min-width: 1024px) and (max-width: 1440px) {
+    .laptop-compact-header {
+      padding-top: 0.625rem;
+      padding-bottom: 0.625rem;
+    }
+    .laptop-compact-header img {
+      max-height: 3.5rem;
+    }
+    .laptop-compact-header h1 {
+      font-size: 1.25rem;
+    }
+    .laptop-compact-main {
+      padding-top: 1.25rem;
+      padding-bottom: 1.25rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    .laptop-compact-main .flex.gap-8 {
+      gap: 1.25rem;
+    }
+    .laptop-compact-sidebar {
+      width: 17rem;
+      padding: 1rem;
+      font-size: 0.85rem;
+      top: 5rem;
+    }
+    .laptop-compact-help {
+      width: 16rem;
+      padding: 1rem;
+      bottom: 1rem;
+      left: 1rem;
+    }
+    .laptop-compact-help h4 {
+      font-size: 0.85rem;
+    }
+    .laptop-compact-help p {
+      font-size: 0.8rem;
+    }
+    .laptop-compact-help .w-7 {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+  }
+
   /* Print styles */
   @media print {
     .no-print {

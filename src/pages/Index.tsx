@@ -141,7 +141,7 @@ const Index = () => {
       </main>
 
       {/* Sticky Help Box */}
-      <div className="fixed bottom-6 left-6 z-40 hidden md:block">
+      <div className="fixed bottom-6 left-6 z-40 hidden md:block laptop-compact-help">
         <div className="flex items-start gap-5 p-6 rounded-xl border border-border bg-card shadow-lg max-w-sm w-80">
           <HelpCircle className="w-7 h-7 text-primary mt-0.5 flex-shrink-0" />
           <div className="space-y-3">
