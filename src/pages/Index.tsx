@@ -47,141 +47,257 @@ const Index = () => {
     window.open('/print', '_blank');
   };
 
+  /* ── Shared sub-components ── */
+
+  const LogoBlock = () => (
+    <img
+      src={manpowerLogo}
+      alt="Manpower"
+      className="h-14 w-auto object-contain"
+    />
+  );
+
+  const HelpBox = ({ compact = false }: { compact?: boolean }) => (
+    <div className={`flex items-start gap-4 p-5 rounded-xl border border-border bg-card shadow-lg ${compact ? 'laptop-help-inline' : ''}`}>
+      <HelpCircle className="w-6 h-6 text-primary mt-0.5 flex-shrink-0" />
+      <div className="space-y-2">
+        <h4 className="font-semibold text-sm text-foreground">{t('helpTitle')}</h4>
+        <p className="text-xs text-muted-foreground leading-relaxed">{t('helpText')}</p>
+        <a
+          href="https://www.manpower.ee/et/vaerbamisteenused"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Button size="sm" className="mt-1 w-full">{t('helpCta')}</Button>
+        </a>
+      </div>
+    </div>
+  );
+
+  const ActionButtons = () => (
+    <div className="flex items-center gap-2 flex-shrink-0">
+      <LanguageToggle />
+      <Button variant="outline" size="sm" onClick={handlePrint} className="gap-1.5">
+        <Printer className="w-4 h-4" />
+        <span className="hidden laptop-3col:inline">{t('printReport')}</span>
+      </Button>
+      <ResetModal />
+      <Link to="/admin">
+        <Button variant="ghost" size="sm" className="gap-1.5">
+          <Settings className="w-4 h-4" />
+          <span className="hidden laptop-3col:inline">{t('admin')}</span>
+        </Button>
+      </Link>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card/50">
-        <div className="relative mx-auto max-w-7xl px-6 py-4 laptop-compact-header laptop-shell">
-          {/* Logo positioned to the left of the content area */}
-          <img
-            src={manpowerLogo}
-            alt="Manpower"
-            className="absolute right-full mr-4 top-1/2 -translate-y-1/2 h-16 md:h-20 w-auto hidden xl:block"
-          />
-          <div className="flex items-center justify-between">
-            {/* Mobile-only logo (inline) */}
-            <div className="flex items-center gap-4">
-              <img src={manpowerLogo} alt="Manpower" className="h-16 md:h-20 w-auto xl:hidden" />
+
+      {/* ════════════════════════════════════════════════════════
+          LAPTOP 3-COLUMN LAYOUT (hidden below laptop breakpoint)
+          Left: logo + help | Center: header + form | Right: buttons + sidebar
+          ════════════════════════════════════════════════════════ */}
+      <div className="hidden laptop-3col:block min-h-screen">
+        {/* Header row — spans full width, uses same grid */}
+        <header className="border-b border-border bg-card/50">
+          <div className="laptop-grid px-3 py-2">
+            {/* Left: Logo */}
+            <div className="flex items-center justify-center">
+              <LogoBlock />
+            </div>
+            {/* Center: Title + Subtitle */}
+            <div className="flex items-center">
               <div>
-                <h1 className="text-2xl font-bold text-foreground">
-                  {t('title')}
-                </h1>
-                <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
-                  {t('subtitle')}
-                </p>
+                <h1 className="text-xl font-bold text-foreground">{t('title')}</h1>
+                <p className="text-xs text-muted-foreground mt-0.5">{t('subtitle')}</p>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <LanguageToggle />
-              <Button variant="outline" size="sm" onClick={handlePrint} className="gap-2">
-                <Printer className="w-4 h-4" />
-                {t('printReport')}
-              </Button>
-              <ResetModal />
-              <Link to="/admin">
-                <Button variant="ghost" size="sm" className="gap-2">
-                  <Settings className="w-4 h-4" />
-                  {t('admin')}
-                </Button>
-              </Link>
+            {/* Right: Action buttons */}
+            <div className="flex items-center justify-end">
+              <ActionButtons />
             </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      {/* Main Content */}
-      <main className="container max-w-7xl mx-auto px-6 py-8 laptop-compact-main laptop-shell">
-        <AccordionControllerProvider>
-          <div className="flex gap-8">
-            {/* Calculator Form */}
-            <div className="flex-1 min-w-0">
+        {/* Main content — 3-column grid */}
+        <main className="laptop-grid px-3 py-4 items-start">
+          {/* LEFT COLUMN: Help box (sticky) */}
+          <div className="sticky top-20 space-y-4">
+            <HelpBox compact />
+          </div>
+
+          {/* CENTER COLUMN: Form */}
+          <div>
+            <AccordionControllerProvider>
               <PrivacyNotice />
-              <div className="mt-4 p-4 rounded-lg border border-primary/20 bg-primary/5">
-                <div className="flex items-start gap-3">
-                  <Sparkles className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                  <div className="flex-1 space-y-2">
-                    <p className="text-sm text-foreground">
-                      {t('fillAveragesPromo')}
-                    </p>
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-2">
+              <div className="mt-3 p-3 rounded-lg border border-primary/20 bg-primary/5">
+                <div className="flex items-start gap-2">
+                  <Sparkles className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <div className="flex-1 space-y-1.5">
+                    <p className="text-xs text-foreground">{t('fillAveragesPromo')}</p>
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5">
                         <Switch
-                          id="auto-fill-toggle"
+                          id="auto-fill-toggle-laptop"
                           checked={autoFillEnabled}
                           onCheckedChange={toggleAutoFill}
                         />
-                        <Label htmlFor="auto-fill-toggle" className="text-sm font-semibold cursor-pointer">
+                        <Label htmlFor="auto-fill-toggle-laptop" className="text-xs font-semibold cursor-pointer">
                           {t('fillAverages')}
                         </Label>
                       </div>
-                      <Button variant="ghost" size="sm" onClick={resetInputs} className="gap-2 text-muted-foreground">
-                        <Eraser className="w-4 h-4" />
+                      <Button variant="ghost" size="sm" onClick={resetInputs} className="gap-1.5 text-muted-foreground text-xs h-7">
+                        <Eraser className="w-3.5 h-3.5" />
                         {t('clearFields')}
                       </Button>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="mt-6">
+              <div className="mt-4">
                 <CalculatorForm />
+              </div>
+            </AccordionControllerProvider>
+          </div>
+
+          {/* RIGHT COLUMN: Summary sidebar */}
+          <div className="sticky top-20">
+            <SummarySidebar />
+          </div>
+        </main>
+
+        {/* Footer */}
+        <footer className="border-t border-border bg-card/30 py-4 mt-8">
+          <div className="text-center text-xs text-muted-foreground px-3">
+            <p>{t('footer')}</p>
+          </div>
+        </footer>
+      </div>
+
+      {/* ════════════════════════════════════════════════════════
+          DEFAULT LAYOUT (mobile / tablet / large desktop)
+          Shown when NOT in laptop-3col range
+          ════════════════════════════════════════════════════════ */}
+      <div className="laptop-3col:hidden">
+        {/* Header */}
+        <header className="border-b border-border bg-card/50">
+          <div className="relative mx-auto max-w-7xl px-6 py-4">
+            {/* Logo positioned to the left of the content area on XL+ */}
+            <img
+              src={manpowerLogo}
+              alt="Manpower"
+              className="absolute right-full mr-4 top-1/2 -translate-y-1/2 h-16 md:h-20 w-auto hidden xl:block"
+            />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <img src={manpowerLogo} alt="Manpower" className="h-16 md:h-20 w-auto xl:hidden" />
+                <div>
+                  <h1 className="text-2xl font-bold text-foreground">{t('title')}</h1>
+                  <p className="text-sm text-muted-foreground mt-1 max-w-2xl">{t('subtitle')}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <LanguageToggle />
+                <Button variant="outline" size="sm" onClick={handlePrint} className="gap-2">
+                  <Printer className="w-4 h-4" />
+                  {t('printReport')}
+                </Button>
+                <ResetModal />
+                <Link to="/admin">
+                  <Button variant="ghost" size="sm" className="gap-2">
+                    <Settings className="w-4 h-4" />
+                    {t('admin')}
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* Main Content */}
+        <main className="container max-w-7xl mx-auto px-6 py-8">
+          <AccordionControllerProvider>
+            <div className="flex gap-8">
+              <div className="flex-1 min-w-0">
+                <PrivacyNotice />
+                <div className="mt-4 p-4 rounded-lg border border-primary/20 bg-primary/5">
+                  <div className="flex items-start gap-3">
+                    <Sparkles className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div className="flex-1 space-y-2">
+                      <p className="text-sm text-foreground">{t('fillAveragesPromo')}</p>
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            id="auto-fill-toggle"
+                            checked={autoFillEnabled}
+                            onCheckedChange={toggleAutoFill}
+                          />
+                          <Label htmlFor="auto-fill-toggle" className="text-sm font-semibold cursor-pointer">
+                            {t('fillAverages')}
+                          </Label>
+                        </div>
+                        <Button variant="ghost" size="sm" onClick={resetInputs} className="gap-2 text-muted-foreground">
+                          <Eraser className="w-4 h-4" />
+                          {t('clearFields')}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-6">
+                  <CalculatorForm />
+                </div>
+              </div>
+
+              {/* Sticky Sidebar */}
+              <div className="hidden lg:block flex-shrink-0">
+                <SummarySidebar />
               </div>
             </div>
 
-            {/* Sticky Sidebar */}
-            <div className="hidden lg:block flex-shrink-0">
+            {/* Mobile Summary */}
+            <div className="lg:hidden mt-8">
               <SummarySidebar />
             </div>
-          </div>
+          </AccordionControllerProvider>
+        </main>
 
-          {/* Mobile Summary (shown below on smaller screens) */}
-          <div className="lg:hidden mt-8">
-            <SummarySidebar />
-          </div>
-        </AccordionControllerProvider>
-      </main>
-
-      {/* Sticky Help Box */}
-      <div className="fixed bottom-6 left-6 z-40 hidden md:block laptop-compact-help">
-        <div className="flex items-start gap-5 p-6 rounded-xl border border-border bg-card shadow-lg max-w-sm w-80">
-          <HelpCircle className="w-7 h-7 text-primary mt-0.5 flex-shrink-0" />
-          <div className="space-y-3">
-            <h4 className="font-semibold text-base text-foreground">{t('helpTitle')}</h4>
-            <p className="text-sm text-muted-foreground leading-relaxed">{t('helpText')}</p>
-            <a
-              href="https://www.manpower.ee/et/vaerbamisteenused"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button size="default" className="mt-1 w-full">{t('helpCta')}</Button>
-            </a>
+        {/* Sticky Help Box (non-laptop) */}
+        <div className="fixed bottom-6 left-6 z-40 hidden md:block">
+          <div className="flex items-start gap-5 p-6 rounded-xl border border-border bg-card shadow-lg max-w-sm w-80">
+            <HelpCircle className="w-7 h-7 text-primary mt-0.5 flex-shrink-0" />
+            <div className="space-y-3">
+              <h4 className="font-semibold text-base text-foreground">{t('helpTitle')}</h4>
+              <p className="text-sm text-muted-foreground leading-relaxed">{t('helpText')}</p>
+              <a href="https://www.manpower.ee/et/vaerbamisteenused" target="_blank" rel="noopener noreferrer">
+                <Button size="default" className="mt-1 w-full">{t('helpCta')}</Button>
+              </a>
+            </div>
           </div>
         </div>
+
+        {/* Mobile Help Box */}
+        <div className="md:hidden container max-w-7xl mx-auto px-6 mt-10">
+          <div className="flex items-start gap-5 p-6 rounded-xl border border-border bg-card shadow-sm">
+            <HelpCircle className="w-7 h-7 text-primary mt-0.5 flex-shrink-0" />
+            <div className="space-y-3">
+              <h4 className="font-semibold text-base text-foreground">{t('helpTitle')}</h4>
+              <p className="text-sm text-muted-foreground leading-relaxed">{t('helpText')}</p>
+              <a href="https://www.manpower.ee/et/vaerbamisteenused" target="_blank" rel="noopener noreferrer">
+                <Button size="default" className="mt-1">{t('helpCta')}</Button>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <footer className="border-t border-border bg-card/30 py-6 mt-12">
+          <div className="container max-w-7xl mx-auto px-6 text-center text-sm text-muted-foreground">
+            <p>{t('footer')}</p>
+          </div>
+        </footer>
       </div>
-
-      {/* Mobile Help Box (above footer, not sticky) */}
-      <div className="md:hidden container max-w-7xl mx-auto px-6 mt-10">
-        <div className="flex items-start gap-5 p-6 rounded-xl border border-border bg-card shadow-sm">
-          <HelpCircle className="w-7 h-7 text-primary mt-0.5 flex-shrink-0" />
-          <div className="space-y-3">
-            <h4 className="font-semibold text-base text-foreground">{t('helpTitle')}</h4>
-            <p className="text-sm text-muted-foreground leading-relaxed">{t('helpText')}</p>
-            <a
-              href="https://www.manpower.ee/et/vaerbamisteenused"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button size="default" className="mt-1">{t('helpCta')}</Button>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <footer className="border-t border-border bg-card/30 py-6 mt-12">
-        <div className="container max-w-7xl mx-auto px-6 text-center text-sm text-muted-foreground laptop-compact-footer laptop-shell">
-          <p>{t('footer')}</p>
-        </div>
-      </footer>
     </div>
   );
 };
