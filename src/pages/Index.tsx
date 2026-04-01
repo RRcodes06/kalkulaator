@@ -178,7 +178,7 @@ const Index = () => {
 
       {/* Footer */}
       <footer className="border-t border-border bg-card/30 py-6 mt-12">
-        <div className="container max-w-7xl mx-auto px-6 text-center text-sm text-muted-foreground">
+        <div className="container max-w-7xl mx-auto px-6 text-center text-sm text-muted-foreground laptop-compact-footer laptop-shell">
           <p>{t('footer')}</p>
         </div>
       </footer>
