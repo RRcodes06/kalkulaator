@@ -51,7 +51,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card/50">
-        <div className="relative mx-auto max-w-7xl px-6 py-4 laptop-compact-header">
+        <div className="relative mx-auto max-w-7xl px-6 py-4 laptop-compact-header laptop-shell">
           {/* Logo positioned to the left of the content area */}
           <img
             src={manpowerLogo}
@@ -90,7 +90,7 @@ const Index = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container max-w-7xl mx-auto px-6 py-8 laptop-compact-main">
+      <main className="container max-w-7xl mx-auto px-6 py-8 laptop-compact-main laptop-shell">
         <AccordionControllerProvider>
           <div className="flex gap-8">
             {/* Calculator Form */}
@@ -178,7 +178,7 @@ const Index = () => {
 
       {/* Footer */}
       <footer className="border-t border-border bg-card/30 py-6 mt-12">
-        <div className="container max-w-7xl mx-auto px-6 text-center text-sm text-muted-foreground">
+        <div className="container max-w-7xl mx-auto px-6 text-center text-sm text-muted-foreground laptop-compact-footer laptop-shell">
           <p>{t('footer')}</p>
         </div>
       </footer>
