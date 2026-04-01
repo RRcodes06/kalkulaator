@@ -90,7 +90,7 @@ const Index = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container max-w-7xl mx-auto px-6 py-8 laptop-compact-main">
+      <main className="container max-w-7xl mx-auto px-6 py-8 laptop-compact-main laptop-shell">
         <AccordionControllerProvider>
           <div className="flex gap-8">
             {/* Calculator Form */}
