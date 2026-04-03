@@ -101,7 +101,7 @@ const Index = () => {
       <div className="hidden laptop-3col:block min-h-screen">
         {/* Header row — spans full width, uses same grid */}
         <header className="border-b border-border bg-card/50">
-          <div className="laptop-grid px-3 py-2">
+          <div className="laptop-grid px-4 py-2">
             {/* Left: Logo */}
             <div className="flex items-center justify-center">
               <LogoBlock />
@@ -121,7 +121,7 @@ const Index = () => {
         </header>
 
         {/* Main content — 3-column grid */}
-        <main className="laptop-grid px-3 py-4 items-start">
+        <main className="laptop-grid px-4 py-4 items-start">
           {/* LEFT COLUMN: Help box (sticky) */}
           <div className="sticky top-20 space-y-4">
             <HelpBox compact />
