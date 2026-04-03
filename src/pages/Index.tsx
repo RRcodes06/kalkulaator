@@ -121,7 +121,7 @@ const Index = () => {
         </header>
 
         {/* Main content — 3-column grid */}
-        <main className="laptop-grid px-3 py-4 items-start">
+        <main className="laptop-grid px-4 py-4 items-start">
           {/* LEFT COLUMN: Help box (sticky) */}
           <div className="sticky top-20 space-y-4">
             <HelpBox compact />
