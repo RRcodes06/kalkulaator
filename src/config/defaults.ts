@@ -74,6 +74,7 @@ export const RANGE_LABELS: Record<string, string> = {
   'strategyPrep.teamHours': 'Strateegia: Tiimi tunnid',
   'adsBranding.hrHours': 'Kuulutused: HR tunnid',
   'adsBranding.managerHours': 'Kuulutused: Juhi tunnid',
+  'adsBranding.teamHours': 'Kuulutused: Tiimi tunnid',
   'adsBranding.directCosts': 'Kuulutuste kulud',
   'candidateMgmt.hrHours': 'Kandidaadid: HR tunnid',
   'candidateMgmt.managerHours': 'Kandidaadid: Juhi tunnid',

@@ -291,7 +291,7 @@ export const useAppStore = create<AppState>((set, get) => {
     fillSectionWithAverages: (sectionId: string) => {
       const SECTION_FIELD_MAP: Record<string, { inputKey: string; fields: string[] }> = {
         strategy: { inputKey: 'strategyPrep', fields: ['hrHours', 'managerHours', 'teamHours'] },
-        ads: { inputKey: 'adsBranding', fields: ['hrHours', 'managerHours', 'directCosts'] },
+        ads: { inputKey: 'adsBranding', fields: ['hrHours', 'managerHours', 'teamHours', 'directCosts'] },
         candidate: { inputKey: 'candidateMgmt', fields: ['hrHours', 'managerHours'] },
         interviews: { inputKey: 'interviews', fields: ['hrHours', 'managerHours', 'teamHours', 'directCosts'] },
         background: { inputKey: 'backgroundOffer', fields: ['hrHours', 'managerHours'] },
