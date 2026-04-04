@@ -36,6 +36,7 @@ export const DEFAULT_RECOMMENDED_RANGES: RecommendedRanges = {
   // Ads & Branding
   'adsBranding.hrHours': { min: 2, max: 8, unit: 'h' },
   'adsBranding.managerHours': { min: 0, max: 4, unit: 'h' },
+  'adsBranding.teamHours': { min: 0, max: 4, unit: 'h' },
   'adsBranding.directCosts': { min: 100, max: 2000, unit: '€' },
   
   // Candidate Management
@@ -73,6 +74,7 @@ export const RANGE_LABELS: Record<string, string> = {
   'strategyPrep.teamHours': 'Strateegia: Tiimi tunnid',
   'adsBranding.hrHours': 'Kuulutused: HR tunnid',
   'adsBranding.managerHours': 'Kuulutused: Juhi tunnid',
+  'adsBranding.teamHours': 'Kuulutused: Tiimi tunnid',
   'adsBranding.directCosts': 'Kuulutuste kulud',
   'candidateMgmt.hrHours': 'Kandidaadid: HR tunnid',
   'candidateMgmt.managerHours': 'Kandidaadid: Juhi tunnid',

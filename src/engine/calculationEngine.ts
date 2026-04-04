@@ -414,9 +414,10 @@ export function computeTotals(
   addFieldWarning('strategyPrep.teamHours', 'Strateegia: Tiimi tunnid', inputs.strategyPrep.teamHours, strategyInUse);
   
   // Ads & Branding
-  const adsInUse = inputs.adsBranding.hrHours > 0 || inputs.adsBranding.managerHours > 0 || inputs.adsBranding.directCosts > 0;
+  const adsInUse = inputs.adsBranding.hrHours > 0 || inputs.adsBranding.managerHours > 0 || inputs.adsBranding.teamHours > 0 || inputs.adsBranding.directCosts > 0;
   addFieldWarning('adsBranding.hrHours', 'Kuulutused: HR tunnid', inputs.adsBranding.hrHours, adsInUse);
   addFieldWarning('adsBranding.managerHours', 'Kuulutused: Juhi tunnid', inputs.adsBranding.managerHours, adsInUse);
+  addFieldWarning('adsBranding.teamHours', 'Kuulutused: Tiimi tunnid', inputs.adsBranding.teamHours, adsInUse);
   addFieldWarning('adsBranding.directCosts', 'Kuulutuste kulud', inputs.adsBranding.directCosts, adsInUse);
   
   // Candidate Management

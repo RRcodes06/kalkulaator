@@ -89,6 +89,7 @@ export function CalculatorForm() {
       <CalculatorSection id="ads" title={t('sectionAds')} icon={<Megaphone className="w-5 h-5" />} subtotal={results.blockCosts.adsBranding.total} infoKey="ads">
         <NumberInput label={t('hrHours')} value={inputs.adsBranding.hrHours} onChange={(v) => updateNestedInput('adsBranding', 'hrHours', v)} suffix="h" warning={getWarningForField('adsBranding.hrHours')} rangeHint={getRangeHintForField('adsBranding.hrHours')} />
         <NumberInput label={t('managerHours')} value={inputs.adsBranding.managerHours} onChange={(v) => updateNestedInput('adsBranding', 'managerHours', v)} suffix="h" warning={getWarningForField('adsBranding.managerHours')} rangeHint={getRangeHintForField('adsBranding.managerHours')} />
+        <NumberInput label={t('teamHours')} value={inputs.adsBranding.teamHours} onChange={(v) => updateNestedInput('adsBranding', 'teamHours', v)} suffix="h" warning={getWarningForField('adsBranding.teamHours')} rangeHint={getRangeHintForField('adsBranding.teamHours')} />
         <NumberInput label={t('adsCosts')} value={inputs.adsBranding.directCosts} onChange={(v) => updateNestedInput('adsBranding', 'directCosts', v)} suffix="€" hint={t('adsCostsHint')} warning={getWarningForField('adsBranding.directCosts')} rangeHint={getRangeHintForField('adsBranding.directCosts')} />
       </CalculatorSection>
 
