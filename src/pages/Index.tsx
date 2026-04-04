@@ -47,186 +47,102 @@ const Index = () => {
     window.open('/print', '_blank');
   };
 
-  const LogoBlock = ({ className = 'h-16 w-auto object-contain' }: { className?: string }) => (
-    <img src={manpowerLogo} alt="Manpower" className={className} />
-  );
-
-  const HelpBox = ({
-    className = '',
-    fullWidthButton = true,
-  }: {
-    className?: string;
-    fullWidthButton?: boolean;
-  }) => (
-    <div className={`flex items-start gap-5 rounded-xl border border-border bg-card p-6 ${className}`}>
-      <HelpCircle className="h-7 w-7 text-primary mt-0.5 flex-shrink-0" />
-      <div className="space-y-3">
-        <h4 className="text-base font-semibold text-foreground">{t('helpTitle')}</h4>
-        <p className="text-sm leading-relaxed text-muted-foreground">{t('helpText')}</p>
-        <a
-          href="https://www.manpower.ee/et/vaerbamisteenused"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Button size="default" className={fullWidthButton ? 'mt-1 w-full' : 'mt-1'}>
-            {t('helpCta')}
-          </Button>
-        </a>
-      </div>
-    </div>
-  );
-
-  const ActionButtons = () => (
-    <div className="flex flex-wrap items-center justify-end gap-2">
-      <LanguageToggle />
-      <Button variant="outline" size="sm" onClick={handlePrint} className="gap-1.5">
-        <Printer className="h-4 w-4" />
-        <span className="hidden laptop-3col:inline">{t('printReport')}</span>
-      </Button>
-      <ResetModal />
-      <Link to="/admin">
-        <Button variant="ghost" size="sm" className="gap-1.5">
-          <Settings className="h-4 w-4" />
-          <span className="hidden laptop-3col:inline">{t('admin')}</span>
-        </Button>
-      </Link>
-    </div>
-  );
-
-  const CalculatorContent = ({ toggleId }: { toggleId: string }) => (
-    <>
-      <PrivacyNotice />
-      <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 p-4">
-        <div className="flex items-start gap-3">
-          <Sparkles className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" />
-          <div className="flex-1 space-y-2">
-            <p className="text-sm text-foreground">{t('fillAveragesPromo')}</p>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2">
-                <Switch id={toggleId} checked={autoFillEnabled} onCheckedChange={toggleAutoFill} />
-                <Label htmlFor={toggleId} className="cursor-pointer text-sm font-semibold">
-                  {t('fillAverages')}
-                </Label>
-              </div>
-              <Button variant="ghost" size="sm" onClick={resetInputs} className="gap-2 text-muted-foreground">
-                <Eraser className="h-4 w-4" />
-                {t('clearFields')}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="mt-6">
-        <CalculatorForm />
-      </div>
-    </>
-  );
-
   return (
     <div className="min-h-screen bg-background">
-      <div className="hidden laptop-3col:block">
-        <main className="px-4 py-6">
-          <div className="laptop-shell">
-            <aside className="laptop-left-column">
-              <div className="space-y-6">
-                <LogoBlock />
-                <div className="laptop-help-sticky">
-                  <HelpBox className="w-full shadow-lg" />
+      <main className="calc-shell-wrapper">
+        <div className="calc-shell">
+          {/* ── LEFT COLUMN: logo + help ── */}
+          <aside className="calc-left-col">
+            <div className="space-y-6 laptop:space-y-4">
+              <img
+                src={manpowerLogo}
+                alt="Manpower"
+                className="h-16 w-auto object-contain laptop:h-12"
+              />
+              <div className="calc-help-sticky">
+                <div className="flex items-start gap-5 laptop:gap-3 rounded-xl border border-border bg-card p-6 laptop:p-4 shadow-lg">
+                  <HelpCircle className="h-7 w-7 laptop:h-5 laptop:w-5 text-primary mt-0.5 flex-shrink-0" />
+                  <div className="space-y-3 laptop:space-y-2">
+                    <h4 className="text-base laptop:text-sm font-semibold text-foreground">{t('helpTitle')}</h4>
+                    <p className="text-sm laptop:text-xs leading-relaxed text-muted-foreground">{t('helpText')}</p>
+                    <a
+                      href="https://www.manpower.ee/et/vaerbamisteenused"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Button size="default" className="mt-1 w-full laptop:text-xs laptop:h-8">
+                        {t('helpCta')}
+                      </Button>
+                    </a>
+                  </div>
                 </div>
               </div>
-            </aside>
+            </div>
+          </aside>
 
-            <section className="min-w-0 space-y-6">
-              <div>
-                <h1 className="text-2xl font-bold text-foreground">{t('title')}</h1>
-                <p className="mt-1 max-w-2xl text-sm text-muted-foreground">{t('subtitle')}</p>
-              </div>
+          {/* ── CENTER COLUMN: calculator ── */}
+          <section className="min-w-0 space-y-6 laptop:space-y-4">
+            <div>
+              <h1 className="text-2xl laptop:text-xl font-bold text-foreground">{t('title')}</h1>
+              <p className="mt-1 max-w-2xl text-sm laptop:text-xs text-muted-foreground">{t('subtitle')}</p>
+            </div>
 
-              <AccordionControllerProvider>
-                <CalculatorContent toggleId="auto-fill-toggle-laptop" />
-              </AccordionControllerProvider>
-            </section>
-
-            <aside className="laptop-right-column">
-              <div className="space-y-4">
-                <div className="flex justify-end">
-                  <ActionButtons />
-                </div>
-                <SummarySidebar />
-              </div>
-            </aside>
-          </div>
-        </main>
-
-        <footer className="mt-8 border-t border-border bg-card/30 py-6">
-          <div className="laptop-shell-footer text-center text-sm text-muted-foreground">
-            <p>{t('footer')}</p>
-          </div>
-        </footer>
-      </div>
-
-      <div className="laptop-3col:hidden">
-        <header className="border-b border-border bg-card/50">
-          <div className="relative mx-auto max-w-7xl px-6 py-4">
-            <LogoBlock className="absolute right-full top-1/2 mr-4 hidden h-16 w-auto -translate-y-1/2 object-contain md:h-20 xl:block" />
-            <div className="flex items-center justify-between gap-6">
-              <div className="flex items-center gap-4">
-                <LogoBlock className="h-16 w-auto object-contain md:h-20 xl:hidden" />
-                <div>
-                  <h1 className="text-2xl font-bold text-foreground">{t('title')}</h1>
-                  <p className="mt-1 max-w-2xl text-sm text-muted-foreground">{t('subtitle')}</p>
+            <AccordionControllerProvider>
+              <PrivacyNotice />
+              <div className="mt-4 laptop:mt-3 rounded-lg border border-primary/20 bg-primary/5 p-4 laptop:p-3">
+                <div className="flex items-start gap-3 laptop:gap-2">
+                  <Sparkles className="mt-0.5 h-5 w-5 laptop:h-4 laptop:w-4 flex-shrink-0 text-primary" />
+                  <div className="flex-1 space-y-2 laptop:space-y-1">
+                    <p className="text-sm laptop:text-xs text-foreground">{t('fillAveragesPromo')}</p>
+                    <div className="flex items-center gap-3 laptop:gap-2">
+                      <div className="flex items-center gap-2">
+                        <Switch id="auto-fill-toggle" checked={autoFillEnabled} onCheckedChange={toggleAutoFill} />
+                        <Label htmlFor="auto-fill-toggle" className="cursor-pointer text-sm laptop:text-xs font-semibold">
+                          {t('fillAverages')}
+                        </Label>
+                      </div>
+                      <Button variant="ghost" size="sm" onClick={resetInputs} className="gap-2 laptop:gap-1 text-muted-foreground laptop:text-xs laptop:h-7">
+                        <Eraser className="h-4 w-4 laptop:h-3 laptop:w-3" />
+                        {t('clearFields')}
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="mt-6 laptop:mt-4">
+                <CalculatorForm />
+              </div>
+            </AccordionControllerProvider>
+          </section>
+
+          {/* ── RIGHT COLUMN: actions + results ── */}
+          <aside className="calc-right-col">
+            <div className="space-y-4 laptop:space-y-3">
+              <div className="flex flex-wrap items-center justify-end gap-2 laptop:gap-1">
                 <LanguageToggle />
-                <Button variant="outline" size="sm" onClick={handlePrint} className="gap-2">
-                  <Printer className="h-4 w-4" />
+                <Button variant="outline" size="sm" onClick={handlePrint} className="gap-1.5 laptop:text-xs laptop:h-7 laptop:px-2">
+                  <Printer className="h-4 w-4 laptop:h-3 laptop:w-3" />
                   {t('printReport')}
                 </Button>
                 <ResetModal />
                 <Link to="/admin">
-                  <Button variant="ghost" size="sm" className="gap-2">
-                    <Settings className="h-4 w-4" />
+                  <Button variant="ghost" size="sm" className="gap-1.5 laptop:text-xs laptop:h-7 laptop:px-2">
+                    <Settings className="h-4 w-4 laptop:h-3 laptop:w-3" />
                     {t('admin')}
                   </Button>
                 </Link>
               </div>
-            </div>
-          </div>
-        </header>
-
-        <main className="container mx-auto max-w-7xl px-6 py-8">
-          <AccordionControllerProvider>
-            <div className="flex gap-8">
-              <div className="min-w-0 flex-1">
-                <CalculatorContent toggleId="auto-fill-toggle" />
-              </div>
-
-              <div className="hidden flex-shrink-0 lg:block">
-                <SummarySidebar />
-              </div>
-            </div>
-
-            <div className="mt-8 lg:hidden">
               <SummarySidebar />
             </div>
-          </AccordionControllerProvider>
-        </main>
-
-        <div className="fixed bottom-6 left-6 z-40 hidden md:block">
-          <HelpBox className="w-80 max-w-sm shadow-lg" />
+          </aside>
         </div>
+      </main>
 
-        <div className="container mx-auto mt-10 max-w-7xl px-6 md:hidden">
-          <HelpBox className="shadow-sm" fullWidthButton={false} />
+      <footer className="mt-8 laptop:mt-6 border-t border-border bg-card/30 py-6 laptop:py-4">
+        <div className="calc-shell-wrapper text-center text-sm laptop:text-xs text-muted-foreground">
+          <p>{t('footer')}</p>
         </div>
-
-        <footer className="mt-12 border-t border-border bg-card/30 py-6">
-          <div className="container mx-auto max-w-7xl px-6 text-center text-sm text-muted-foreground">
-            <p>{t('footer')}</p>
-          </div>
-        </footer>
-      </div>
+      </footer>
     </div>
   );
 };
