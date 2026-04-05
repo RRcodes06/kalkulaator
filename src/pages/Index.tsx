@@ -10,7 +10,6 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Printer, Settings, Eraser, HelpCircle, Sparkles } from 'lucide-react';
 import { useAppStore } from '@/store/appStore';
-import { AccordionControllerProvider } from '@/hooks/useAccordionController';
 import { useLanguage } from '@/i18n/LanguageContext';
 
 const PRINT_SNAPSHOT_KEY = 'recruitment-calc-print-snapshot';
@@ -87,7 +86,6 @@ const Index = () => {
               <p className="mt-1 max-w-2xl text-sm laptop:text-xs text-muted-foreground">{t('subtitle')}</p>
             </div>
 
-            <AccordionControllerProvider>
               <PrivacyNotice />
               <div className="mt-4 laptop:mt-3 rounded-lg border border-primary/20 bg-primary/5 p-4 laptop:p-3">
                 <div className="flex items-start gap-3 laptop:gap-2">
@@ -112,7 +110,6 @@ const Index = () => {
               <div className="mt-6 laptop:mt-4">
                 <CalculatorForm />
               </div>
-            </AccordionControllerProvider>
           </section>
 
           {/* ── RIGHT COLUMN: actions + results ── */}
