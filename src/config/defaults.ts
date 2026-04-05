@@ -12,8 +12,8 @@ export const CONFIG_VERSION = 'v3';
 
 export const ROLE_DEFAULT_SALARIES = {
   team: 2115,      // Estonian average gross salary
-  hr: 2860,        // Estonian recruiter average gross salary  
-  manager: 3566,   // Estonian HR manager average gross salary
+  hr: 2980,        // Estonian recruiter average gross salary  
+  manager: 3642,   // Estonian HR manager average gross salary
 } as const;
 
 export const ROLE_SALARY_LABELS = {
