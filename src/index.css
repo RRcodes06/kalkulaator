@@ -191,6 +191,15 @@
       padding-block: 1rem;
     }
 
+    .calc-help-sticky {
+      position: fixed;
+      bottom: 1rem;
+      left: 0.75rem;
+      width: 13.5rem;
+      z-index: 40;
+      top: auto;
+    }
+
     /* Compact the results sidebar */
     .calc-right-col .laptop-compact-sidebar {
       width: 100% !important;
