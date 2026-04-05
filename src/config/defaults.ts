@@ -4,7 +4,7 @@ import type { CalculatorConfig, RecommendedRanges } from '@/types/calculator';
 export const ADMIN_PASSWORD = 'CHANGE_ME';
 
 // Config storage version for migrations
-export const CONFIG_VERSION = 'v3';
+export const CONFIG_VERSION = 'v4';
 
 // ============================================================================
 // ROLE-SPECIFIC DEFAULT SALARIES (Estonian averages, gross)

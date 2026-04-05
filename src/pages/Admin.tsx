@@ -599,7 +599,7 @@ function AdminPanel() {
               value={config.INCOME_TAX_RATE}
               onChange={(v) => updateConfig('INCOME_TAX_RATE', v)}
               step={0.01}
-              hint="Praegu 20% (0.20)"
+              hint="Praegu 22% (0.22)"
             />
             <ConfigNumberInput
               label="II sammas"
