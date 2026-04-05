@@ -31,11 +31,11 @@ export const DEFAULT_RECOMMENDED_RANGES: RecommendedRanges = {
   // Strategy & Prep
   'strategyPrep.hrHours': { min: 2, max: 8, unit: 'h' },
   'strategyPrep.managerHours': { min: 1, max: 6, unit: 'h' },
-  'strategyPrep.teamHours': { min: 0, max: 4, unit: 'h' },
+  'strategyPrep.teamHours': { min: 0, max: 2, unit: 'h' },
   
   // Ads & Branding
   'adsBranding.hrHours': { min: 2, max: 8, unit: 'h' },
-  'adsBranding.managerHours': { min: 0, max: 4, unit: 'h' },
+  'adsBranding.managerHours': { min: 0, max: 1, unit: 'h' },
   'adsBranding.teamHours': { min: 0, max: 4, unit: 'h' },
   'adsBranding.directCosts': { min: 100, max: 2000, unit: '€' },
   
