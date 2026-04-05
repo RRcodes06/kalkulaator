@@ -91,7 +91,7 @@ describe('grossHourlyRate', () => {
 describe('normalizeHirePay', () => {
   const config = {
     HOURS_PER_MONTH: 168,
-    EST_AVG_GROSS_WAGE: 2075,
+    EST_AVG_GROSS_WAGE: 2115,
     SOCIAL_TAX_RATE: 0.33,
     EMPLOYER_UI_RATE: 0.008,
   };
@@ -99,7 +99,7 @@ describe('normalizeHirePay', () => {
   it('returns default values for unset pay', () => {
     const result = normalizeHirePay({ payType: 'unset', payAmount: 0 }, config);
     expect(result.isDefault).toBe(true);
-    expect(result.monthlyGross).toBe(2075);
+    expect(result.monthlyGross).toBe(2115);
   });
 
   it('uses provided values when set', () => {
