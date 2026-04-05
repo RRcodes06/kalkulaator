@@ -87,7 +87,6 @@ const Index = () => {
               <p className="mt-1 max-w-2xl text-sm laptop:text-xs text-muted-foreground">{t('subtitle')}</p>
             </div>
 
-            <AccordionControllerProvider>
               <PrivacyNotice />
               <div className="mt-4 laptop:mt-3 rounded-lg border border-primary/20 bg-primary/5 p-4 laptop:p-3">
                 <div className="flex items-start gap-3 laptop:gap-2">
@@ -112,7 +111,6 @@ const Index = () => {
               <div className="mt-6 laptop:mt-4">
                 <CalculatorForm />
               </div>
-            </AccordionControllerProvider>
           </section>
 
           {/* ── RIGHT COLUMN: actions + results ── */}
