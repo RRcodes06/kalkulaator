@@ -10,7 +10,6 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Printer, Settings, Eraser, HelpCircle, Sparkles } from 'lucide-react';
 import { useAppStore } from '@/store/appStore';
-import { AccordionControllerProvider } from '@/hooks/useAccordionController';
 import { useLanguage } from '@/i18n/LanguageContext';
 
 const PRINT_SNAPSHOT_KEY = 'recruitment-calc-print-snapshot';
