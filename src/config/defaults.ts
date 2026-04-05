@@ -11,7 +11,7 @@ export const CONFIG_VERSION = 'v3';
 // ============================================================================
 
 export const ROLE_DEFAULT_SALARIES = {
-  team: 2075,      // Estonian average gross salary
+  team: 2115,      // Estonian average gross salary
   hr: 2860,        // Estonian recruiter average gross salary  
   manager: 3566,   // Estonian HR manager average gross salary
 } as const;
@@ -95,7 +95,7 @@ export const RANGE_LABELS: Record<string, string> = {
 
 export const DEFAULT_CONFIG: CalculatorConfig = {
   HOURS_PER_MONTH: 168,
-  EST_AVG_GROSS_WAGE: 2075,
+  EST_AVG_GROSS_WAGE: 2115,
   
   // Employer taxes (Estonia 2024)
   SOCIAL_TAX_RATE: 0.33,

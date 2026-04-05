@@ -127,7 +127,7 @@ export function normalizeRolePay(
   }
   
   const isDefault = roleInput.payType === 'unset' || roleInput.payAmount <= 0;
-  const defaultSalaries = roleDefaults ?? { team: 2075, hr: 2860, manager: 3566 };
+  const defaultSalaries = roleDefaults ?? { team: 2115, hr: 2860, manager: 3566 };
   
   let effectivePayType: PayType;
   let effectivePayAmount: number;
