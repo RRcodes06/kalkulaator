@@ -103,9 +103,9 @@ export const DEFAULT_CONFIG: CalculatorConfig = {
   
   // Employee taxes (for future net/gross support)
   EMPLOYEE_UI_RATE: 0.016,
-  INCOME_TAX_RATE: 0.20,
+  INCOME_TAX_RATE: 0.22,
   PILLAR_II_RATE: 0.02,
-  TAX_FREE_ALLOWANCE: 654,
+  TAX_FREE_ALLOWANCE: 700,
   
   // Risk parameters
   BAD_HIRE_RISK_RATE: 0.15,
