@@ -172,7 +172,18 @@
     min-width: 0;
   }
 
-  /* Help box sticky inside left column */
+  /* Help box – fixed bottom-left on desktop (>1600px) */
+  @media (min-width: 1601px) {
+    .calc-help-sticky {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 2rem;
+      width: 17rem;
+      z-index: 40;
+    }
+  }
+
+  /* Help box – fallback for non-desktop non-laptop */
   .calc-help-sticky {
     position: sticky;
     top: 1rem;
