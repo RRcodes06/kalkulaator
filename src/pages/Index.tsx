@@ -115,7 +115,7 @@ const Index = () => {
           {/* ── RIGHT COLUMN: actions + results ── */}
           <aside className="calc-right-col">
             <div className="space-y-4 laptop:space-y-3">
-              <div className="flex flex-nowrap items-center justify-end gap-2 laptop:flex-wrap laptop:gap-1">
+              <div className="flex flex-wrap items-center justify-end gap-2 laptop:gap-1">
                 <LanguageToggle />
                 <Button variant="outline" size="sm" onClick={handlePrint} className="gap-1.5 laptop:text-xs laptop:h-7 laptop:px-2">
                   <Printer className="h-4 w-4 laptop:h-3 laptop:w-3" />
