@@ -178,8 +178,12 @@
     top: 1rem;
   }
 
-  /* Help box – fixed bottom-left on large desktop (>1600px) */
+  /* Large desktop overrides (>1600px) */
   @media (min-width: 1601px) {
+    .calc-shell {
+      grid-template-columns: 18rem minmax(0, 1fr) 28rem;
+    }
+
     .calc-help-sticky {
       position: fixed !important;
       bottom: 1.5rem;
@@ -187,6 +191,10 @@
       width: 17rem;
       z-index: 40;
       top: auto;
+    }
+
+    .calc-right-col .flex-wrap {
+      flex-wrap: nowrap !important;
     }
   }
 
