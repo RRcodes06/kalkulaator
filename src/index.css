@@ -195,6 +195,12 @@
 
     .calc-right-col .flex-wrap {
       flex-wrap: nowrap !important;
+      gap: 0.375rem !important;
+    }
+
+    .calc-right-col .flex-wrap button,
+    .calc-right-col .flex-wrap a button {
+      padding-inline: 0.5rem !important;
     }
   }
 
