@@ -247,25 +247,23 @@ function RecommendedRangesTable({
   // Group ranges by section
   const sections = useMemo(() => {
     const groups: Record<string, string[]> = {
-      'Strateegia & ettevalmistus': [],
-      'Kuulutused & bränding': [],
-      'Kandidaatide haldus': [],
+      'Ametiprofiili koostamine, nõuete määramine': [],
+      'Töökuulutused, tööandja brändi materjalid': [],
+      'Kandidaatide haldus ja testid': [],
       'Intervjuud': [],
-      'Taustakontroll': [],
-      'Kaudsed kulud': [],
+      'Taustakontroll ja pakkumine': [],
       'Sisseelamine': [],
-      'Vakants': [],
+      'Täitmata positsiooni mõju': [],
     };
 
     for (const key of Object.keys(DEFAULT_RECOMMENDED_RANGES)) {
-      if (key.startsWith('strategyPrep')) groups['Strateegia & ettevalmistus'].push(key);
-      else if (key.startsWith('adsBranding')) groups['Kuulutused & bränding'].push(key);
-      else if (key.startsWith('candidateMgmt')) groups['Kandidaatide haldus'].push(key);
+      if (key.startsWith('strategyPrep')) groups['Ametiprofiili koostamine, nõuete määramine'].push(key);
+      else if (key.startsWith('adsBranding')) groups['Töökuulutused, tööandja brändi materjalid'].push(key);
+      else if (key.startsWith('candidateMgmt')) groups['Kandidaatide haldus ja testid'].push(key);
       else if (key.startsWith('interviews')) groups['Intervjuud'].push(key);
-      else if (key.startsWith('backgroundOffer')) groups['Taustakontroll'].push(key);
-      else if (key.startsWith('indirectCosts')) groups['Kaudsed kulud'].push(key);
+      else if (key.startsWith('backgroundOffer')) groups['Taustakontroll ja pakkumine'].push(key);
       else if (key.startsWith('onboarding')) groups['Sisseelamine'].push(key);
-      else if (key.startsWith('vacancy')) groups['Vakants'].push(key);
+      else if (key.startsWith('vacantPositionImpact')) groups['Täitmata positsiooni mõju'].push(key);
     }
 
     return groups;
