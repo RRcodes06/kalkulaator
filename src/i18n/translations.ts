@@ -413,8 +413,7 @@ export const translations = {
     sectionOtherServices: 'Recruitment agencies, contractors, consultants',
     sectionPreboarding: 'Workplace preparation, equipment',
     sectionOnboarding: 'Productivity loss during new employee onboarding',
-    sectionVacancy: 'Lost productivity due to unfilled position',
-    sectionIndirect: 'Team overload, manager distraction, priority reshuffling',
+    sectionVacantImpact: 'Vacant position impact or additional coverage cost',
 
     // Field labels
     positionTitle: 'Job title',
@@ -452,12 +451,17 @@ export const translations = {
     extraCosts: 'Additional costs',
     extraCostsHint: 'Training, certifications',
 
-    // Vacancy
-    vacancyDays: 'Vacancy duration',
-    vacancyDaysSuffix: 'days',
-    dailyCost: 'Daily cost',
-    dailyCostSuffix: '€/day',
-    dailyCostHint: 'Lost revenue or productivity per day',
+    // Vacant Position Impact
+    vacantImpactDescription: 'Choose whether work remains partially or fully uncovered, or is covered by the existing team. The same impact is not counted in both.',
+    vacantModeUncovered: 'Work remains partially or fully uncovered',
+    vacantModeTeamCoverage: 'Work is covered by the existing team',
+    vacantPercentageUndone: 'What percentage of work remains undone?',
+    vacantMonthlyPositionValue: 'Estimated monthly position value',
+    vacantAdditionalHours: 'Additional hours per month',
+    vacantAvgHourlyCost: 'Average hourly cost',
+    vacantOvertimeMultiplier: 'Overtime multiplier',
+    vacantLostProductivityCost: 'Lost productivity cost',
+    vacantTeamCoverageCost: 'Additional coverage cost',
 
     // Pay input group
     payTypeLabel: 'Pay type',
@@ -600,10 +604,8 @@ export const translations = {
     sectionInfoPreboardingGuidance: 'Think about what needs to be done before the first day.',
     sectionInfoOnboarding: 'Period when employee productivity is lower as they learn roles and systems.',
     sectionInfoOnboardingGuidance: 'More complex roles require longer onboarding periods.',
-    sectionInfoVacancy: 'Impact when the role is unfilled and work goes undone or is distributed to others.',
-    sectionInfoVacancyGuidance: 'Estimate how much you lose per day with an unfilled position.',
-    sectionInfoIndirect: 'Loss of focus and extra work not reflected in direct costs.',
-    sectionInfoIndirectGuidance: 'Team overload, manager distraction, priority reshuffling.',
+    sectionInfoVacantImpact: 'Impact of a vacant position on business performance.',
+    sectionInfoVacantImpactGuidance: 'Choose whether work remains undone or is covered by the team. Both are not counted at the same time.',
     sectionInfoOther: 'External or internal services used in the recruitment process.',
     sectionInfoOtherGuidance: 'For example: lawyer, IT, recruitment agency, background check provider.',
     sectionInfoRisk: 'Statistical probability that the hire will fail.',
@@ -615,7 +617,7 @@ export const translations = {
     insightCostOnly: 'The cost depends on chosen solutions and service volume.',
     insightTimeCost: 'Includes both time costs and direct costs.',
     insightOnboarding: 'Impact comes from productivity loss during the onboarding period.',
-    insightVacancy: 'An unfilled position directly affects business performance.',
+    insightVacantImpact: 'An unfilled position directly affects business performance.',
     insightRisk: 'This is a risk-weighted estimate of a bad hire cost.',
 
     // Block labels
@@ -627,8 +629,7 @@ export const translations = {
     blockOtherServices: 'Other services',
     blockPreboarding: 'Pre-start preparation',
     blockOnboarding: 'Onboarding',
-    blockVacancy: 'Vacancy cost',
-    blockIndirectCosts: 'Indirect costs',
+    blockVacantImpact: 'Vacant position impact',
     blockExpectedRisk: 'Expected risk cost',
 
     // Chart short labels
@@ -640,8 +641,7 @@ export const translations = {
     chartOtherServices: 'Other services',
     chartPreboarding: 'Pre-start',
     chartOnboarding: 'Onboarding',
-    chartVacancy: 'Vacancy',
-    chartIndirect: 'Indirect',
+    chartVacantImpact: 'Vacant pos.',
     chartRisk: 'Risk',
 
     // Chart
