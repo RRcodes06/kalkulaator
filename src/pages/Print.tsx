@@ -485,9 +485,18 @@ const Print = () => {
           <div className="page-break-inside-avoid bg-gray-50 p-3 rounded col-span-2">
             <h4 className="font-medium mb-2">{t('blockVacantImpact')}</h4>
             {inputs.vacantPositionImpact.mode === 'uncovered' ? (
-              <p>{inputs.vacantPositionImpact.percentageUndone}% × {formatCurrency(inputs.vacantPositionImpact.monthlyPositionValue)}</p>
+              <>
+                <p className="text-xs text-gray-500 mb-1">{t('vacantModeUncovered')}</p>
+                <p>{t('vacantPercentageUndone')}: {inputs.vacantPositionImpact.percentageUndone}%</p>
+                <p>{t('vacantMonthlyPositionValue')}: {formatCurrency(inputs.vacantPositionImpact.monthlyPositionValue)}</p>
+              </>
             ) : (
-              <p>{inputs.vacantPositionImpact.additionalHours}h × {formatCurrency(inputs.vacantPositionImpact.avgHourlyCost)} × {inputs.vacantPositionImpact.overtimeMultiplier}x</p>
+              <>
+                <p className="text-xs text-gray-500 mb-1">{t('vacantModeTeamCoverage')}</p>
+                <p>{t('vacantAdditionalHours')}: {inputs.vacantPositionImpact.additionalHours} h</p>
+                <p>{t('vacantAvgHourlyCost')}: {formatCurrency(inputs.vacantPositionImpact.avgHourlyCost)}</p>
+                <p>{t('vacantOvertimeMultiplier')}: {inputs.vacantPositionImpact.overtimeMultiplier}x</p>
+              </>
             )}
           </div>
         </div>
