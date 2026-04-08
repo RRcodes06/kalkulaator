@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { CalculatorInputs, CalculatorConfig, ComputedResult, ServiceRow } from '@/types/calculator';
-import { DEFAULT_CONFIG, STORAGE_KEYS } from '@/config/defaults';
+import { DEFAULT_CONFIG } from '@/config/defaults';
 import { computeTotals, createDefaultInputs, createServiceRow } from '@/engine/calculationEngine';
 
 // ============================================================================
@@ -40,23 +40,8 @@ interface AppState {
 // PERSISTENCE
 // ============================================================================
 
-const loadConfigFromStorage = (): CalculatorConfig => {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEYS.CONFIG);
-    if (stored) return { ...DEFAULT_CONFIG, ...JSON.parse(stored) };
-  } catch (e) {
-    console.warn('Failed to load config from localStorage:', e);
-  }
-  return DEFAULT_CONFIG;
-};
-
-const saveConfigToStorage = (config: CalculatorConfig): void => {
-  try {
-    localStorage.setItem(STORAGE_KEYS.CONFIG, JSON.stringify(config));
-  } catch (e) {
-    console.warn('Failed to save config to localStorage:', e);
-  }
-};
+// Admin edits are session-only — the config file is always the source of truth.
+// localStorage is no longer read at startup or used to persist config.
 
 // ============================================================================
 // AUTO-FILL HELPERS
@@ -206,7 +191,7 @@ function removeAutoFill(
 let serviceRowCounter = 0;
 
 export const useAppStore = create<AppState>((set, get) => {
-  const initialConfig = loadConfigFromStorage();
+  const initialConfig = DEFAULT_CONFIG;
   const initialInputs = createDefaultInputs();
   const initialResults = computeTotals(initialInputs, initialConfig);
 
@@ -360,16 +345,16 @@ export const useAppStore = create<AppState>((set, get) => {
       });
     },
 
+    // Admin edits are session-only — they affect the running app but are
+    // never persisted to localStorage. Refreshing the page resets to config file defaults.
     updateConfig: (key, value) => {
       set((state) => {
         const newConfig = { ...state.config, [key]: value };
-        saveConfigToStorage(newConfig);
         return { config: newConfig, results: computeTotals(state.inputs, newConfig) };
       });
     },
 
     resetConfig: () => {
-      localStorage.removeItem(STORAGE_KEYS.CONFIG);
       set((state) => ({
         config: DEFAULT_CONFIG,
         results: computeTotals(state.inputs, DEFAULT_CONFIG),

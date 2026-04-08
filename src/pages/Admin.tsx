@@ -2,7 +2,7 @@ import { useState, useRef, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppStore } from '@/store/appStore';
 import { useAdminAuthStore } from '@/store/adminAuthStore';
-import { DEFAULT_CONFIG, STORAGE_KEYS } from '@/config/defaults';
+import { DEFAULT_CONFIG } from '@/config/defaults';
 import { RANGE_LABELS, ranges as DEFAULT_RECOMMENDED_RANGES } from '@/config/calculator-config';
 import type { CalculatorConfig, RecommendedRanges, RecommendedRange } from '@/types/calculator';
 import { Button } from '@/components/ui/button';
@@ -747,10 +747,10 @@ function AdminPanel() {
 
         <div className="flex justify-between items-center pt-4 border-t">
           <p className="text-sm text-muted-foreground">
-            Muudatused salvestatakse automaatselt brauseri mällu
+            ⚠️ Muudatused kehtivad ainult selles sessioonis. Lehe värskendamisel taastatakse konfiguratsioonifaili vaikeväärtused.
           </p>
           <p className="text-xs text-muted-foreground">
-            Salvestusvõti: {STORAGE_KEYS.CONFIG}
+            Allikas: calculator-config.ts
           </p>
         </div>
       </main>
