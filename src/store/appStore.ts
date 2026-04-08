@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { CalculatorInputs, CalculatorConfig, ComputedResult, ServiceRow } from '@/types/calculator';
-import { DEFAULT_CONFIG, STORAGE_KEYS } from '@/config/defaults';
+import { DEFAULT_CONFIG } from '@/config/defaults';
 import { computeTotals, createDefaultInputs, createServiceRow } from '@/engine/calculationEngine';
 
 // ============================================================================
