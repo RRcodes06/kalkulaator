@@ -8,7 +8,7 @@ import { LanguageToggle } from '@/components/calculator/LanguageToggle';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Printer, Settings, Eraser, HelpCircle, Sparkles } from 'lucide-react';
+import { Printer, Eraser, HelpCircle, Sparkles } from 'lucide-react';
 import { useAppStore } from '@/store/appStore';
 import { useLanguage } from '@/i18n/LanguageContext';
 
