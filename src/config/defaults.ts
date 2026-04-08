@@ -4,7 +4,7 @@ import type { CalculatorConfig, RecommendedRanges } from '@/types/calculator';
 export const ADMIN_PASSWORD = 'CHANGE_ME';
 
 // Config storage version for migrations
-export const CONFIG_VERSION = 'v4';
+export const CONFIG_VERSION = 'v5';
 
 // ============================================================================
 // ROLE-SPECIFIC DEFAULT SALARIES (Estonian averages, gross)
@@ -111,8 +111,14 @@ export const DEFAULT_CONFIG: CalculatorConfig = {
   BAD_HIRE_RISK_RATE: 0.15,
   BAD_HIRE_PAY_MONTHS: 2,
   
+  // Role-specific default salaries
+  roleDefaultSalaries: ROLE_DEFAULT_SALARIES,
+  
   // Recommended ranges - single source of truth
   recommendedRanges: DEFAULT_RECOMMENDED_RANGES,
+  
+  // URLs
+  helpUrl: 'https://www.manpower.ee/et/vaerbamisteenused',
   
   // Text snippets
   disclaimerText: 'See kalkulaator annab ligikaudse hinnangu värbamisprotsessi kogukulule. Tegelikud kulud võivad varieeruda sõltuvalt konkreetsetest asjaoludest.',

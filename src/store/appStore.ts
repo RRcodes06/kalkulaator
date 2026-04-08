@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { CalculatorInputs, CalculatorConfig, ComputedResult, ServiceRow } from '@/types/calculator';
-import { DEFAULT_CONFIG, STORAGE_KEYS, ROLE_DEFAULT_SALARIES } from '@/config/defaults';
+import { DEFAULT_CONFIG, STORAGE_KEYS } from '@/config/defaults';
 import { computeTotals, createDefaultInputs, createServiceRow } from '@/engine/calculationEngine';
 
 // ============================================================================
@@ -75,10 +75,10 @@ function buildAutoFillValues(config: CalculatorConfig): Record<string, number> {
     const mid = (range.min + range.max) / 2;
     vals[key] = roundByUnit(mid, range.unit);
   }
-  vals['roles.hr.payAmount'] = ROLE_DEFAULT_SALARIES.hr;
-  vals['roles.manager.payAmount'] = ROLE_DEFAULT_SALARIES.manager;
-  vals['roles.team.payAmount'] = ROLE_DEFAULT_SALARIES.team;
-  vals['hirePay.payAmount'] = ROLE_DEFAULT_SALARIES.team;
+  vals['roles.hr.payAmount'] = config.roleDefaultSalaries.hr;
+  vals['roles.manager.payAmount'] = config.roleDefaultSalaries.manager;
+  vals['roles.team.payAmount'] = config.roleDefaultSalaries.team;
+  vals['hirePay.payAmount'] = config.roleDefaultSalaries.team;
   return vals;
 }
 

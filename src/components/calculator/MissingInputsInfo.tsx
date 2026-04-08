@@ -1,6 +1,6 @@
 import { Info } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ROLE_DEFAULT_SALARIES } from '@/config/defaults';
+import { useAppStore } from '@/store/appStore';
 import { useLanguage } from '@/i18n/LanguageContext';
 
 export interface MissingInputInfo {
@@ -15,14 +15,14 @@ interface MissingInputsInfoProps {
 
 export function MissingInputsInfo({ missingInputs }: MissingInputsInfoProps) {
   const { t } = useLanguage();
-
+  const salaries = useAppStore((s) => s.config.roleDefaultSalaries);
   if (missingInputs.length === 0) return null;
 
   const TYPICAL_GUIDANCE: Record<string, string> = {
-    [t('fieldHirePay')]: t('guidanceHirePay', { min: ROLE_DEFAULT_SALARIES.team.toLocaleString('et-EE') }),
-    [t('fieldHrPay')]: t('guidanceHrPay', { amount: ROLE_DEFAULT_SALARIES.hr.toLocaleString('et-EE') }),
-    [t('fieldManagerPay')]: t('guidanceManagerPay', { amount: ROLE_DEFAULT_SALARIES.manager.toLocaleString('et-EE') }),
-    [t('fieldTeamPay')]: t('guidanceTeamPay', { amount: ROLE_DEFAULT_SALARIES.team.toLocaleString('et-EE') }),
+    [t('fieldHirePay')]: t('guidanceHirePay', { min: salaries.team.toLocaleString('et-EE') }),
+    [t('fieldHrPay')]: t('guidanceHrPay', { amount: salaries.hr.toLocaleString('et-EE') }),
+    [t('fieldManagerPay')]: t('guidanceManagerPay', { amount: salaries.manager.toLocaleString('et-EE') }),
+    [t('fieldTeamPay')]: t('guidanceTeamPay', { amount: salaries.team.toLocaleString('et-EE') }),
     [t('hrHours')]: t('guidanceHrHours'),
     [t('managerHours')]: t('guidanceManagerHours'),
     [t('teamHours')]: t('guidanceTeamHours'),

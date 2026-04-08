@@ -127,7 +127,7 @@ export function normalizeRolePay(
   }
   
   const isDefault = roleInput.payType === 'unset' || roleInput.payAmount <= 0;
-  const defaultSalaries = roleDefaults ?? { team: 2115, hr: 2980, manager: 3642 };
+  const defaultSalaries = roleDefaults ?? { team: 2115, hr: 2980, manager: 3642 }; // fallback only if no roleDefaults passed
   
   let effectivePayType: PayType;
   let effectivePayAmount: number;
@@ -262,10 +262,11 @@ export function computeTotals(
   config: CalculatorConfig
 ): ComputedResult {
   const normalizedHirePay = normalizeHirePay(inputs.hirePay, config);
+  const roleDefaults = config.roleDefaultSalaries ?? { team: config.EST_AVG_GROSS_WAGE, hr: config.EST_AVG_GROSS_WAGE, manager: config.EST_AVG_GROSS_WAGE };
   const normalizedRoles = {
-    hr: normalizeRolePay(inputs.roles.hr, 'hr', config),
-    manager: normalizeRolePay(inputs.roles.manager, 'manager', config),
-    team: normalizeRolePay(inputs.roles.team, 'team', config),
+    hr: normalizeRolePay(inputs.roles.hr, 'hr', config, roleDefaults),
+    manager: normalizeRolePay(inputs.roles.manager, 'manager', config, roleDefaults),
+    team: normalizeRolePay(inputs.roles.team, 'team', config, roleDefaults),
   };
   
   const { totalServicesCost, repeatedServicesCost } = computeServicesCost(inputs.otherServices, config);

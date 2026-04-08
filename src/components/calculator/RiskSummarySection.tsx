@@ -178,7 +178,7 @@ export function RiskSummarySection() {
                     {t('contactUs')}
                   </p>
                   <a
-                    href="https://www.manpower.ee/et/vaerbamisteenused"
+                    href={config.helpUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     referrerPolicy="no-referrer"

@@ -160,6 +160,12 @@ export interface RecommendedRange {
 
 export type RecommendedRanges = Record<string, RecommendedRange>;
 
+export interface RoleDefaultSalaries {
+  team: number;
+  hr: number;
+  manager: number;
+}
+
 export interface CalculatorConfig {
   HOURS_PER_MONTH: number;
   EST_AVG_GROSS_WAGE: number;
@@ -178,8 +184,14 @@ export interface CalculatorConfig {
   BAD_HIRE_RISK_RATE: number;
   BAD_HIRE_PAY_MONTHS: number;
   
+  // Role-specific default salaries
+  roleDefaultSalaries: RoleDefaultSalaries;
+  
   // Recommended ranges - single source of truth for benchmarkable fields
   recommendedRanges: RecommendedRanges;
+  
+  // URLs
+  helpUrl: string;
   
   // Text snippets
   disclaimerText: string;

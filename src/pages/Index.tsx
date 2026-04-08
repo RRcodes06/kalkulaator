@@ -37,6 +37,7 @@ const Index = () => {
         BAD_HIRE_PAY_MONTHS: config.BAD_HIRE_PAY_MONTHS,
         HOURS_PER_MONTH: config.HOURS_PER_MONTH,
         EST_AVG_GROSS_WAGE: config.EST_AVG_GROSS_WAGE,
+        helpUrl: config.helpUrl,
       },
       language,
       generatedAt: new Date().toISOString(),
@@ -65,7 +66,7 @@ const Index = () => {
                     <h4 className="text-base laptop:text-sm font-semibold text-foreground">{t('helpTitle')}</h4>
                     <p className="text-sm laptop:text-xs leading-relaxed text-muted-foreground">{t('helpText')}</p>
                     <a
-                      href="https://www.manpower.ee/et/vaerbamisteenused"
+                      href={config.helpUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                     >

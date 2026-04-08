@@ -21,6 +21,7 @@ interface PrintConfig {
   BAD_HIRE_PAY_MONTHS: number;
   HOURS_PER_MONTH: number;
   EST_AVG_GROSS_WAGE: number;
+  helpUrl: string;
 }
 
 interface PrintSnapshot {
@@ -588,7 +589,7 @@ const Print = () => {
           <h2 className="text-xl font-semibold mb-3">{t('configFinalQuestion')}</h2>
           <p className="text-gray-600 mb-4">{t('configCtaPlaceholder')}</p>
           <a
-            href="https://www.manpower.ee/et/vaerbamisteenused"
+            href={config.helpUrl || 'https://www.manpower.ee/et/vaerbamisteenused'}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block px-6 py-2 bg-primary text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
