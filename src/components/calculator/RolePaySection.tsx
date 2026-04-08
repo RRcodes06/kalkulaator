@@ -3,12 +3,12 @@ import { CalculatorSection } from './CalculatorSection';
 import { PayInputGroup } from './PayInputGroup';
 import { Label } from '@/components/ui/label';
 import { Users } from 'lucide-react';
-import { ROLE_DEFAULT_SALARIES } from '@/config/defaults';
 import { useLanguage } from '@/i18n/LanguageContext';
 
 export function RolePaySection() {
-  const { inputs, results, updateInput } = useAppStore();
+  const { inputs, results, config, updateInput } = useAppStore();
   const { t } = useLanguage();
+  const salaries = config.roleDefaultSalaries;
 
   const updateRole = (
     role: 'hr' | 'manager' | 'team',
@@ -46,7 +46,7 @@ export function RolePaySection() {
           }
           normalizedPay={results.normalizedRoles.hr}
           isDefaultUsed={results.defaultsUsed.hrPay}
-          defaultSalaryHint={`${t('roleSalaryLabelHr')}: ${ROLE_DEFAULT_SALARIES.hr} €`}
+          defaultSalaryHint={`${t('roleSalaryLabelHr')}: ${salaries.hr} €`}
           compact
         />
       </div>
@@ -70,7 +70,7 @@ export function RolePaySection() {
           }
           normalizedPay={results.normalizedRoles.manager}
           isDefaultUsed={results.defaultsUsed.managerPay}
-          defaultSalaryHint={`${t('roleSalaryLabelManager')}: ${ROLE_DEFAULT_SALARIES.manager} €`}
+          defaultSalaryHint={`${t('roleSalaryLabelManager')}: ${salaries.manager} €`}
           compact
         />
       </div>
@@ -97,7 +97,7 @@ export function RolePaySection() {
           }
           normalizedPay={results.normalizedRoles.team}
           isDefaultUsed={results.defaultsUsed.teamPay}
-          defaultSalaryHint={`${t('roleSalaryLabelTeam')}: ${ROLE_DEFAULT_SALARIES.team} €`}
+          defaultSalaryHint={`${t('roleSalaryLabelTeam')}: ${salaries.team} €`}
           compact
         />
       </div>

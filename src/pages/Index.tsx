@@ -65,7 +65,7 @@ const Index = () => {
                     <h4 className="text-base laptop:text-sm font-semibold text-foreground">{t('helpTitle')}</h4>
                     <p className="text-sm laptop:text-xs leading-relaxed text-muted-foreground">{t('helpText')}</p>
                     <a
-                      href="https://www.manpower.ee/et/vaerbamisteenused"
+                      href={config.helpUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
