@@ -554,6 +554,34 @@ function AdminPanel() {
           </CardContent>
         </Card>
 
+        {/* Role Default Salaries */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Rollide vaikepalgad</CardTitle>
+            <CardDescription>Eesti keskmised brutopalgad rollide kaupa</CardDescription>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <ConfigNumberInput
+              label="Tiimiliige (€)"
+              value={config.roleDefaultSalaries?.team ?? 2115}
+              onChange={(v) => updateConfig('roleDefaultSalaries', { ...config.roleDefaultSalaries, team: v })}
+              hint="Eesti keskmine brutopalk"
+            />
+            <ConfigNumberInput
+              label="Värbamisspetsialist (€)"
+              value={config.roleDefaultSalaries?.hr ?? 2980}
+              onChange={(v) => updateConfig('roleDefaultSalaries', { ...config.roleDefaultSalaries, hr: v })}
+              hint="Värbamisspetsialisti keskmine brutopalk"
+            />
+            <ConfigNumberInput
+              label="Personalijuht (€)"
+              value={config.roleDefaultSalaries?.manager ?? 3642}
+              onChange={(v) => updateConfig('roleDefaultSalaries', { ...config.roleDefaultSalaries, manager: v })}
+              hint="Personalijuhi keskmine brutopalk"
+            />
+          </CardContent>
+        </Card>
+
         {/* Employer Tax Rates */}
         <Card>
           <CardHeader>
@@ -706,6 +734,12 @@ function AdminPanel() {
               value={config.privacyNotice}
               onChange={(v) => updateConfig('privacyNotice', v)}
               rows={2}
+            />
+            <ConfigTextInput
+              label="Abi-nupu link (URL)"
+              value={config.helpUrl}
+              onChange={(v) => updateConfig('helpUrl', v)}
+              rows={1}
             />
           </CardContent>
         </Card>
