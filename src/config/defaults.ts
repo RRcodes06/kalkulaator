@@ -1,4 +1,9 @@
+/**
+ * defaults.ts — Re-exports from the centralized calculator-config
+ * and defines app-level constants (admin password, storage keys, labels).
+ */
 import type { CalculatorConfig, RecommendedRanges } from '@/types/calculator';
+import { CALCULATOR_CONFIG, roleSalaries, ranges } from '@/config/calculator-config';
 
 // Admin password - change this in production
 export const ADMIN_PASSWORD = 'CHANGE_ME';
@@ -6,66 +11,16 @@ export const ADMIN_PASSWORD = 'CHANGE_ME';
 // Config storage version for migrations
 export const CONFIG_VERSION = 'v5';
 
-// ============================================================================
-// ROLE-SPECIFIC DEFAULT SALARIES (Estonian averages, gross)
-// ============================================================================
-
-export const ROLE_DEFAULT_SALARIES = {
-  team: 2115,      // Estonian average gross salary
-  hr: 2980,        // Estonian recruiter average gross salary  
-  manager: 3642,   // Estonian HR manager average gross salary
-} as const;
+// Re-export for backward compatibility
+export const ROLE_DEFAULT_SALARIES = roleSalaries;
+export const DEFAULT_RECOMMENDED_RANGES: RecommendedRanges = ranges;
+export const DEFAULT_CONFIG: CalculatorConfig = CALCULATOR_CONFIG;
 
 export const ROLE_SALARY_LABELS = {
   team: 'Eesti Statistikaameti andmetel keskmine brutopalk',
   hr: 'Eesti Statistikaameti andmetel värbamisspetsialisti keskmine brutopalk',
   manager: 'Eesti Statistikaameti andmetel personalijuhi keskmine brutopalk',
 } as const;
-
-// ============================================================================
-// DEFAULT RECOMMENDED RANGES
-// Keys map to input fields; labels shown in Admin UI
-// ============================================================================
-
-export const DEFAULT_RECOMMENDED_RANGES: RecommendedRanges = {
-  // Strategy & Prep
-  'strategyPrep.hrHours': { min: 2, max: 8, unit: 'h' },
-  'strategyPrep.managerHours': { min: 1, max: 6, unit: 'h' },
-  'strategyPrep.teamHours': { min: 0, max: 2, unit: 'h' },
-  
-  // Ads & Branding
-  'adsBranding.hrHours': { min: 2, max: 8, unit: 'h' },
-  'adsBranding.managerHours': { min: 0, max: 1, unit: 'h' },
-  'adsBranding.teamHours': { min: 0, max: 4, unit: 'h' },
-  'adsBranding.directCosts': { min: 100, max: 2000, unit: '€' },
-  
-  // Candidate Management
-  'candidateMgmt.hrHours': { min: 4, max: 25, unit: 'h' },
-  'candidateMgmt.managerHours': { min: 1, max: 10, unit: 'h' },
-  
-  // Interviews
-  'interviews.hrHours': { min: 3, max: 15, unit: 'h' },
-  'interviews.managerHours': { min: 3, max: 20, unit: 'h' },
-  'interviews.teamHours': { min: 0, max: 12, unit: 'h' },
-  'interviews.directCosts': { min: 0, max: 500, unit: '€' },
-  
-  // Background & Offer
-  'backgroundOffer.hrHours': { min: 1, max: 6, unit: 'h' },
-  'backgroundOffer.managerHours': { min: 0, max: 4, unit: 'h' },
-  
-  // Onboarding
-  'onboarding.onboardingMonths': { min: 1, max: 12, unit: 'months' },
-  'onboarding.productivityPct': { min: 20, max: 80, unit: '%' },
-  
-  // Vacant Position Impact - Mode A (uncovered)
-  'vacantPositionImpact.percentageUndone': { min: 20, max: 80, unit: '%' },
-  'vacantPositionImpact.monthlyPositionValue': { min: 2000, max: 8000, unit: '€' },
-  
-  // Vacant Position Impact - Mode B (team coverage)
-  'vacantPositionImpact.additionalHours': { min: 10, max: 60, unit: 'h' },
-  'vacantPositionImpact.avgHourlyCost': { min: 10, max: 35, unit: '€' },
-  'vacantPositionImpact.overtimeMultiplier': { min: 1, max: 2, unit: 'x' },
-};
 
 // Labels for recommended ranges (shown in Admin UI)
 export const RANGE_LABELS: Record<string, string> = {
@@ -91,44 +46,6 @@ export const RANGE_LABELS: Record<string, string> = {
   'vacantPositionImpact.additionalHours': 'Lisatunnid kuus',
   'vacantPositionImpact.avgHourlyCost': 'Keskmine tunnikulu',
   'vacantPositionImpact.overtimeMultiplier': 'Ületunni koefitsient',
-};
-
-export const DEFAULT_CONFIG: CalculatorConfig = {
-  HOURS_PER_MONTH: 168,
-  EST_AVG_GROSS_WAGE: 2115,
-  
-  // Employer taxes (Estonia 2024)
-  SOCIAL_TAX_RATE: 0.33,
-  EMPLOYER_UI_RATE: 0.008,
-  
-  // Employee taxes (for future net/gross support)
-  EMPLOYEE_UI_RATE: 0.016,
-  INCOME_TAX_RATE: 0.22,
-  PILLAR_II_RATE: 0.02,
-  TAX_FREE_ALLOWANCE: 700,
-  
-  // Risk parameters
-  BAD_HIRE_RISK_RATE: 0.15,
-  BAD_HIRE_PAY_MONTHS: 2,
-  
-  // Role-specific default salaries
-  roleDefaultSalaries: ROLE_DEFAULT_SALARIES,
-  
-  // Recommended ranges - single source of truth
-  recommendedRanges: DEFAULT_RECOMMENDED_RANGES,
-  
-  // URLs
-  helpUrl: 'https://www.manpower.ee/et/vaerbamisteenused',
-  
-  // Text snippets
-  disclaimerText: 'See kalkulaator annab ligikaudse hinnangu värbamisprotsessi kogukulule. Tegelikud kulud võivad varieeruda sõltuvalt konkreetsetest asjaoludest.',
-  riskExplanationText: 'Halva värbamisotsuse risk arvestab statistilist tõenäosust, et töötaja lahkub katseajal või osutub sobimatuks. Keskmine risk on 15% ning kulud hõlmavad kahe kuu palgakulusid.',
-  indirectExplanationText: 'Kaudsed kulud hõlmavad aega, mille kolleegid pühendavad uue töötaja abistamisele, koosolekutele ja muudele tegevustele, mis ei ole otseselt värbamisprotsess.',
-  finalQuestionText: 'Kas see number üllatas sind?',
-  ctaPlaceholderText: 'Võta meiega ühendust, et arutada, kuidas värbamiskulusid optimeerida.',
-  resetConfirmText: 'Kas oled kindel, et soovid kõik andmed lähtestada?',
-  defaultUsedText: 'Kasutasime vaikeväärtust',
-  privacyNotice: 'Sisestatud infot ei salvestata. Lehelt lahkudes kõik kustub.',
 };
 
 export const STORAGE_KEYS = {
