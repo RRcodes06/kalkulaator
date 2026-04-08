@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+
 import manpowerLogo from '@/assets/manpower-logo.png';
 import { CalculatorForm } from '@/components/calculator/CalculatorForm';
 import { SummarySidebar } from '@/components/calculator/SummarySidebar';
@@ -8,7 +8,7 @@ import { LanguageToggle } from '@/components/calculator/LanguageToggle';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Printer, Settings, Eraser, HelpCircle, Sparkles } from 'lucide-react';
+import { Printer, Eraser, HelpCircle, Sparkles } from 'lucide-react';
 import { useAppStore } from '@/store/appStore';
 import { useLanguage } from '@/i18n/LanguageContext';
 
@@ -123,12 +123,6 @@ const Index = () => {
                   {t('printReport')}
                 </Button>
                 <ResetModal />
-                <Link to="/admin">
-                  <Button variant="ghost" size="sm" className="gap-1.5 laptop:text-xs laptop:h-7 laptop:px-2">
-                    <Settings className="h-4 w-4 laptop:h-3 laptop:w-3" />
-                    {t('admin')}
-                  </Button>
-                </Link>
               </div>
               <SummarySidebar />
             </div>
