@@ -1,9 +1,10 @@
 /**
  * App-level constants (admin password, storage keys).
  * Calculator config lives in calculator-config.ts.
+ * Access config via config-loader.ts (getCalculatorConfig / loadCalculatorConfig).
  */
 import type { CalculatorConfig } from '@/types/calculator';
-import { CALCULATOR_CONFIG } from '@/config/calculator-config';
+import { getCalculatorConfig } from '@/config/config-loader';
 
 // Admin password — change this in production
 export const ADMIN_PASSWORD = 'CHANGE_ME';
@@ -15,5 +16,5 @@ export const STORAGE_KEYS = {
   CONFIG: `recruitment-calc-config-${CONFIG_VERSION}`,
 } as const;
 
-// Re-export for convenience
-export const DEFAULT_CONFIG: CalculatorConfig = CALCULATOR_CONFIG;
+// Re-export for convenience (uses the access layer)
+export const DEFAULT_CONFIG: CalculatorConfig = getCalculatorConfig();
