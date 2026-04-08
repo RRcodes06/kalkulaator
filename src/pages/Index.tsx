@@ -37,6 +37,7 @@ const Index = () => {
         BAD_HIRE_PAY_MONTHS: config.BAD_HIRE_PAY_MONTHS,
         HOURS_PER_MONTH: config.HOURS_PER_MONTH,
         EST_AVG_GROSS_WAGE: config.EST_AVG_GROSS_WAGE,
+        helpUrl: config.helpUrl,
       },
       language,
       generatedAt: new Date().toISOString(),
