@@ -3,6 +3,7 @@ import { NumberInput } from './NumberInput';
 import { Label } from '@/components/ui/label';
 import type { PayType, PayInput, NormalizedPay } from '@/types/calculator';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { useAppStore } from '@/store/appStore';
 
 interface PayInputGroupProps {
   label: string;
@@ -26,6 +27,7 @@ export function PayInputGroup({
   defaultSalaryHint,
 }: PayInputGroupProps) {
   const { t } = useLanguage();
+  const defaultHours = useAppStore((s) => s.config.HOURS_PER_MONTH);
 
   const formatCurrency = (val: number) => {
     return new Intl.NumberFormat('et-EE', {
@@ -38,7 +40,7 @@ export function PayInputGroup({
     onChange({
       ...value,
       payType,
-      hoursPerMonth: payType === 'hourly' ? (value.hoursPerMonth ?? 168) : undefined,
+      hoursPerMonth: payType === 'hourly' ? (value.hoursPerMonth ?? defaultHours) : undefined,
     });
   };
 
@@ -89,7 +91,7 @@ export function PayInputGroup({
         {value.payType === 'hourly' && (
           <NumberInput
             label={t('hoursPerMonth')}
-            value={value.hoursPerMonth ?? 168}
+            value={value.hoursPerMonth ?? defaultHours}
             onChange={handleHoursChange}
             suffix={t('hoursPerMonthSuffix')}
             min={1}
@@ -130,7 +132,7 @@ export function PayInputGroup({
       {value.payType === 'hourly' && (
         <NumberInput
           label={t('hoursPerMonth')}
-          value={value.hoursPerMonth ?? 168}
+          value={value.hoursPerMonth ?? defaultHours}
           onChange={handleHoursChange}
           suffix={t('hoursPerMonthSuffix')}
           min={1}
