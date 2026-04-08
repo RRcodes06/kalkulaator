@@ -8,7 +8,7 @@
  * call `useAppStore.getState().resetConfig()` with the fetched data).
  *
  * Groups:
- *   general      – working hours, base salary
+ *   general       – working hours, base salary
  *   roleSalaries  – role-specific default gross salaries
  *   employerTax   – employer-side tax rates
  *   employeeTax   – employee-side tax rates & allowances
@@ -16,6 +16,7 @@
  *   ranges        – recommended min/max for each calculator field
  *   urls          – external links (help, CTA)
  *   texts         – all UI copy that admins may change
+ *   labels        – UI labels for blocks & range fields (admin panel)
  */
 
 import type { CalculatorConfig, RecommendedRanges } from '@/types/calculator';
@@ -55,33 +56,25 @@ const risk = {
 
 // ── Recommended ranges ──────────────────────────────────────────────────────
 const ranges: RecommendedRanges = {
-  // Strategy & Prep
   'strategyPrep.hrHours':       { min: 2,  max: 8,   unit: 'h' },
   'strategyPrep.managerHours':  { min: 1,  max: 6,   unit: 'h' },
   'strategyPrep.teamHours':     { min: 0,  max: 2,   unit: 'h' },
-  // Ads & Branding
   'adsBranding.hrHours':        { min: 2,  max: 8,   unit: 'h' },
   'adsBranding.managerHours':   { min: 0,  max: 1,   unit: 'h' },
   'adsBranding.teamHours':      { min: 0,  max: 4,   unit: 'h' },
   'adsBranding.directCosts':    { min: 100, max: 2000, unit: '€' },
-  // Candidate Management
   'candidateMgmt.hrHours':      { min: 4,  max: 25,  unit: 'h' },
   'candidateMgmt.managerHours': { min: 1,  max: 10,  unit: 'h' },
-  // Interviews
   'interviews.hrHours':         { min: 3,  max: 15,  unit: 'h' },
   'interviews.managerHours':    { min: 3,  max: 20,  unit: 'h' },
   'interviews.teamHours':       { min: 0,  max: 12,  unit: 'h' },
   'interviews.directCosts':     { min: 0,  max: 500,  unit: '€' },
-  // Background & Offer
   'backgroundOffer.hrHours':    { min: 1,  max: 6,   unit: 'h' },
   'backgroundOffer.managerHours': { min: 0, max: 4,   unit: 'h' },
-  // Onboarding
   'onboarding.onboardingMonths':  { min: 1,  max: 12, unit: 'months' },
   'onboarding.productivityPct':   { min: 20, max: 80, unit: '%' },
-  // Vacant Position Impact – uncovered
   'vacantPositionImpact.percentageUndone':     { min: 20,  max: 80,   unit: '%' },
   'vacantPositionImpact.monthlyPositionValue':  { min: 2000, max: 8000, unit: '€' },
-  // Vacant Position Impact – team coverage
   'vacantPositionImpact.additionalHours':   { min: 10, max: 60, unit: 'h' },
   'vacantPositionImpact.avgHourlyCost':     { min: 10, max: 35, unit: '€' },
   'vacantPositionImpact.overtimeMultiplier': { min: 1,  max: 2,  unit: 'x' },
@@ -111,6 +104,48 @@ const texts = {
   privacyNotice:
     'Sisestatud infot ei salvestata. Lehelt lahkudes kõik kustub.',
 } as const;
+
+// ── Labels (admin panel & engine) ───────────────────────────────────────────
+
+/** Human-readable names for each cost block (used in results & admin) */
+export const BLOCK_LABELS: Record<string, string> = {
+  strategyPrep:   'Strateegia ja ettevalmistus',
+  adsBranding:    'Kuulutused ja bränding',
+  candidateMgmt:  'Kandidaatide haldus ja testid',
+  interviews:     'Intervjuud',
+  backgroundOffer:'Taustakontroll ja pakkumine',
+  otherServices:  'Muud teenused',
+  preboarding:    'Ettevalmistus enne alustamist',
+  onboarding:     'Sisseelamine',
+  vacantImpact:   'Täitmata positsiooni mõju',
+  expectedRisk:   'Oodatav riskikulu',
+};
+
+/** Field labels inside each range group (shown in admin ranges table) */
+export const RANGE_LABELS: Record<string, string> = {
+  'strategyPrep.hrHours':       'HR tunnid',
+  'strategyPrep.managerHours':  'Juhi tunnid',
+  'strategyPrep.teamHours':     'Tiimi tunnid',
+  'adsBranding.hrHours':        'HR tunnid',
+  'adsBranding.managerHours':   'Juhi tunnid',
+  'adsBranding.teamHours':      'Tiimi tunnid',
+  'adsBranding.directCosts':    'Otsesed kulud',
+  'candidateMgmt.hrHours':      'HR tunnid',
+  'candidateMgmt.managerHours': 'Juhi tunnid',
+  'interviews.hrHours':         'HR tunnid',
+  'interviews.managerHours':    'Juhi tunnid',
+  'interviews.teamHours':       'Tiimi tunnid',
+  'interviews.directCosts':     'Otsesed kulud',
+  'backgroundOffer.hrHours':    'HR tunnid',
+  'backgroundOffer.managerHours':'Juhi tunnid',
+  'onboarding.onboardingMonths':'Sisseelamisperiood (kuud)',
+  'onboarding.productivityPct': 'Keskmine tootlikkus (%)',
+  'vacantPositionImpact.percentageUndone':    'Täitmata töö osakaal',
+  'vacantPositionImpact.monthlyPositionValue': 'Positsiooni kuine väärtus',
+  'vacantPositionImpact.additionalHours':     'Lisatunnid kuus',
+  'vacantPositionImpact.avgHourlyCost':       'Keskmine tunnikulu',
+  'vacantPositionImpact.overtimeMultiplier':  'Ületunni koefitsient',
+};
 
 // ============================================================================
 // Assembled CalculatorConfig — used as the single DEFAULT_CONFIG everywhere
