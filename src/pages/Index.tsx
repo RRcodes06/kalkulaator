@@ -123,12 +123,6 @@ const Index = () => {
                   {t('printReport')}
                 </Button>
                 <ResetModal />
-                <Link to="/admin">
-                  <Button variant="ghost" size="sm" className="gap-1.5 laptop:text-xs laptop:h-7 laptop:px-2">
-                    <Settings className="h-4 w-4 laptop:h-3 laptop:w-3" />
-                    {t('admin')}
-                  </Button>
-                </Link>
               </div>
               <SummarySidebar />
             </div>
