@@ -31,7 +31,7 @@ import type {
   ComputedResult,
   EmptyFieldInfo,
 } from '@/types/calculator';
-import { BLOCK_LABELS } from '@/config/defaults';
+import { BLOCK_LABELS } from '@/config/calculator-config';
 
 // ============================================================================
 // CORE PAY CALCULATION FUNCTIONS
