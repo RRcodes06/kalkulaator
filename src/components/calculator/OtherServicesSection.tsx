@@ -81,6 +81,7 @@ interface ServiceRowCardProps {
 
 function ServiceRowCard({ row, onUpdate, onRemove }: ServiceRowCardProps) {
   const { t } = useLanguage();
+  const defaultHours = useAppStore((s) => s.config.HOURS_PER_MONTH);
   const isInhouse = row.details.serviceType === 'inhouse';
 
   const handleServiceTypeChange = (type: ServiceType) => {
@@ -90,7 +91,7 @@ function ServiceRowCard({ row, onUpdate, onRemove }: ServiceRowCardProps) {
           serviceType: 'inhouse',
           payType: 'monthly',
           payAmount: 0,
-          hoursPerMonth: 168,
+          hoursPerMonth: defaultHours,
         },
       });
     } else {
@@ -154,7 +155,7 @@ function ServiceRowCard({ row, onUpdate, onRemove }: ServiceRowCardProps) {
                     details: {
                       ...row.details,
                       payType: v as PayType,
-                      hoursPerMonth: v === 'hourly' ? 168 : undefined,
+                      hoursPerMonth: v === 'hourly' ? defaultHours : undefined,
                     } as ServiceDetails,
                   })
                 }
@@ -185,7 +186,7 @@ function ServiceRowCard({ row, onUpdate, onRemove }: ServiceRowCardProps) {
             {row.details.payType === 'hourly' && (
               <NumberInput
                 label={t('hoursPerMonth')}
-                value={row.details.hoursPerMonth ?? 168}
+                value={row.details.hoursPerMonth ?? defaultHours}
                 onChange={(v) =>
                   onUpdate({
                     details: { ...row.details, hoursPerMonth: v } as ServiceDetails,
