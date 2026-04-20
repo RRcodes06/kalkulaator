@@ -429,10 +429,6 @@ function AdminPanel() {
                 <p className="text-sm text-muted-foreground">Kalkulaatori vaikeväärtused ja tekstid</p>
               </div>
             </div>
-            <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-2">
-              <LogOut className="w-4 h-4" />
-              Logi välja
-            </Button>
           </div>
         </div>
       </header>
