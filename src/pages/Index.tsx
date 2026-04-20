@@ -1,5 +1,5 @@
 
-import manpowerLogo from '@/assets/manpower-logo.png';
+import manpowerLogo from '@/assets/manpower-logo.svg';
 import { CalculatorForm } from '@/components/calculator/CalculatorForm';
 import { SummarySidebar } from '@/components/calculator/SummarySidebar';
 import { ResetModal } from '@/components/calculator/ResetModal';
