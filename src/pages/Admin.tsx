@@ -691,14 +691,6 @@ function AdminPanel() {
 // MAIN ADMIN PAGE
 // ============================================================================
 
-const Admin = () => {
-  const { isAuthenticated } = useAdminAuthStore();
-
-  if (!isAuthenticated) {
-    return <PasswordGate onSuccess={() => {}} />;
-  }
-
-  return <AdminPanel />;
-};
+const Admin = () => <AdminPanel />;
 
 export default Admin;
