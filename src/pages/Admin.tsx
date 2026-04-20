@@ -307,7 +307,6 @@ function RecommendedRangesTable({
 
 function AdminPanel() {
   const { config, updateConfig, resetConfig } = useAppStore();
-  const { logout } = useAdminAuthStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSave = () => {
@@ -396,10 +395,6 @@ function AdminPanel() {
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
-  };
-
-  const handleLogout = () => {
-    logout();
   };
 
   // Handle range updates
