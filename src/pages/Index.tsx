@@ -52,12 +52,12 @@ const Index = () => {
       <main className="calc-shell-wrapper">
         <div className="calc-shell">
           {/* ── LEFT COLUMN: logo + help ── */}
-          <aside className="calc-left-col">
+          <aside className="calc-left-col self-start">
             <div className="space-y-6 laptop:space-y-4">
               <img
                 src={manpowerLogo}
                 alt="Manpower"
-                className="w-full max-w-[240px] h-auto object-contain shrink-0 rounded-none"
+                className="block w-full max-w-[220px] h-auto object-contain shrink-0 rounded-none"
               />
               <div className="calc-help-sticky">
                 <div className="flex items-start gap-5 laptop:gap-3 rounded-xl border border-border bg-card p-6 laptop:p-4 shadow-lg">
