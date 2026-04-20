@@ -1,7 +1,6 @@
 import { useState, useRef, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppStore } from '@/store/appStore';
-import { useAdminAuthStore } from '@/store/adminAuthStore';
 import { DEFAULT_CONFIG } from '@/config/defaults';
 import { RANGE_LABELS, ranges as DEFAULT_RECOMMENDED_RANGES } from '@/config/calculator-config';
 import type { CalculatorConfig, RecommendedRanges, RecommendedRange } from '@/types/calculator';
@@ -11,69 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ArrowLeft, RotateCcw, Save, Download, Upload, LogOut, Lock, AlertCircle } from 'lucide-react';
+import { ArrowLeft, RotateCcw, Save, Download, Upload, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
-
-// ============================================================================
-// PASSWORD GATE COMPONENT
-// ============================================================================
-
-function PasswordGate({ onSuccess }: { onSuccess: () => void }) {
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(false);
-  const { login } = useAdminAuthStore();
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (login(password)) {
-      onSuccess();
-      setError(false);
-    } else {
-      setError(true);
-      setPassword('');
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="mx-auto w-12 h-12 bg-muted rounded-full flex items-center justify-center mb-4">
-            <Lock className="w-6 h-6 text-muted-foreground" />
-          </div>
-          <CardTitle>Admin</CardTitle>
-          <CardDescription>Sisesta parool, et jätkata</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="password">Parool</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                autoFocus
-              />
-              {error && (
-                <p className="text-sm text-destructive">Vale parool</p>
-              )}
-            </div>
-            <Button type="submit" className="w-full">
-              Sisene
-            </Button>
-            <div className="text-center">
-              <Link to="/" className="text-sm text-muted-foreground hover:underline">
-                ← Tagasi kalkulaatorisse
-              </Link>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
 
 // ============================================================================
 // CONFIG INPUT COMPONENTS
