@@ -6,9 +6,6 @@
 import type { CalculatorConfig } from '@/types/calculator';
 import { getCalculatorConfig } from '@/config/config-loader';
 
-// Admin password — change this in production
-export const ADMIN_PASSWORD = 'CHANGE_ME';
-
 // Config storage version — bump when CalculatorConfig shape changes
 export const CONFIG_VERSION = 'v5';
 
