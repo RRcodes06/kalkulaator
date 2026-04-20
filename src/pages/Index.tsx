@@ -57,7 +57,7 @@ const Index = () => {
               <img
                 src={manpowerLogo}
                 alt="Manpower"
-                className="block w-full max-w-[190px] laptop:max-w-[160px] h-auto object-contain shrink-0 rounded-none"
+                className="block w-full max-w-[180px] laptop:max-w-[150px] h-auto object-contain shrink-0 rounded-none"
               />
               <div className="calc-help-sticky">
                 <div className="flex items-start gap-5 laptop:gap-3 rounded-xl border border-border bg-card p-6 laptop:p-4 shadow-lg">
