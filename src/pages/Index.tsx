@@ -11,8 +11,28 @@ import { Label } from '@/components/ui/label';
 import { Printer, Eraser, HelpCircle, Sparkles } from 'lucide-react';
 import { useAppStore } from '@/store/appStore';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { useEffect, useState } from 'react';
 
 const PRINT_SNAPSHOT_KEY = 'recruitment-calc-print-snapshot';
+
+const MIN_CALC_WIDTH = 1150;
+
+function useIsWideEnough(minWidth: number) {
+  const [isWide, setIsWide] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return true;
+    return window.innerWidth >= minWidth;
+  });
+
+  useEffect(() => {
+    const mql = window.matchMedia(`(min-width: ${minWidth}px)`);
+    const onChange = () => setIsWide(mql.matches);
+    onChange();
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, [minWidth]);
+
+  return isWide;
+}
 
 const Index = () => {
   const { t, language } = useLanguage();
@@ -22,6 +42,7 @@ const Index = () => {
   const autoFillEnabled = useAppStore((s) => s.autoFillEnabled);
   const toggleAutoFill = useAppStore((s) => s.toggleAutoFill);
   const resetInputs = useAppStore((s) => s.resetInputs);
+  const isWideEnough = useIsWideEnough(MIN_CALC_WIDTH);
 
   const handlePrint = () => {
     const snapshot = {
@@ -46,6 +67,21 @@ const Index = () => {
     sessionStorage.setItem(PRINT_SNAPSHOT_KEY, JSON.stringify(snapshot));
     window.open('/print', '_blank');
   };
+
+  if (!isWideEnough) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-6">
+        <div className="max-w-md w-full rounded-xl border border-border bg-card p-8 shadow-lg text-center space-y-4">
+          <h1 className="text-xl font-bold text-foreground">
+            See kalkulaator on mõeldud kasutamiseks arvutis.
+          </h1>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Palun ava kalkulaator süle- või lauaarvutis, et näha täielikku arvutust ja tulemusi.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
