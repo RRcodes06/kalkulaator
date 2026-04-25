@@ -38,6 +38,7 @@ export function RiskSummarySection() {
     const checks: Array<{ condition: boolean; sectionId: string; fieldName: string; label: string }> = [
       { condition: inputs.strategyPrep.hrHours === 0 && inputs.strategyPrep.managerHours === 0, sectionId: 'strategy', fieldName: 'strategyPrep', label: t('fieldStrategyHours') },
       { condition: inputs.adsBranding.hrHours === 0 && inputs.adsBranding.directCosts === 0, sectionId: 'ads', fieldName: 'adsBranding', label: t('fieldAds') },
+      { condition: inputs.adsBranding.databaseLicenseFee === null || inputs.adsBranding.databaseLicenseFee === undefined, sectionId: 'ads', fieldName: 'adsBranding.databaseLicenseFee', label: t('emptyAdsDatabaseLicenseFee') },
       { condition: inputs.candidateMgmt.hrHours === 0, sectionId: 'candidate', fieldName: 'candidateMgmt', label: t('fieldCandidateMgmt') },
       { condition: inputs.interviews.hrHours === 0 && inputs.interviews.managerHours === 0, sectionId: 'interviews', fieldName: 'interviews', label: t('fieldInterviews') },
       { condition: inputs.onboarding.onboardingMonths === 0, sectionId: 'onboarding', fieldName: 'onboarding', label: t('fieldOnboarding') },
