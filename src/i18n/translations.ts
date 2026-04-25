@@ -12,7 +12,7 @@ export const translations = {
     clearFields: 'Tühjenda',
     fillAveragesHint: 'Täidab ainult tühjad väljad soovituslike vahemike keskmisega.',
     fillAveragesPromo: 'Kui täpsed andmed puuduvad, saad täita ainult täitmata väljad soovituslike keskmiste väärtustega.',
-    footer: '© 2024 Värbamiskulude kalkulaator. Andmed põhinevad Eesti 2024. aasta maksumääradel.',
+    footer: '© 2026 Värbamiskulude kalkulaator. Andmed põhinevad Eesti 2026. aasta maksumääradel.',
 
     // Privacy
     privacyNotice: 'Sisestatud infot ei salvestata. Lehelt lahkudes kõik kustub.',
