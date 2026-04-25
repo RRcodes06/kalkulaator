@@ -471,7 +471,7 @@ export function computeTotals(
   // Both the pre-calc modal and the post-calc box consume this list, so order here
   // drives display order in both places.
   type ZeroCheck = { sectionId: string; value: number; key: string; label: string; type: EmptyFieldInfo['fieldType'] };
-  const vpi = inputs.vacantPositionImpact;
+  const vpiE = inputs.vacantPositionImpact;
 
   const orderedChecks: ZeroCheck[] = [
     // 1. Position & Hire Pay
@@ -524,15 +524,15 @@ export function computeTotals(
     { sectionId: 'onboarding', value: inputs.onboarding.productivityPct, key: 'onboarding.productivityPct', label: 'emptyProductivity', type: 'percentage' },
     { sectionId: 'onboarding', value: inputs.onboarding.extraCosts, key: 'onboarding.extraCosts', label: 'emptyOnboardingExtraCosts', type: 'cost' },
     // 10. Vacant Position Impact (mode-aware)
-    ...(vpi.mode === 'uncovered'
+    ...(vpiE.mode === 'uncovered'
       ? [
-          { sectionId: 'vacantImpact', value: vpi.percentageUndone, key: 'vacantPositionImpact.percentageUndone', label: 'emptyVacantPercentageUndone', type: 'percentage' as const },
-          { sectionId: 'vacantImpact', value: vpi.monthlyPositionValue, key: 'vacantPositionImpact.monthlyPositionValue', label: 'emptyVacantMonthlyPositionValue', type: 'cost' as const },
+          { sectionId: 'vacantImpact', value: vpiE.percentageUndone, key: 'vacantPositionImpact.percentageUndone', label: 'emptyVacantPercentageUndone', type: 'percentage' as const },
+          { sectionId: 'vacantImpact', value: vpiE.monthlyPositionValue, key: 'vacantPositionImpact.monthlyPositionValue', label: 'emptyVacantMonthlyPositionValue', type: 'cost' as const },
         ]
       : [
-          { sectionId: 'vacantImpact', value: vpi.additionalHours, key: 'vacantPositionImpact.additionalHours', label: 'emptyVacantAdditionalHours', type: 'hours' as const },
-          { sectionId: 'vacantImpact', value: vpi.avgHourlyCost, key: 'vacantPositionImpact.avgHourlyCost', label: 'emptyVacantAvgHourlyCost', type: 'rate' as const },
-          { sectionId: 'vacantImpact', value: vpi.overtimeMultiplier, key: 'vacantPositionImpact.overtimeMultiplier', label: 'emptyVacantOvertimeMultiplier', type: 'multiplier' as const },
+          { sectionId: 'vacantImpact', value: vpiE.additionalHours, key: 'vacantPositionImpact.additionalHours', label: 'emptyVacantAdditionalHours', type: 'hours' as const },
+          { sectionId: 'vacantImpact', value: vpiE.avgHourlyCost, key: 'vacantPositionImpact.avgHourlyCost', label: 'emptyVacantAvgHourlyCost', type: 'rate' as const },
+          { sectionId: 'vacantImpact', value: vpiE.overtimeMultiplier, key: 'vacantPositionImpact.overtimeMultiplier', label: 'emptyVacantOvertimeMultiplier', type: 'multiplier' as const },
         ]),
   ];
 
