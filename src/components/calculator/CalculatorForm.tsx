@@ -1,6 +1,7 @@
 import { useAppStore } from '@/store/appStore';
 import { CalculatorSection } from './CalculatorSection';
 import { NumberInput } from './NumberInput';
+import { NullableEuroInput } from './NullableEuroInput';
 import { PayInputGroup } from './PayInputGroup';
 import { RolePaySection } from './RolePaySection';
 import { OtherServicesSection } from './OtherServicesSection';
@@ -91,6 +92,11 @@ export function CalculatorForm() {
         <NumberInput label={t('managerHours')} value={inputs.adsBranding.managerHours} onChange={(v) => updateNestedInput('adsBranding', 'managerHours', v)} suffix="h" warning={getWarningForField('adsBranding.managerHours')} rangeHint={getRangeHintForField('adsBranding.managerHours')} />
         <NumberInput label={t('teamHours')} value={inputs.adsBranding.teamHours} onChange={(v) => updateNestedInput('adsBranding', 'teamHours', v)} suffix="h" warning={getWarningForField('adsBranding.teamHours')} rangeHint={getRangeHintForField('adsBranding.teamHours')} />
         <NumberInput label={t('adsCosts')} value={inputs.adsBranding.directCosts} onChange={(v) => updateNestedInput('adsBranding', 'directCosts', v)} suffix="€" hint={t('adsCostsHint')} warning={getWarningForField('adsBranding.directCosts')} rangeHint={getRangeHintForField('adsBranding.directCosts')} />
+        <NullableEuroInput
+          label={t('databaseLicenseFee')}
+          value={inputs.adsBranding.databaseLicenseFee}
+          onChange={(v) => updateNestedInput('adsBranding', 'databaseLicenseFee', v)}
+        />
       </CalculatorSection>
 
       {/* Candidate Management */}

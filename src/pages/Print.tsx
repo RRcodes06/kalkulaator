@@ -450,6 +450,9 @@ const Print = () => {
           <div className="page-break-inside-avoid bg-gray-50 p-3 rounded">
             <h4 className="font-medium mb-2">{t('blockAdsBranding')}</h4>
             <p>{t('printDirectCost')} {formatCurrency(inputs.adsBranding.directCosts)}</p>
+            {inputs.adsBranding.databaseLicenseFee !== null && inputs.adsBranding.databaseLicenseFee !== undefined && (
+              <p>{t('printDatabaseLicenseFee')} {formatCurrency(inputs.adsBranding.databaseLicenseFee)}</p>
+            )}
             <p>{t('printHr')}: {inputs.adsBranding.hrHours}h, {t('printManager')}: {inputs.adsBranding.managerHours}h, {t('printTeam')}: {inputs.adsBranding.teamHours}h</p>
           </div>
 

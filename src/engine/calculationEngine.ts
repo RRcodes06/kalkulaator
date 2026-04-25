@@ -283,7 +283,7 @@ export function computeTotals(
     },
     adsBranding: {
       timeCost: computeBlockTimeCost(inputs.adsBranding, normalizedRoles),
-      directCost: inputs.adsBranding.directCosts,
+      directCost: inputs.adsBranding.directCosts + (inputs.adsBranding.databaseLicenseFee ?? 0),
       total: 0,
     },
     candidateMgmt: {
@@ -498,6 +498,16 @@ export function computeTotals(
       emptyFields.push({ sectionId: check.sectionId, fieldKey: check.key, label: check.label, fieldType: check.type });
     }
   }
+
+  // Database license fee: only "empty" when it is null (0 is a valid user-entered value)
+  if (inputs.adsBranding.databaseLicenseFee === null || inputs.adsBranding.databaseLicenseFee === undefined) {
+    emptyFields.push({
+      sectionId: 'ads',
+      fieldKey: 'adsBranding.databaseLicenseFee',
+      label: 'emptyAdsDatabaseLicenseFee',
+      fieldType: 'cost',
+    });
+  }
   
   return {
     normalizedHirePay,
@@ -533,7 +543,7 @@ export function createDefaultInputs(): CalculatorInputs {
       team: { enabled: true, payType: 'unset', payAmount: 0 },
     },
     strategyPrep: { hrHours: 0, managerHours: 0, teamHours: 0 },
-    adsBranding: { hrHours: 0, managerHours: 0, teamHours: 0, directCosts: 0 },
+    adsBranding: { hrHours: 0, managerHours: 0, teamHours: 0, directCosts: 0, databaseLicenseFee: null },
     candidateMgmt: { hrHours: 0, managerHours: 0, teamHours: 0, testsCost: 0 },
     interviews: { hrHours: 0, managerHours: 0, teamHours: 0, directCosts: 0 },
     backgroundOffer: { hrHours: 0, managerHours: 0, teamHours: 0, directCosts: 0 },
