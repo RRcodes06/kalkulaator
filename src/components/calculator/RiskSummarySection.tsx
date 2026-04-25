@@ -10,7 +10,7 @@ import { useAccordionController } from '@/hooks/useAccordionController';
 import { useLanguage } from '@/i18n/LanguageContext';
 
 export function RiskSummarySection() {
-  const { results, config, hasCalculated, triggerCalculation, inputs } = useAppStore();
+  const { results, config, hasCalculated, triggerCalculation } = useAppStore();
   const { t } = useLanguage();
   const [showInfo, setShowInfo] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
@@ -19,39 +19,15 @@ export function RiskSummarySection() {
   const resultsRef = useRef<HTMLDivElement>(null);
   const accordionController = useAccordionController();
 
-  const validateInputs = useCallback(() => {
-    const emptyFields: EmptyField[] = [];
-    
-    if (inputs.hirePay.payType === 'unset' || inputs.hirePay.payAmount === 0) {
-      emptyFields.push({ sectionId: 'position', fieldName: 'hirePay', label: t('fieldHirePay') });
-    }
-    if (inputs.roles.hr.payType === 'unset' || inputs.roles.hr.payAmount === 0) {
-      emptyFields.push({ sectionId: 'roles', fieldName: 'roles.hr', label: t('fieldHrPay') });
-    }
-    if (inputs.roles.manager.payType === 'unset' || inputs.roles.manager.payAmount === 0) {
-      emptyFields.push({ sectionId: 'roles', fieldName: 'roles.manager', label: t('fieldManagerPay') });
-    }
-    if (inputs.roles.team.payType === 'unset' || inputs.roles.team.payAmount === 0) {
-      emptyFields.push({ sectionId: 'roles', fieldName: 'roles.team', label: t('fieldTeamPay') });
-    }
-    
-    const checks: Array<{ condition: boolean; sectionId: string; fieldName: string; label: string }> = [
-      { condition: inputs.strategyPrep.hrHours === 0 && inputs.strategyPrep.managerHours === 0, sectionId: 'strategy', fieldName: 'strategyPrep', label: t('fieldStrategyHours') },
-      { condition: inputs.adsBranding.hrHours === 0 && inputs.adsBranding.directCosts === 0, sectionId: 'ads', fieldName: 'adsBranding', label: t('fieldAds') },
-      { condition: inputs.adsBranding.databaseLicenseFee === null || inputs.adsBranding.databaseLicenseFee === undefined, sectionId: 'ads', fieldName: 'adsBranding.databaseLicenseFee', label: t('emptyAdsDatabaseLicenseFee') },
-      { condition: inputs.candidateMgmt.hrHours === 0, sectionId: 'candidate', fieldName: 'candidateMgmt', label: t('fieldCandidateMgmt') },
-      { condition: inputs.interviews.hrHours === 0 && inputs.interviews.managerHours === 0, sectionId: 'interviews', fieldName: 'interviews', label: t('fieldInterviews') },
-      { condition: inputs.onboarding.onboardingMonths === 0, sectionId: 'onboarding', fieldName: 'onboarding', label: t('fieldOnboarding') },
-    ];
-    
-    for (const check of checks) {
-      if (check.condition) {
-        emptyFields.push({ sectionId: check.sectionId, fieldName: check.fieldName, label: check.label });
-      }
-    }
-    
-    return emptyFields;
-  }, [inputs, t]);
+  // Single source of truth: the engine's emptyFields. Mapped to the modal's
+  // EmptyField shape so the pre-calc modal and post-calc box stay in sync.
+  const validateInputs = useCallback((): EmptyField[] => {
+    return results.emptyFields.map((f) => ({
+      sectionId: f.sectionId,
+      fieldName: f.fieldKey,
+      label: t(f.label as Parameters<typeof t>[0]),
+    }));
+  }, [results.emptyFields, t]);
 
   const handleCalculate = useCallback(() => {
     const emptyFields = validateInputs();
