@@ -397,7 +397,7 @@ export const translations = {
     clearFields: 'Clear',
     fillAveragesHint: 'Fills only empty fields with the midpoint of recommended ranges.',
     fillAveragesPromo: 'If exact data is unavailable, only empty fields will be filled with recommended average values.',
-    footer: '© 2024 Recruitment Cost Calculator. Data is based on Estonian 2024 tax rates.',
+    footer: '© 2026 Recruitment Cost Calculator. Data is based on Estonian 2026 tax rates.',
 
     // Privacy
     privacyNotice: 'Entered data is not saved. Everything is deleted when you leave the page.',
