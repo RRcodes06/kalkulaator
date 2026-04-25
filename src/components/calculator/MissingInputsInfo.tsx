@@ -28,7 +28,6 @@ export function MissingInputsInfo({ missingInputs }: MissingInputsInfoProps) {
     [t('teamHours')]: t('guidanceTeamHours'),
     [t('onboardingMonths')]: t('guidanceOnboardingMonths'),
     [t('productivityPct')]: t('guidanceProductivity'),
-    [t('devicesCost')]: t('guidanceDevicesCost'),
     [t('itHourlyRate')]: t('guidanceItRate'),
   };
 
