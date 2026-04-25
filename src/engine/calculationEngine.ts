@@ -483,19 +483,57 @@ export function computeTotals(
   const blockFieldChecks: Array<{ sectionId: string; value: number; key: string; label: string; type: EmptyFieldInfo['fieldType'] }> = [
     { sectionId: 'strategy', value: inputs.strategyPrep.hrHours, key: 'strategyPrep.hrHours', label: 'emptyStrategyHr', type: 'hours' },
     { sectionId: 'strategy', value: inputs.strategyPrep.managerHours, key: 'strategyPrep.managerHours', label: 'emptyStrategyManager', type: 'hours' },
+    { sectionId: 'strategy', value: inputs.strategyPrep.teamHours, key: 'strategyPrep.teamHours', label: 'emptyStrategyTeam', type: 'hours' },
     { sectionId: 'ads', value: inputs.adsBranding.hrHours, key: 'adsBranding.hrHours', label: 'emptyAdsHr', type: 'hours' },
+    { sectionId: 'ads', value: inputs.adsBranding.managerHours, key: 'adsBranding.managerHours', label: 'emptyAdsManager', type: 'hours' },
+    { sectionId: 'ads', value: inputs.adsBranding.teamHours, key: 'adsBranding.teamHours', label: 'emptyAdsTeam', type: 'hours' },
     { sectionId: 'ads', value: inputs.adsBranding.directCosts, key: 'adsBranding.directCosts', label: 'emptyAdsCosts', type: 'cost' },
     { sectionId: 'candidate', value: inputs.candidateMgmt.hrHours, key: 'candidateMgmt.hrHours', label: 'emptyCandidateHr', type: 'hours' },
+    { sectionId: 'candidate', value: inputs.candidateMgmt.managerHours, key: 'candidateMgmt.managerHours', label: 'emptyCandidateManager', type: 'hours' },
+    { sectionId: 'candidate', value: inputs.candidateMgmt.teamHours, key: 'candidateMgmt.teamHours', label: 'emptyCandidateTeam', type: 'hours' },
+    { sectionId: 'candidate', value: inputs.candidateMgmt.testsCost, key: 'candidateMgmt.testsCost', label: 'emptyCandidateTestsCost', type: 'cost' },
     { sectionId: 'interviews', value: inputs.interviews.hrHours, key: 'interviews.hrHours', label: 'emptyInterviewsHr', type: 'hours' },
     { sectionId: 'interviews', value: inputs.interviews.managerHours, key: 'interviews.managerHours', label: 'emptyInterviewsManager', type: 'hours' },
+    { sectionId: 'interviews', value: inputs.interviews.teamHours, key: 'interviews.teamHours', label: 'emptyInterviewsTeam', type: 'hours' },
+    { sectionId: 'interviews', value: inputs.interviews.directCosts, key: 'interviews.directCosts', label: 'emptyInterviewsDirectCosts', type: 'cost' },
+    { sectionId: 'background', value: inputs.backgroundOffer.hrHours, key: 'backgroundOffer.hrHours', label: 'emptyBackgroundHr', type: 'hours' },
+    { sectionId: 'background', value: inputs.backgroundOffer.managerHours, key: 'backgroundOffer.managerHours', label: 'emptyBackgroundManager', type: 'hours' },
+    { sectionId: 'background', value: inputs.backgroundOffer.teamHours, key: 'backgroundOffer.teamHours', label: 'emptyBackgroundTeam', type: 'hours' },
+    { sectionId: 'background', value: inputs.backgroundOffer.directCosts, key: 'backgroundOffer.directCosts', label: 'emptyBackgroundDirectCosts', type: 'cost' },
     { sectionId: 'preboarding', value: inputs.preboarding.devicesCost, key: 'preboarding.devicesCost', label: 'emptyDevicesCost', type: 'cost' },
+    { sectionId: 'preboarding', value: inputs.preboarding.itSetupHours, key: 'preboarding.itSetupHours', label: 'emptyItSetupHours', type: 'hours' },
+    { sectionId: 'preboarding', value: inputs.preboarding.itHourlyRate, key: 'preboarding.itHourlyRate', label: 'emptyItHourlyRate', type: 'rate' },
+    { sectionId: 'preboarding', value: inputs.preboarding.prepHours, key: 'preboarding.prepHours', label: 'emptyPrepHours', type: 'hours' },
     { sectionId: 'onboarding', value: inputs.onboarding.onboardingMonths, key: 'onboarding.onboardingMonths', label: 'emptyOnboardingMonths', type: 'months' },
     { sectionId: 'onboarding', value: inputs.onboarding.productivityPct, key: 'onboarding.productivityPct', label: 'emptyProductivity', type: 'percentage' },
+    { sectionId: 'onboarding', value: inputs.onboarding.extraCosts, key: 'onboarding.extraCosts', label: 'emptyOnboardingExtraCosts', type: 'cost' },
   ];
   
   for (const check of blockFieldChecks) {
     if (check.value === 0) {
       emptyFields.push({ sectionId: check.sectionId, fieldKey: check.key, label: check.label, fieldType: check.type });
+    }
+  }
+
+  // Vacant position impact - only check fields for the currently active mode
+  const vpiInputs = inputs.vacantPositionImpact;
+  if (vpiInputs.mode === 'uncovered') {
+    if (vpiInputs.percentageUndone === 0) {
+      emptyFields.push({ sectionId: 'vacantImpact', fieldKey: 'vacantPositionImpact.percentageUndone', label: 'emptyVacantPercentageUndone', fieldType: 'percentage' });
+    }
+    if (vpiInputs.monthlyPositionValue === 0) {
+      emptyFields.push({ sectionId: 'vacantImpact', fieldKey: 'vacantPositionImpact.monthlyPositionValue', label: 'emptyVacantMonthlyPositionValue', fieldType: 'cost' });
+    }
+  } else {
+    if (vpiInputs.additionalHours === 0) {
+      emptyFields.push({ sectionId: 'vacantImpact', fieldKey: 'vacantPositionImpact.additionalHours', label: 'emptyVacantAdditionalHours', fieldType: 'hours' });
+    }
+    if (vpiInputs.avgHourlyCost === 0) {
+      emptyFields.push({ sectionId: 'vacantImpact', fieldKey: 'vacantPositionImpact.avgHourlyCost', label: 'emptyVacantAvgHourlyCost', fieldType: 'rate' });
+    }
+    // overtimeMultiplier defaults to 1.5; treat 0 (or <1) as empty since input enforces min=1
+    if (vpiInputs.overtimeMultiplier === 0) {
+      emptyFields.push({ sectionId: 'vacantImpact', fieldKey: 'vacantPositionImpact.overtimeMultiplier', label: 'emptyVacantOvertimeMultiplier', fieldType: 'multiplier' });
     }
   }
 
