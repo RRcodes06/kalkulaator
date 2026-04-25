@@ -466,83 +466,80 @@ export function computeTotals(
   
   // Track empty/zero fields
   const emptyFields: EmptyFieldInfo[] = [];
-  
-  if (inputs.hirePay.payType === 'unset' || inputs.hirePay.payAmount === 0) {
-    emptyFields.push({ sectionId: 'position', fieldKey: 'hirePay', label: 'emptyHirePay', fieldType: 'salary' });
-  }
-  if (inputs.roles.hr.payType === 'unset' || inputs.roles.hr.payAmount === 0) {
-    emptyFields.push({ sectionId: 'roles', fieldKey: 'roles.hr', label: 'emptyHrPay', fieldType: 'salary' });
-  }
-  if (inputs.roles.manager.payType === 'unset' || inputs.roles.manager.payAmount === 0) {
-    emptyFields.push({ sectionId: 'roles', fieldKey: 'roles.manager', label: 'emptyManagerPay', fieldType: 'salary' });
-  }
-  if (inputs.roles.team.payType === 'unset' || inputs.roles.team.payAmount === 0) {
-    emptyFields.push({ sectionId: 'roles', fieldKey: 'roles.team', label: 'emptyTeamPay', fieldType: 'salary' });
-  }
-  
-  const blockFieldChecks: Array<{ sectionId: string; value: number; key: string; label: string; type: EmptyFieldInfo['fieldType'] }> = [
+
+  // Build the list in the EXACT visual order of the calculator UI (top → bottom).
+  // Both the pre-calc modal and the post-calc box consume this list, so order here
+  // drives display order in both places.
+  type ZeroCheck = { sectionId: string; value: number; key: string; label: string; type: EmptyFieldInfo['fieldType'] };
+  const vpi = inputs.vacantPositionImpact;
+
+  const orderedChecks: ZeroCheck[] = [
+    // 1. Position & Hire Pay
+    ...((inputs.hirePay.payType === 'unset' || inputs.hirePay.payAmount === 0)
+      ? [{ sectionId: 'position', value: 0, key: 'hirePay', label: 'emptyHirePay', type: 'salary' as const }]
+      : []),
+    // 2. Role Pay (HR, Manager, Team)
+    ...((inputs.roles.hr.payType === 'unset' || inputs.roles.hr.payAmount === 0)
+      ? [{ sectionId: 'roles', value: 0, key: 'roles.hr', label: 'emptyHrPay', type: 'salary' as const }]
+      : []),
+    ...((inputs.roles.manager.payType === 'unset' || inputs.roles.manager.payAmount === 0)
+      ? [{ sectionId: 'roles', value: 0, key: 'roles.manager', label: 'emptyManagerPay', type: 'salary' as const }]
+      : []),
+    ...((inputs.roles.team.payType === 'unset' || inputs.roles.team.payAmount === 0)
+      ? [{ sectionId: 'roles', value: 0, key: 'roles.team', label: 'emptyTeamPay', type: 'salary' as const }]
+      : []),
+    // 3. Strategy & Prep
     { sectionId: 'strategy', value: inputs.strategyPrep.hrHours, key: 'strategyPrep.hrHours', label: 'emptyStrategyHr', type: 'hours' },
     { sectionId: 'strategy', value: inputs.strategyPrep.managerHours, key: 'strategyPrep.managerHours', label: 'emptyStrategyManager', type: 'hours' },
     { sectionId: 'strategy', value: inputs.strategyPrep.teamHours, key: 'strategyPrep.teamHours', label: 'emptyStrategyTeam', type: 'hours' },
+    // 4. Ads & Branding (databaseLicenseFee is the LAST visible field in this section)
     { sectionId: 'ads', value: inputs.adsBranding.hrHours, key: 'adsBranding.hrHours', label: 'emptyAdsHr', type: 'hours' },
     { sectionId: 'ads', value: inputs.adsBranding.managerHours, key: 'adsBranding.managerHours', label: 'emptyAdsManager', type: 'hours' },
     { sectionId: 'ads', value: inputs.adsBranding.teamHours, key: 'adsBranding.teamHours', label: 'emptyAdsTeam', type: 'hours' },
     { sectionId: 'ads', value: inputs.adsBranding.directCosts, key: 'adsBranding.directCosts', label: 'emptyAdsCosts', type: 'cost' },
+    // databaseLicenseFee uses null-check semantics (0 is valid)
+    ...(inputs.adsBranding.databaseLicenseFee === null || inputs.adsBranding.databaseLicenseFee === undefined
+      ? [{ sectionId: 'ads', value: 0, key: 'adsBranding.databaseLicenseFee', label: 'emptyAdsDatabaseLicenseFee', type: 'cost' as const }]
+      : []),
+    // 5. Candidate Management
     { sectionId: 'candidate', value: inputs.candidateMgmt.hrHours, key: 'candidateMgmt.hrHours', label: 'emptyCandidateHr', type: 'hours' },
     { sectionId: 'candidate', value: inputs.candidateMgmt.managerHours, key: 'candidateMgmt.managerHours', label: 'emptyCandidateManager', type: 'hours' },
     { sectionId: 'candidate', value: inputs.candidateMgmt.testsCost, key: 'candidateMgmt.testsCost', label: 'emptyCandidateTestsCost', type: 'cost' },
+    // 6. Interviews
     { sectionId: 'interviews', value: inputs.interviews.hrHours, key: 'interviews.hrHours', label: 'emptyInterviewsHr', type: 'hours' },
     { sectionId: 'interviews', value: inputs.interviews.managerHours, key: 'interviews.managerHours', label: 'emptyInterviewsManager', type: 'hours' },
     { sectionId: 'interviews', value: inputs.interviews.teamHours, key: 'interviews.teamHours', label: 'emptyInterviewsTeam', type: 'hours' },
     { sectionId: 'interviews', value: inputs.interviews.directCosts, key: 'interviews.directCosts', label: 'emptyInterviewsDirectCosts', type: 'cost' },
+    // 7. Background & Offer
     { sectionId: 'background', value: inputs.backgroundOffer.hrHours, key: 'backgroundOffer.hrHours', label: 'emptyBackgroundHr', type: 'hours' },
     { sectionId: 'background', value: inputs.backgroundOffer.managerHours, key: 'backgroundOffer.managerHours', label: 'emptyBackgroundManager', type: 'hours' },
     { sectionId: 'background', value: inputs.backgroundOffer.directCosts, key: 'backgroundOffer.directCosts', label: 'emptyBackgroundDirectCosts', type: 'cost' },
+    // 8. Preboarding (Workplace prep)
     { sectionId: 'preboarding', value: inputs.preboarding.devicesCost, key: 'preboarding.devicesCost', label: 'emptyDevicesCost', type: 'cost' },
     { sectionId: 'preboarding', value: inputs.preboarding.itSetupHours, key: 'preboarding.itSetupHours', label: 'emptyItSetupHours', type: 'hours' },
     { sectionId: 'preboarding', value: inputs.preboarding.itHourlyRate, key: 'preboarding.itHourlyRate', label: 'emptyItHourlyRate', type: 'rate' },
     { sectionId: 'preboarding', value: inputs.preboarding.prepHours, key: 'preboarding.prepHours', label: 'emptyPrepHours', type: 'hours' },
+    // 9. Onboarding (Productivity loss)
     { sectionId: 'onboarding', value: inputs.onboarding.onboardingMonths, key: 'onboarding.onboardingMonths', label: 'emptyOnboardingMonths', type: 'months' },
     { sectionId: 'onboarding', value: inputs.onboarding.productivityPct, key: 'onboarding.productivityPct', label: 'emptyProductivity', type: 'percentage' },
     { sectionId: 'onboarding', value: inputs.onboarding.extraCosts, key: 'onboarding.extraCosts', label: 'emptyOnboardingExtraCosts', type: 'cost' },
+    // 10. Vacant Position Impact (mode-aware)
+    ...(vpi.mode === 'uncovered'
+      ? [
+          { sectionId: 'vacantImpact', value: vpi.percentageUndone, key: 'vacantPositionImpact.percentageUndone', label: 'emptyVacantPercentageUndone', type: 'percentage' as const },
+          { sectionId: 'vacantImpact', value: vpi.monthlyPositionValue, key: 'vacantPositionImpact.monthlyPositionValue', label: 'emptyVacantMonthlyPositionValue', type: 'cost' as const },
+        ]
+      : [
+          { sectionId: 'vacantImpact', value: vpi.additionalHours, key: 'vacantPositionImpact.additionalHours', label: 'emptyVacantAdditionalHours', type: 'hours' as const },
+          { sectionId: 'vacantImpact', value: vpi.avgHourlyCost, key: 'vacantPositionImpact.avgHourlyCost', label: 'emptyVacantAvgHourlyCost', type: 'rate' as const },
+          { sectionId: 'vacantImpact', value: vpi.overtimeMultiplier, key: 'vacantPositionImpact.overtimeMultiplier', label: 'emptyVacantOvertimeMultiplier', type: 'multiplier' as const },
+        ]),
   ];
-  
-  for (const check of blockFieldChecks) {
+
+  for (const check of orderedChecks) {
     if (check.value === 0) {
       emptyFields.push({ sectionId: check.sectionId, fieldKey: check.key, label: check.label, fieldType: check.type });
     }
-  }
-
-  // Vacant position impact - only check fields for the currently active mode
-  const vpiInputs = inputs.vacantPositionImpact;
-  if (vpiInputs.mode === 'uncovered') {
-    if (vpiInputs.percentageUndone === 0) {
-      emptyFields.push({ sectionId: 'vacantImpact', fieldKey: 'vacantPositionImpact.percentageUndone', label: 'emptyVacantPercentageUndone', fieldType: 'percentage' });
-    }
-    if (vpiInputs.monthlyPositionValue === 0) {
-      emptyFields.push({ sectionId: 'vacantImpact', fieldKey: 'vacantPositionImpact.monthlyPositionValue', label: 'emptyVacantMonthlyPositionValue', fieldType: 'cost' });
-    }
-  } else {
-    if (vpiInputs.additionalHours === 0) {
-      emptyFields.push({ sectionId: 'vacantImpact', fieldKey: 'vacantPositionImpact.additionalHours', label: 'emptyVacantAdditionalHours', fieldType: 'hours' });
-    }
-    if (vpiInputs.avgHourlyCost === 0) {
-      emptyFields.push({ sectionId: 'vacantImpact', fieldKey: 'vacantPositionImpact.avgHourlyCost', label: 'emptyVacantAvgHourlyCost', fieldType: 'rate' });
-    }
-    // overtimeMultiplier defaults to 1.5; treat 0 (or <1) as empty since input enforces min=1
-    if (vpiInputs.overtimeMultiplier === 0) {
-      emptyFields.push({ sectionId: 'vacantImpact', fieldKey: 'vacantPositionImpact.overtimeMultiplier', label: 'emptyVacantOvertimeMultiplier', fieldType: 'multiplier' });
-    }
-  }
-
-  // Database license fee: only "empty" when it is null (0 is a valid user-entered value)
-  if (inputs.adsBranding.databaseLicenseFee === null || inputs.adsBranding.databaseLicenseFee === undefined) {
-    emptyFields.push({
-      sectionId: 'ads',
-      fieldKey: 'adsBranding.databaseLicenseFee',
-      label: 'emptyAdsDatabaseLicenseFee',
-      fieldType: 'cost',
-    });
   }
   
   return {
