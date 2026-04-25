@@ -40,6 +40,7 @@ export const translations = {
     directCosts: 'Otsesed kulud',
     adsCosts: 'Kuulutuste ja brändingu kulud',
     adsCostsHint: 'CV-Online, LinkedIn, materjalid',
+    databaseLicenseFee: 'Andmebaaside litsentsitasu',
     testsCost: 'Hindamistestide kulud',
     testsCostHint: 'Psühholoogilised testid, oskuste hindamine',
     teamHoursHint: 'Tiimikaaslaste kaasamine intervjuudele',
@@ -373,12 +374,14 @@ export const translations = {
     emptyStrategyManager: 'Strateegia: Juhi tunnid',
     emptyAdsHr: 'Kuulutused: HR tunnid',
     emptyAdsCosts: 'Kuulutuste kulud',
+    emptyAdsDatabaseLicenseFee: 'Andmebaaside litsentsitasu',
     emptyCandidateHr: 'Kandidaadid: HR tunnid',
     emptyInterviewsHr: 'Intervjuud: HR tunnid',
     emptyInterviewsManager: 'Intervjuud: Juhi tunnid',
     emptyDevicesCost: 'Seadmete kulu',
     emptyOnboardingMonths: 'Sisseelamisperiood',
     emptyProductivity: 'Keskmine tootlikkus',
+    printDatabaseLicenseFee: 'Andmebaaside litsentsitasu:',
 
     // Help box
     helpTitle: 'Jääd arvutamisel hätta?',
