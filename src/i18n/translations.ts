@@ -428,6 +428,7 @@ export const translations = {
     directCosts: 'Direct costs',
     adsCosts: 'Ads and branding costs',
     adsCostsHint: 'CV-Online, LinkedIn, materials',
+    databaseLicenseFee: 'Database license fee',
     testsCost: 'Assessment test costs',
     testsCostHint: 'Psychological tests, skills assessment',
     teamHoursHint: 'Team involvement in interviews',
@@ -764,6 +765,7 @@ export const translations = {
     emptyStrategyManager: 'Strategy: Manager hours',
     emptyAdsHr: 'Job ads: HR hours',
     emptyAdsCosts: 'Job ads costs',
+    emptyAdsDatabaseLicenseFee: 'Database license fee',
     emptyCandidateHr: 'Candidates: HR hours',
     emptyInterviewsHr: 'Interviews: HR hours',
     emptyInterviewsManager: 'Interviews: Manager hours',
@@ -772,6 +774,7 @@ export const translations = {
     emptyProductivity: 'Average productivity',
     emptyVacancyDays: 'Vacancy duration',
     emptyDailyCost: 'Daily cost',
+    printDatabaseLicenseFee: 'Database license fee:',
 
     // Help box
     helpTitle: 'Need help with the calculation?',
