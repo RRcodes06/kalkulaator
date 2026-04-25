@@ -76,6 +76,7 @@ export interface StrategyPrepInput extends BlockHoursInput {}
 
 export interface AdsBrandingInput extends BlockHoursInput {
   directCosts: number; // job ads, employer branding materials
+  databaseLicenseFee: number | null; // optional, user-entered. null = unfilled, 0 = explicitly zero
 }
 
 export interface CandidateMgmtInput extends BlockHoursInput {
