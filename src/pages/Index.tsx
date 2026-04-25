@@ -69,14 +69,25 @@ const Index = () => {
   };
 
   if (!isWideEnough) {
+    const browserLang =
+      typeof navigator !== 'undefined'
+        ? (navigator.languages && navigator.languages[0]) || navigator.language || ''
+        : '';
+    const isEt = browserLang.toLowerCase().startsWith('et');
+    const guardTitle = isEt
+      ? 'See kalkulaator on mõeldud kasutamiseks arvutis.'
+      : 'This calculator is designed for desktop use.';
+    const guardText = isEt
+      ? 'Palun ava kalkulaator süle- või lauaarvutis, et näha täielikku arvutust ja tulemusi.'
+      : 'Please open it on a laptop or desktop computer to view the full calculation and results.';
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-6">
         <div className="max-w-md w-full rounded-xl border border-border bg-card p-8 shadow-lg text-center space-y-4">
           <h1 className="text-xl font-bold text-foreground">
-            See kalkulaator on mõeldud kasutamiseks arvutis.
+            {guardTitle}
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Palun ava kalkulaator süle- või lauaarvutis, et näha täielikku arvutust ja tulemusi.
+            {guardText}
           </p>
         </div>
       </div>
