@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import { AlertTriangle, Info } from 'lucide-react';
 
 /**
  * Euro input that distinguishes between empty (null) and explicit zero.
@@ -19,6 +20,11 @@ function strip(s: string): string {
   return s.replace(/\s/g, '').replace(/,/g, '.');
 }
 
+export interface NullableEuroInputWarning {
+  message: string;
+  severity: 'info' | 'warning' | 'error';
+}
+
 export interface NullableEuroInputProps {
   label?: string;
   value: number | null;
@@ -26,6 +32,7 @@ export interface NullableEuroInputProps {
   hint?: string;
   suffix?: string;
   className?: string;
+  warning?: NullableEuroInputWarning;
 }
 
 export function NullableEuroInput({
@@ -35,6 +42,7 @@ export function NullableEuroInput({
   hint,
   suffix = '€',
   className,
+  warning,
 }: NullableEuroInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -96,7 +104,9 @@ export function NullableEuroInput({
           onBlur={handleBlur}
           className={cn(
             'h-11 w-full min-w-0 overflow-x-hidden bg-card pr-3 text-right text-base [text-overflow:clip] [appearance:textfield]',
-            suffix && 'pr-16 sm:pr-20'
+            suffix && 'pr-16 sm:pr-20',
+            warning && warning.severity === 'warning' && 'border-warning focus-visible:ring-warning',
+            warning && warning.severity === 'info' && 'border-muted-foreground/50'
           )}
         />
         {suffix && (
@@ -105,7 +115,25 @@ export function NullableEuroInput({
           </span>
         )}
       </div>
-      {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+      {warning ? (
+        <div
+          className={cn(
+            'flex items-start gap-1.5 text-xs',
+            warning.severity === 'warning' && 'text-warning',
+            warning.severity === 'info' && 'text-muted-foreground',
+            warning.severity === 'error' && 'text-destructive'
+          )}
+        >
+          {warning.severity === 'warning' ? (
+            <AlertTriangle className="mt-0.5 h-3 w-3 flex-shrink-0" />
+          ) : (
+            <Info className="mt-0.5 h-3 w-3 flex-shrink-0" />
+          )}
+          <span>{warning.message}</span>
+        </div>
+      ) : hint ? (
+        <p className="text-xs text-muted-foreground">{hint}</p>
+      ) : null}
     </div>
   );
 }
