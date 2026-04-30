@@ -96,6 +96,14 @@ export function CalculatorForm() {
           label={t('databaseLicenseFee')}
           value={inputs.adsBranding.databaseLicenseFee}
           onChange={(v) => updateNestedInput('adsBranding', 'databaseLicenseFee', v)}
+          hint={t('databaseLicenseFeeHint')}
+          warning={
+            inputs.adsBranding.databaseLicenseFee !== null &&
+            inputs.adsBranding.databaseLicenseFee !== undefined &&
+            inputs.adsBranding.databaseLicenseFee > 500
+              ? { message: t('databaseLicenseFeeHigh'), severity: 'warning' }
+              : undefined
+          }
         />
       </CalculatorSection>
 
