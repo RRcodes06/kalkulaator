@@ -64,8 +64,6 @@ function buildAutoFillValues(config: CalculatorConfig): Record<string, number> {
   vals['roles.manager.payAmount'] = config.roleDefaultSalaries.manager;
   vals['roles.team.payAmount'] = config.roleDefaultSalaries.team;
   vals['hirePay.payAmount'] = config.roleDefaultSalaries.team;
-  // Database license fee: fixed average (no recommendedRanges entry, null-valued field)
-  vals['adsBranding.databaseLicenseFee'] = 250;
   return vals;
 }
 
@@ -118,7 +116,8 @@ function applyAutoFill(
   // Block hour/cost fields
   const blockMappings: Array<{ section: string; obj: Record<string, unknown>; fields: string[] }> = [
     { section: 'strategyPrep', obj: inp.strategyPrep as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours'] },
-    { section: 'adsBranding', obj: inp.adsBranding as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours', 'directCosts', 'databaseLicenseFee'] },
+    // databaseLicenseFee is intentionally excluded — no average/default autofill.
+    { section: 'adsBranding', obj: inp.adsBranding as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours', 'directCosts'] },
     { section: 'candidateMgmt', obj: inp.candidateMgmt as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours'] },
     { section: 'interviews', obj: inp.interviews as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours', 'directCosts'] },
     { section: 'backgroundOffer', obj: inp.backgroundOffer as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours'] },
@@ -285,7 +284,8 @@ export const useAppStore = create<AppState>((set, get) => {
     fillSectionWithAverages: (sectionId: string) => {
       const SECTION_FIELD_MAP: Record<string, { inputKey: string; fields: string[] }> = {
         strategy: { inputKey: 'strategyPrep', fields: ['hrHours', 'managerHours', 'teamHours'] },
-        ads: { inputKey: 'adsBranding', fields: ['hrHours', 'managerHours', 'teamHours', 'directCosts', 'databaseLicenseFee'] },
+        // databaseLicenseFee is intentionally excluded from "fill with averages" — user must enter explicitly.
+        ads: { inputKey: 'adsBranding', fields: ['hrHours', 'managerHours', 'teamHours', 'directCosts'] },
         candidate: { inputKey: 'candidateMgmt', fields: ['hrHours', 'managerHours'] },
         interviews: { inputKey: 'interviews', fields: ['hrHours', 'managerHours', 'teamHours', 'directCosts'] },
         background: { inputKey: 'backgroundOffer', fields: ['hrHours', 'managerHours'] },
