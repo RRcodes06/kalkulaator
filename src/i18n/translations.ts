@@ -41,6 +41,8 @@ export const translations = {
     adsCosts: 'Kuulutuste ja brändingu kulud',
     adsCostsHint: 'CV-Online, LinkedIn, materjalid',
     databaseLicenseFee: 'Andmebaaside litsentsitasu',
+    databaseLicenseFeeHint: 'Tavaliselt 0–500 €',
+    databaseLicenseFeeHigh: 'See on tavapärasest kõrgem. Tüüpiline vahemik: 0–500 €.',
     testsCost: 'Hindamistestide kulud',
     testsCostHint: 'Psühholoogilised testid, oskuste hindamine',
     teamHoursHint: 'Tiimikaaslaste kaasamine intervjuudele',
