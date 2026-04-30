@@ -64,6 +64,8 @@ function buildAutoFillValues(config: CalculatorConfig): Record<string, number> {
   vals['roles.manager.payAmount'] = config.roleDefaultSalaries.manager;
   vals['roles.team.payAmount'] = config.roleDefaultSalaries.team;
   vals['hirePay.payAmount'] = config.roleDefaultSalaries.team;
+  // Database license fee: fixed average (no recommendedRanges entry, null-valued field)
+  vals['adsBranding.databaseLicenseFee'] = 250;
   return vals;
 }
 
