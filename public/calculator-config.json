@@ -1,0 +1,151 @@
+{
+  "HOURS_PER_MONTH": 168,
+  "EST_AVG_GROSS_WAGE": 2115,
+  "SOCIAL_TAX_RATE": 0.33,
+  "EMPLOYER_UI_RATE": 0.008,
+  "EMPLOYEE_UI_RATE": 0.016,
+  "INCOME_TAX_RATE": 0.22,
+  "PILLAR_II_RATE": 0.02,
+  "TAX_FREE_ALLOWANCE": 700,
+  "BAD_HIRE_RISK_RATE": 0.15,
+  "BAD_HIRE_PAY_MONTHS": 2,
+  "roleDefaultSalaries": {
+    "team": 2115,
+    "hr": 2980,
+    "manager": 3642
+  },
+  "recommendedRanges": {
+    "strategyPrep.hrHours": {
+      "min": 2,
+      "max": 8,
+      "unit": "h"
+    },
+    "strategyPrep.managerHours": {
+      "min": 1,
+      "max": 6,
+      "unit": "h"
+    },
+    "strategyPrep.teamHours": {
+      "min": 0,
+      "max": 2,
+      "unit": "h"
+    },
+    "adsBranding.hrHours": {
+      "min": 2,
+      "max": 8,
+      "unit": "h"
+    },
+    "adsBranding.managerHours": {
+      "min": 0,
+      "max": 1,
+      "unit": "h"
+    },
+    "adsBranding.teamHours": {
+      "min": 0,
+      "max": 4,
+      "unit": "h"
+    },
+    "adsBranding.directCosts": {
+      "min": 100,
+      "max": 2000,
+      "unit": "€"
+    },
+    "adsBranding.databaseLicenseFee": {
+      "min": 0,
+      "max": 500,
+      "unit": "€"
+    },
+    "candidateMgmt.hrHours": {
+      "min": 4,
+      "max": 25,
+      "unit": "h"
+    },
+    "candidateMgmt.managerHours": {
+      "min": 1,
+      "max": 10,
+      "unit": "h"
+    },
+    "interviews.hrHours": {
+      "min": 3,
+      "max": 15,
+      "unit": "h"
+    },
+    "interviews.managerHours": {
+      "min": 3,
+      "max": 20,
+      "unit": "h"
+    },
+    "interviews.teamHours": {
+      "min": 0,
+      "max": 12,
+      "unit": "h"
+    },
+    "interviews.directCosts": {
+      "min": 0,
+      "max": 500,
+      "unit": "€"
+    },
+    "backgroundOffer.hrHours": {
+      "min": 1,
+      "max": 6,
+      "unit": "h"
+    },
+    "backgroundOffer.managerHours": {
+      "min": 0,
+      "max": 4,
+      "unit": "h"
+    },
+    "onboarding.onboardingMonths": {
+      "min": 1,
+      "max": 12,
+      "unit": "months"
+    },
+    "onboarding.productivityPct": {
+      "min": 20,
+      "max": 80,
+      "unit": "%"
+    },
+    "vacantPositionImpact.percentageUndone": {
+      "min": 20,
+      "max": 80,
+      "unit": "%"
+    },
+    "vacantPositionImpact.monthlyPositionValue": {
+      "min": 2000,
+      "max": 8000,
+      "unit": "€"
+    },
+    "vacantPositionImpact.additionalHours": {
+      "min": 10,
+      "max": 60,
+      "unit": "h"
+    },
+    "vacantPositionImpact.avgHourlyCost": {
+      "min": 10,
+      "max": 35,
+      "unit": "€"
+    },
+    "vacantPositionImpact.overtimeMultiplier": {
+      "min": 1,
+      "max": 2,
+      "unit": "x"
+    }
+  },
+  "helpUrl": "https://www.manpower.ee/et/vaerbamisteenused",
+  "pageTitle": {
+    "est": "Värbamisprotsessi tegeliku kogukulu kalkulaator",
+    "eng": "True Cost of Recruitment Calculator"
+  },
+  "pageSubtitle": {
+    "est": "See kalkulaator annab ligikaudse hinnangu värbamisprotsessi kogukulule. Tegelikud kulud võivad varieeruda sõltuvalt konkreetsetest asjaoludest ja sisestatud andmetest. Kalkulaator hõlmab kõiki värbamisprotsessiga seotud otseseid, kaudseid ja varjatud kulusid. Kõik kulud on arvestatud proportsioonis kuu kogukuluga. Kui täpsed andmed puuduvad, kasuta soovituslikke vahemikke või funktsiooni „Täida keskmistega\".",
+    "eng": "This calculator provides an approximate estimate of the total cost of the recruitment process. Actual costs may vary depending on specific circumstances and the data entered. The calculator covers all direct, indirect, and hidden costs associated with the recruitment process. All costs are calculated in proportion to total monthly cost. If precise data is unavailable, use the recommended ranges or the \"Fill with averages\" function."
+  },
+  "disclaimerText": "See kalkulaator annab ligikaudse hinnangu värbamisprotsessi kogukulule. Tegelikud kulud võivad varieeruda sõltuvalt konkreetsetest asjaoludest ja sisestatud andmetest. Kalkulaator hõlmab kõiki värbamisprotsessiga seotud otseseid, kaudseid ja varjatud kulusid. Kõik kulud on arvestatud proportsioonis kuu kogukuluga. Kui täpsed andmed puuduvad, kasuta soovituslikke vahemikke või funktsiooni „Täida keskmistega\".",
+  "riskExplanationText": "Kui värbamine ebaõnnestub ({pct}% tõenäosus), kaotate veel {amount} lisaks juba tehtud kuludele. See on võimalik lisakulu, mitte garanteeritud kulu.",
+  "indirectExplanationText": "Täitmata positsiooni mõju äri tulemuslikkusele. Vali, kas töö jääb tegemata või kaetakse tiimi poolt. Mõlemat korraga ei arvestata.",
+  "finalQuestionText": "Kas see number üllatas sind?",
+  "ctaPlaceholderText": "Võta meiega ühendust, et arutada, kuidas värbamiskulusid optimeerida.",
+  "resetConfirmText": "Kõik sisestatud andmed kustutatakse ja väljad taastatakse vaikeväärtustele. Seda toimingut ei saa tagasi võtta.",
+  "defaultUsedText": "Kasutatakse Eesti keskmist palka",
+  "privacyNotice": "Sisestatud infot ei salvestata. Lehelt lahkudes kõik kustub."
+}
