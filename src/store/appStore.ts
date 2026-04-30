@@ -278,7 +278,7 @@ export const useAppStore = create<AppState>((set, get) => {
     fillSectionWithAverages: (sectionId: string) => {
       const SECTION_FIELD_MAP: Record<string, { inputKey: string; fields: string[] }> = {
         strategy: { inputKey: 'strategyPrep', fields: ['hrHours', 'managerHours', 'teamHours'] },
-        ads: { inputKey: 'adsBranding', fields: ['hrHours', 'managerHours', 'teamHours', 'directCosts'] },
+        ads: { inputKey: 'adsBranding', fields: ['hrHours', 'managerHours', 'teamHours', 'directCosts', 'databaseLicenseFee'] },
         candidate: { inputKey: 'candidateMgmt', fields: ['hrHours', 'managerHours'] },
         interviews: { inputKey: 'interviews', fields: ['hrHours', 'managerHours', 'teamHours', 'directCosts'] },
         background: { inputKey: 'backgroundOffer', fields: ['hrHours', 'managerHours'] },
@@ -313,7 +313,11 @@ export const useAppStore = create<AppState>((set, get) => {
 
       for (const field of mapping.fields) {
         const path = `${mapping.inputKey}.${field}`;
-        if (vals[path] !== undefined && isFieldEmpty(obj[field])) {
+        const isNullable = path === 'adsBranding.databaseLicenseFee';
+        const empty = isNullable
+          ? obj[field] === null || obj[field] === undefined || obj[field] === ''
+          : isFieldEmpty(obj[field]);
+        if (vals[path] !== undefined && empty) {
           obj[field] = vals[path];
         }
       }
