@@ -180,6 +180,9 @@ function removeAutoFill(
         // For overtimeMultiplier, reset to default 1.5 instead of 0
         if (field === 'overtimeMultiplier') {
           obj[field] = 1.5;
+        } else if (path === 'adsBranding.databaseLicenseFee') {
+          // Nullable field: reset to null (unfilled), not 0
+          obj[field] = null;
         } else {
           obj[field] = 0;
         }
