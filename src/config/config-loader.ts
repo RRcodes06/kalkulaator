@@ -21,7 +21,13 @@
 import type { CalculatorConfig } from '@/types/calculator';
 import { CALCULATOR_CONFIG } from '@/config/calculator-config';
 
-const RUNTIME_CONFIG_URL = '/calculator-config.json';
+/**
+ * Use Vite's BASE_URL so the fetch works whether the app is served from
+ * the domain root (Lovable preview/deploy) or a subfolder (e.g. embedded
+ * inside a Joomla site at `/recruitment-calculator/`). BASE_URL always
+ * has a trailing slash.
+ */
+const RUNTIME_CONFIG_URL = `${import.meta.env.BASE_URL ?? '/'}calculator-config.json`;
 
 type Plain = Record<string, unknown>;
 
