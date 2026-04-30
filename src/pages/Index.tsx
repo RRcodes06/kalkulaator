@@ -130,8 +130,12 @@ const Index = () => {
           {/* ── CENTER COLUMN: calculator ── */}
           <section className="min-w-0 space-y-6 laptop:space-y-4">
             <div>
-              <h1 className="text-2xl laptop:text-xl font-bold text-foreground">{t('title')}</h1>
-              <p className="mt-1 max-w-2xl text-sm laptop:text-xs text-muted-foreground">{t('subtitle')}</p>
+              <h1 className="text-2xl laptop:text-xl font-bold text-foreground">
+                {config.pageTitle?.[language] || t('title')}
+              </h1>
+              <p className="mt-1 max-w-2xl text-sm laptop:text-xs text-muted-foreground">
+                {config.pageSubtitle?.[language] || t('subtitle')}
+              </p>
             </div>
 
               <PrivacyNotice />
