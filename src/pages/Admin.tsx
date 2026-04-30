@@ -621,6 +621,30 @@ function AdminPanel() {
           </CardHeader>
           <CardContent className="space-y-4">
             <ConfigTextInput
+              label="Lehe pealkiri (ET)"
+              value={config.pageTitle?.est ?? ''}
+              onChange={(v) => updateConfig('pageTitle', { ...config.pageTitle, est: v, eng: config.pageTitle?.eng ?? '' })}
+              rows={1}
+            />
+            <ConfigTextInput
+              label="Page title (EN)"
+              value={config.pageTitle?.eng ?? ''}
+              onChange={(v) => updateConfig('pageTitle', { ...config.pageTitle, eng: v, est: config.pageTitle?.est ?? '' })}
+              rows={1}
+            />
+            <ConfigTextInput
+              label="Pealkirja alune tekst (ET)"
+              value={config.pageSubtitle?.est ?? ''}
+              onChange={(v) => updateConfig('pageSubtitle', { ...config.pageSubtitle, est: v, eng: config.pageSubtitle?.eng ?? '' })}
+              rows={5}
+            />
+            <ConfigTextInput
+              label="Subtitle / intro paragraph (EN)"
+              value={config.pageSubtitle?.eng ?? ''}
+              onChange={(v) => updateConfig('pageSubtitle', { ...config.pageSubtitle, eng: v, est: config.pageSubtitle?.est ?? '' })}
+              rows={5}
+            />
+            <ConfigTextInput
               label="Vastutusest loobumine"
               value={config.disclaimerText}
               onChange={(v) => updateConfig('disclaimerText', v)}
