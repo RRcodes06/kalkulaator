@@ -64,6 +64,8 @@ function buildAutoFillValues(config: CalculatorConfig): Record<string, number> {
   vals['roles.manager.payAmount'] = config.roleDefaultSalaries.manager;
   vals['roles.team.payAmount'] = config.roleDefaultSalaries.team;
   vals['hirePay.payAmount'] = config.roleDefaultSalaries.team;
+  // Database license fee: fixed average (no recommendedRanges entry, null-valued field)
+  vals['adsBranding.databaseLicenseFee'] = 250;
   return vals;
 }
 
@@ -83,7 +85,11 @@ function applyAutoFill(
 
   const maybeSet = (path: string, target: Record<string, unknown>, key: string) => {
     if (vals[path] === undefined) return;
-    if (!isFieldEmpty(target[key])) return;
+    const isNullable = path === 'adsBranding.databaseLicenseFee';
+    const empty = isNullable
+      ? target[key] === null || target[key] === undefined || target[key] === ''
+      : isFieldEmpty(target[key]);
+    if (!empty) return;
     target[key] = vals[path];
     filledPaths.add(path);
   };
@@ -112,7 +118,7 @@ function applyAutoFill(
   // Block hour/cost fields
   const blockMappings: Array<{ section: string; obj: Record<string, unknown>; fields: string[] }> = [
     { section: 'strategyPrep', obj: inp.strategyPrep as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours'] },
-    { section: 'adsBranding', obj: inp.adsBranding as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours', 'directCosts'] },
+    { section: 'adsBranding', obj: inp.adsBranding as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours', 'directCosts', 'databaseLicenseFee'] },
     { section: 'candidateMgmt', obj: inp.candidateMgmt as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours'] },
     { section: 'interviews', obj: inp.interviews as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours', 'directCosts'] },
     { section: 'backgroundOffer', obj: inp.backgroundOffer as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours'] },
@@ -174,6 +180,9 @@ function removeAutoFill(
         // For overtimeMultiplier, reset to default 1.5 instead of 0
         if (field === 'overtimeMultiplier') {
           obj[field] = 1.5;
+        } else if (path === 'adsBranding.databaseLicenseFee') {
+          // Nullable field: reset to null (unfilled), not 0
+          obj[field] = null;
         } else {
           obj[field] = 0;
         }
@@ -276,7 +285,7 @@ export const useAppStore = create<AppState>((set, get) => {
     fillSectionWithAverages: (sectionId: string) => {
       const SECTION_FIELD_MAP: Record<string, { inputKey: string; fields: string[] }> = {
         strategy: { inputKey: 'strategyPrep', fields: ['hrHours', 'managerHours', 'teamHours'] },
-        ads: { inputKey: 'adsBranding', fields: ['hrHours', 'managerHours', 'teamHours', 'directCosts'] },
+        ads: { inputKey: 'adsBranding', fields: ['hrHours', 'managerHours', 'teamHours', 'directCosts', 'databaseLicenseFee'] },
         candidate: { inputKey: 'candidateMgmt', fields: ['hrHours', 'managerHours'] },
         interviews: { inputKey: 'interviews', fields: ['hrHours', 'managerHours', 'teamHours', 'directCosts'] },
         background: { inputKey: 'backgroundOffer', fields: ['hrHours', 'managerHours'] },
@@ -311,7 +320,11 @@ export const useAppStore = create<AppState>((set, get) => {
 
       for (const field of mapping.fields) {
         const path = `${mapping.inputKey}.${field}`;
-        if (vals[path] !== undefined && isFieldEmpty(obj[field])) {
+        const isNullable = path === 'adsBranding.databaseLicenseFee';
+        const empty = isNullable
+          ? obj[field] === null || obj[field] === undefined || obj[field] === ''
+          : isFieldEmpty(obj[field]);
+        if (vals[path] !== undefined && empty) {
           obj[field] = vals[path];
         }
       }
