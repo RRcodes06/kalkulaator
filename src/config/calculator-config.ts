@@ -91,6 +91,12 @@ const urls = {
 // and as a snapshot of the canonical Estonian wording shown in the calculator.
 // If you change the wording in the calculator, mirror it here.
 const texts = {
+  // Mirrors translations.title — main page H1
+  pageTitle:
+    'Värbamisprotsessi tegeliku kogukulu kalkulaator',
+  // Mirrors translations.subtitle — under-title intro paragraph
+  pageSubtitle:
+    'See kalkulaator annab ligikaudse hinnangu värbamisprotsessi kogukulule. Tegelikud kulud võivad varieeruda sõltuvalt konkreetsetest asjaoludest ja sisestatud andmetest. Kalkulaator hõlmab kõiki värbamisprotsessiga seotud otseseid, kaudseid ja varjatud kulusid. Kõik kulud on arvestatud proportsioonis kuu kogukuluga. Kui täpsed andmed puuduvad, kasuta soovituslikke vahemikke või funktsiooni „Täida keskmistega".',
   // Mirrors translations.subtitle (Estonian) — page intro / disclaimer
   disclaimerText:
     'See kalkulaator annab ligikaudse hinnangu värbamisprotsessi kogukulule. Tegelikud kulud võivad varieeruda sõltuvalt konkreetsetest asjaoludest ja sisestatud andmetest. Kalkulaator hõlmab kõiki värbamisprotsessiga seotud otseseid, kaudseid ja varjatud kulusid. Kõik kulud on arvestatud proportsioonis kuu kogukuluga. Kui täpsed andmed puuduvad, kasuta soovituslikke vahemikke või funktsiooni „Täida keskmistega".',
