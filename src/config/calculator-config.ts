@@ -91,12 +91,16 @@ const urls = {
 // and as a snapshot of the canonical Estonian wording shown in the calculator.
 // If you change the wording in the calculator, mirror it here.
 const texts = {
-  // Mirrors translations.title — main page H1
-  pageTitle:
-    'Värbamisprotsessi tegeliku kogukulu kalkulaator',
-  // Mirrors translations.subtitle — under-title intro paragraph
-  pageSubtitle:
-    'See kalkulaator annab ligikaudse hinnangu värbamisprotsessi kogukulule. Tegelikud kulud võivad varieeruda sõltuvalt konkreetsetest asjaoludest ja sisestatud andmetest. Kalkulaator hõlmab kõiki värbamisprotsessiga seotud otseseid, kaudseid ja varjatud kulusid. Kõik kulud on arvestatud proportsioonis kuu kogukuluga. Kui täpsed andmed puuduvad, kasuta soovituslikke vahemikke või funktsiooni „Täida keskmistega".',
+  // Live page H1 — read by Index.tsx (per language). Editable in admin.
+  pageTitle: {
+    est: 'Värbamisprotsessi tegeliku kogukulu kalkulaator',
+    eng: 'True Cost of Recruitment Calculator',
+  },
+  // Live under-title intro paragraph — read by Index.tsx (per language).
+  pageSubtitle: {
+    est: 'See kalkulaator annab ligikaudse hinnangu värbamisprotsessi kogukulule. Tegelikud kulud võivad varieeruda sõltuvalt konkreetsetest asjaoludest ja sisestatud andmetest. Kalkulaator hõlmab kõiki värbamisprotsessiga seotud otseseid, kaudseid ja varjatud kulusid. Kõik kulud on arvestatud proportsioonis kuu kogukuluga. Kui täpsed andmed puuduvad, kasuta soovituslikke vahemikke või funktsiooni „Täida keskmistega".',
+    eng: 'This calculator provides an approximate estimate of the total cost of the recruitment process. Actual costs may vary depending on specific circumstances and the data entered. The calculator covers all direct, indirect, and hidden costs associated with the recruitment process. All costs are calculated in proportion to total monthly cost. If precise data is unavailable, use the recommended ranges or the "Fill with averages" function.',
+  },
   // Mirrors translations.subtitle (Estonian) — page intro / disclaimer
   disclaimerText:
     'See kalkulaator annab ligikaudse hinnangu värbamisprotsessi kogukulule. Tegelikud kulud võivad varieeruda sõltuvalt konkreetsetest asjaoludest ja sisestatud andmetest. Kalkulaator hõlmab kõiki värbamisprotsessiga seotud otseseid, kaudseid ja varjatud kulusid. Kõik kulud on arvestatud proportsioonis kuu kogukuluga. Kui täpsed andmed puuduvad, kasuta soovituslikke vahemikke või funktsiooni „Täida keskmistega".',

@@ -195,8 +195,8 @@ export interface CalculatorConfig {
   helpUrl: string;
   
   // Text snippets
-  pageTitle: string;
-  pageSubtitle: string;
+  pageTitle: LocalizedText;
+  pageSubtitle: LocalizedText;
   disclaimerText: string;
   riskExplanationText: string;
   indirectExplanationText: string;
