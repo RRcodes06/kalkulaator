@@ -85,7 +85,11 @@ function applyAutoFill(
 
   const maybeSet = (path: string, target: Record<string, unknown>, key: string) => {
     if (vals[path] === undefined) return;
-    if (!isFieldEmpty(target[key])) return;
+    const isNullable = path === 'adsBranding.databaseLicenseFee';
+    const empty = isNullable
+      ? target[key] === null || target[key] === undefined || target[key] === ''
+      : isFieldEmpty(target[key]);
+    if (!empty) return;
     target[key] = vals[path];
     filledPaths.add(path);
   };
@@ -114,7 +118,7 @@ function applyAutoFill(
   // Block hour/cost fields
   const blockMappings: Array<{ section: string; obj: Record<string, unknown>; fields: string[] }> = [
     { section: 'strategyPrep', obj: inp.strategyPrep as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours'] },
-    { section: 'adsBranding', obj: inp.adsBranding as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours', 'directCosts'] },
+    { section: 'adsBranding', obj: inp.adsBranding as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours', 'directCosts', 'databaseLicenseFee'] },
     { section: 'candidateMgmt', obj: inp.candidateMgmt as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours'] },
     { section: 'interviews', obj: inp.interviews as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours', 'directCosts'] },
     { section: 'backgroundOffer', obj: inp.backgroundOffer as unknown as Record<string, unknown>, fields: ['hrHours', 'managerHours', 'teamHours'] },
