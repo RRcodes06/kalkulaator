@@ -3,37 +3,80 @@
  * CONFIG ACCESS LAYER
  * ============================================================================
  *
- * Abstraction over the config source. Currently reads from the local
- * calculator-config.ts file, but the two exported functions can be
- * re-pointed to any async source (API, Joomla endpoint, shared JSON)
- * without touching the rest of the codebase.
+ * Two-layer config:
+ *   1. Built-in defaults from `calculator-config.ts` (always available).
+ *   2. Optional runtime overrides from `/calculator-config.json` served
+ *      from `public/`. This file can be edited by the Joomla developer
+ *      (or any deployment) without rebuilding the app.
  *
- * Integration example (future):
+ * On startup, `loadCalculatorConfig()` tries to fetch the JSON. If the
+ * fetch succeeds and the body parses, the JSON is deep-merged OVER the
+ * defaults. If anything fails (404, parse error, network error), the
+ * defaults are returned unchanged.
  *
- *   export async function loadCalculatorConfig(): Promise<CalculatorConfig> {
- *     const res = await fetch('/api/calculator-config');
- *     return { ...CALCULATOR_CONFIG, ...await res.json() };
- *   }
+ * The TS file is the canonical fallback — the app NEVER depends solely
+ * on the JSON file.
  */
 
 import type { CalculatorConfig } from '@/types/calculator';
 import { CALCULATOR_CONFIG } from '@/config/calculator-config';
 
+const RUNTIME_CONFIG_URL = '/calculator-config.json';
+
+type Plain = Record<string, unknown>;
+
+function isPlainObject(v: unknown): v is Plain {
+  return typeof v === 'object' && v !== null && !Array.isArray(v);
+}
+
 /**
- * Load the calculator config from its source.
- *
- * Currently synchronous (local file), but returns a Promise so that
- * callers are already prepared for an async source swap.
+ * Recursive merge: `override` wins, but missing keys fall back to `base`.
+ * Arrays and primitives are replaced wholesale (not merged element-wise).
  */
-export async function loadCalculatorConfig(): Promise<CalculatorConfig> {
-  // Future: fetch('/api/calculator-config').then(r => r.json())
+function deepMerge<T>(base: T, override: unknown): T {
+  if (!isPlainObject(override)) return base;
+  if (!isPlainObject(base)) return override as T;
+  const out: Plain = { ...base };
+  for (const key of Object.keys(override)) {
+    const bVal = (base as Plain)[key];
+    const oVal = (override as Plain)[key];
+    if (isPlainObject(bVal) && isPlainObject(oVal)) {
+      out[key] = deepMerge(bVal, oVal);
+    } else if (oVal !== undefined) {
+      out[key] = oVal;
+    }
+  }
+  return out as T;
+}
+
+/**
+ * Synchronous getter for the built-in default config (used as Zustand
+ * initial value before async runtime config has loaded).
+ */
+export function getCalculatorConfig(): CalculatorConfig {
   return { ...CALCULATOR_CONFIG };
 }
 
 /**
- * Synchronous getter for the default config.
- * Use when an async call is not practical (e.g. Zustand initialiser).
+ * Load the calculator config from `/calculator-config.json` (if present)
+ * and merge it over the built-in defaults. Always resolves with a valid
+ * `CalculatorConfig` — falls back to defaults on any error.
  */
-export function getCalculatorConfig(): CalculatorConfig {
-  return { ...CALCULATOR_CONFIG };
+export async function loadCalculatorConfig(): Promise<CalculatorConfig> {
+  const defaults = getCalculatorConfig();
+  try {
+    const res = await fetch(RUNTIME_CONFIG_URL, { cache: 'no-store' });
+    if (!res.ok) return defaults;
+    const ct = res.headers.get('content-type') ?? '';
+    // Vite dev server returns index.html for missing files — guard against it.
+    if (!ct.includes('json') && !ct.includes('text/plain')) return defaults;
+    const text = await res.text();
+    const trimmed = text.trim();
+    if (!trimmed.startsWith('{')) return defaults;
+    const json = JSON.parse(trimmed) as unknown;
+    if (!isPlainObject(json)) return defaults;
+    return deepMerge(defaults, json);
+  } catch {
+    return defaults;
+  }
 }

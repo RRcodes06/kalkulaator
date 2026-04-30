@@ -63,6 +63,7 @@ const ranges: RecommendedRanges = {
   'adsBranding.managerHours':   { min: 0,  max: 1,   unit: 'h' },
   'adsBranding.teamHours':      { min: 0,  max: 4,   unit: 'h' },
   'adsBranding.directCosts':    { min: 100, max: 2000, unit: '€' },
+  'adsBranding.databaseLicenseFee': { min: 0, max: 500, unit: '€' },
   'candidateMgmt.hrHours':      { min: 4,  max: 25,  unit: 'h' },
   'candidateMgmt.managerHours': { min: 1,  max: 10,  unit: 'h' },
   'interviews.hrHours':         { min: 3,  max: 15,  unit: 'h' },
@@ -163,6 +164,7 @@ export const RANGE_LABELS: Record<string, string> = {
   'adsBranding.managerHours':                   'Juhi tunnid',
   'adsBranding.teamHours':                      'Tiimi tunnid',
   'adsBranding.directCosts':                    'Kuulutuste ja brändingu kulud',
+  'adsBranding.databaseLicenseFee':             'Andmebaaside litsentsitasu',
   // Candidate management
   'candidateMgmt.hrHours':                      'Personalitöötaja tunnid',
   'candidateMgmt.managerHours':                 'Juhi tunnid',
