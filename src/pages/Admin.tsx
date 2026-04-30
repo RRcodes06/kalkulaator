@@ -379,6 +379,15 @@ function AdminPanel() {
           }
         }
 
+        // Validate localized text fields ({ est, eng })
+        const localizedKeys: (keyof CalculatorConfig)[] = ['pageTitle', 'pageSubtitle'];
+        for (const key of localizedKeys) {
+          const v = validatedConfig[key] as unknown as { est?: unknown; eng?: unknown } | undefined;
+          if (!v || typeof v !== 'object' || typeof v.est !== 'string' || typeof v.eng !== 'string') {
+            validatedConfig[key] = DEFAULT_CONFIG[key] as never;
+          }
+        }
+
         // Apply all updates
         Object.entries(validatedConfig).forEach(([key, value]) => {
           updateConfig(key as keyof CalculatorConfig, value as never);
