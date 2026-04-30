@@ -167,6 +167,12 @@ export interface RoleDefaultSalaries {
   manager: number;
 }
 
+/** Per-language string used for editable, language-aware UI copy. */
+export interface LocalizedText {
+  est: string;
+  eng: string;
+}
+
 export interface CalculatorConfig {
   HOURS_PER_MONTH: number;
   EST_AVG_GROSS_WAGE: number;
