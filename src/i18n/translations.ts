@@ -452,6 +452,8 @@ export const translations = {
     adsCosts: 'Ads and branding costs',
     adsCostsHint: 'CV-Online, LinkedIn, materials',
     databaseLicenseFee: 'Database license fee',
+    databaseLicenseFeeHint: 'Usually €0–500',
+    databaseLicenseFeeHigh: 'This is higher than typical. Typical range: €0–500.',
     testsCost: 'Assessment test costs',
     testsCostHint: 'Psychological tests, skills assessment',
     teamHoursHint: 'Team involvement in interviews',
