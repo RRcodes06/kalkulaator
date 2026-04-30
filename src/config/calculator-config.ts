@@ -164,6 +164,7 @@ export const RANGE_LABELS: Record<string, string> = {
   'adsBranding.managerHours':                   'Juhi tunnid',
   'adsBranding.teamHours':                      'Tiimi tunnid',
   'adsBranding.directCosts':                    'Kuulutuste ja brändingu kulud',
+  'adsBranding.databaseLicenseFee':             'Andmebaaside litsentsitasu',
   // Candidate management
   'candidateMgmt.hrHours':                      'Personalitöötaja tunnid',
   'candidateMgmt.managerHours':                 'Juhi tunnid',
