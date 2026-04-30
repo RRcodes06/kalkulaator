@@ -7,7 +7,9 @@ import { LanguageProvider } from "@/i18n/LanguageContext";
 import Index from "./pages/Index";
 import Print from "./pages/Print";
 import NotFound from "./pages/NotFound";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
+import { loadCalculatorConfig } from "@/config/config-loader";
+import { useAppStore } from "@/store/appStore";
 
 // Admin page is only available in development. In production builds the
 // /admin route is removed entirely so the panel cannot be accessed.
@@ -17,7 +19,20 @@ const Admin = import.meta.env.DEV
 
 const queryClient = new QueryClient();
 
-const App = () => (
+const App = () => {
+  // Bootstrap: try to load runtime config from /calculator-config.json
+  // (deep-merged over the built-in TS defaults). Falls back silently to
+  // defaults if the file is missing or invalid.
+  useEffect(() => {
+    let cancelled = false;
+    loadCalculatorConfig().then((cfg) => {
+      if (cancelled) return;
+      useAppStore.getState().setConfig(cfg);
+    });
+    return () => { cancelled = true; };
+  }, []);
+
+  return (
   <QueryClientProvider client={queryClient}>
     <LanguageProvider>
       <TooltipProvider>
@@ -44,6 +59,7 @@ const App = () => (
       </TooltipProvider>
     </LanguageProvider>
   </QueryClientProvider>
-);
+  );
+};
 
 export default App;
