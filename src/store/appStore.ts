@@ -31,6 +31,7 @@ interface AppState {
 
   updateConfig: <K extends keyof CalculatorConfig>(key: K, value: CalculatorConfig[K]) => void;
   resetConfig: () => void;
+  setConfig: (config: CalculatorConfig) => void;
 
   triggerCalculation: () => void;
   recompute: () => void;
@@ -371,6 +372,14 @@ export const useAppStore = create<AppState>((set, get) => {
       set((state) => ({
         config: DEFAULT_CONFIG,
         results: computeTotals(state.inputs, DEFAULT_CONFIG),
+      }));
+    },
+
+    // Replace the entire config (used for runtime JSON bootstrap).
+    setConfig: (config: CalculatorConfig) => {
+      set((state) => ({
+        config,
+        results: computeTotals(state.inputs, config),
       }));
     },
 
