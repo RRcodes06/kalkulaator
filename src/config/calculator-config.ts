@@ -86,65 +86,93 @@ const urls = {
 } as const;
 
 // ── UI texts ────────────────────────────────────────────────────────────────
+// NOTE: Live UI copy is sourced from src/i18n/translations.ts (est/eng).
+// These strings are kept ONLY for legacy admin import/export compatibility
+// and as a snapshot of the canonical Estonian wording shown in the calculator.
+// If you change the wording in the calculator, mirror it here.
 const texts = {
+  // Mirrors translations.subtitle (Estonian) — page intro / disclaimer
   disclaimerText:
-    'See kalkulaator annab ligikaudse hinnangu värbamisprotsessi kogukulule. Tegelikud kulud võivad varieeruda sõltuvalt konkreetsetest asjaoludest.',
+    'See kalkulaator annab ligikaudse hinnangu värbamisprotsessi kogukulule. Tegelikud kulud võivad varieeruda sõltuvalt konkreetsetest asjaoludest ja sisestatud andmetest. Kalkulaator hõlmab kõiki värbamisprotsessiga seotud otseseid, kaudseid ja varjatud kulusid. Kõik kulud on arvestatud proportsioonis kuu kogukuluga. Kui täpsed andmed puuduvad, kasuta soovituslikke vahemikke või funktsiooni „Täida keskmistega".',
+  // Mirrors translations.riskExplanation template (with placeholders left in)
   riskExplanationText:
-    'Halva värbamisotsuse risk arvestab statistilist tõenäosust, et töötaja lahkub katseajal või osutub sobimatuks. Keskmine risk on 15% ning kulud hõlmavad kahe kuu palgakulusid.',
+    'Kui värbamine ebaõnnestub ({pct}% tõenäosus), kaotate veel {amount} lisaks juba tehtud kuludele. See on võimalik lisakulu, mitte garanteeritud kulu.',
+  // Mirrors translations.sectionInfoVacantImpact + guidance — replaces the
+  // legacy "indirect costs" concept which no longer exists in the calculator.
   indirectExplanationText:
-    'Kaudsed kulud hõlmavad aega, mille kolleegid pühendavad uue töötaja abistamisele, koosolekutele ja muudele tegevustele, mis ei ole otseselt värbamisprotsess.',
+    'Täitmata positsiooni mõju äri tulemuslikkusele. Vali, kas töö jääb tegemata või kaetakse tiimi poolt. Mõlemat korraga ei arvestata.',
+  // Mirrors translations.didThisSurpriseYou
   finalQuestionText:
     'Kas see number üllatas sind?',
+  // Mirrors translations.contactUs
   ctaPlaceholderText:
     'Võta meiega ühendust, et arutada, kuidas värbamiskulusid optimeerida.',
+  // Mirrors translations.resetDescription
   resetConfirmText:
-    'Kas oled kindel, et soovid kõik andmed lähtestada?',
+    'Kõik sisestatud andmed kustutatakse ja väljad taastatakse vaikeväärtustele. Seda toimingut ei saa tagasi võtta.',
+  // Mirrors translations.usesEstonianAverage (without the leading icon)
   defaultUsedText:
-    'Kasutasime vaikeväärtust',
+    'Kasutatakse Eesti keskmist palka',
+  // Mirrors translations.privacyNotice
   privacyNotice:
     'Sisestatud infot ei salvestata. Lehelt lahkudes kõik kustub.',
 } as const;
 
 // ── Labels (admin panel & engine) ───────────────────────────────────────────
 
-/** Human-readable names for each cost block (used in results & admin) */
+/**
+ * Short human-readable names for each cost block. Used in results breakdown,
+ * admin panel and as fallback for the engine's topDrivers.label.
+ * Must mirror the `block*` keys in src/i18n/translations.ts (Estonian).
+ */
 export const BLOCK_LABELS: Record<string, string> = {
-  strategyPrep:   'Strateegia ja ettevalmistus',
-  adsBranding:    'Kuulutused ja bränding',
-  candidateMgmt:  'Kandidaatide haldus ja testid',
-  interviews:     'Intervjuud',
-  backgroundOffer:'Taustakontroll ja pakkumine',
-  otherServices:  'Muud teenused',
-  preboarding:    'Ettevalmistus enne alustamist',
-  onboarding:     'Sisseelamine',
-  vacantImpact:   'Täitmata positsiooni mõju',
-  expectedRisk:   'Oodatav riskikulu',
+  strategyPrep:    'Strateegia ja ettevalmistus',
+  adsBranding:     'Kuulutused ja bränding',
+  candidateMgmt:   'Kandidaatide haldus ja testid',
+  interviews:      'Intervjuud',
+  backgroundOffer: 'Taustakontroll ja pakkumine',
+  otherServices:   'Muud teenused',
+  preboarding:     'Ettevalmistus enne alustamist',
+  onboarding:      'Sisseelamine',
+  vacantImpact:    'Täitmata positsiooni mõju',
+  expectedRisk:    'Oodatav riskikulu',
 };
 
-/** Field labels inside each range group (shown in admin ranges table) */
+/**
+ * Field labels inside each range group (shown in admin ranges table).
+ * Must contain an entry for every key in `ranges` above and use the same
+ * Estonian wording the user sees in the calculator UI (translations.ts).
+ */
 export const RANGE_LABELS: Record<string, string> = {
-  'strategyPrep.hrHours':       'HR tunnid',
-  'strategyPrep.managerHours':  'Juhi tunnid',
-  'strategyPrep.teamHours':     'Tiimi tunnid',
-  'adsBranding.hrHours':        'HR tunnid',
-  'adsBranding.managerHours':   'Juhi tunnid',
-  'adsBranding.teamHours':      'Tiimi tunnid',
-  'adsBranding.directCosts':    'Otsesed kulud',
-  'candidateMgmt.hrHours':      'HR tunnid',
-  'candidateMgmt.managerHours': 'Juhi tunnid',
-  'interviews.hrHours':         'HR tunnid',
-  'interviews.managerHours':    'Juhi tunnid',
-  'interviews.teamHours':       'Tiimi tunnid',
-  'interviews.directCosts':     'Otsesed kulud',
-  'backgroundOffer.hrHours':    'HR tunnid',
-  'backgroundOffer.managerHours':'Juhi tunnid',
-  'onboarding.onboardingMonths':'Sisseelamisperiood (kuud)',
-  'onboarding.productivityPct': 'Keskmine tootlikkus (%)',
-  'vacantPositionImpact.percentageUndone':    'Täitmata töö osakaal',
-  'vacantPositionImpact.monthlyPositionValue': 'Positsiooni kuine väärtus',
-  'vacantPositionImpact.additionalHours':     'Lisatunnid kuus',
-  'vacantPositionImpact.avgHourlyCost':       'Keskmine tunnikulu',
-  'vacantPositionImpact.overtimeMultiplier':  'Ületunni koefitsient',
+  // Strategy & prep
+  'strategyPrep.hrHours':                       'Personalitöötaja tunnid',
+  'strategyPrep.managerHours':                  'Juhi tunnid',
+  'strategyPrep.teamHours':                     'Tiimi tunnid',
+  // Ads & branding
+  'adsBranding.hrHours':                        'Personalitöötaja tunnid',
+  'adsBranding.managerHours':                   'Juhi tunnid',
+  'adsBranding.teamHours':                      'Tiimi tunnid',
+  'adsBranding.directCosts':                    'Kuulutuste ja brändingu kulud',
+  // Candidate management
+  'candidateMgmt.hrHours':                      'Personalitöötaja tunnid',
+  'candidateMgmt.managerHours':                 'Juhi tunnid',
+  // Interviews
+  'interviews.hrHours':                         'Personalitöötaja tunnid',
+  'interviews.managerHours':                    'Juhi tunnid',
+  'interviews.teamHours':                       'Tiimi tunnid',
+  'interviews.directCosts':                     'Otsesed kulud',
+  // Background & offer
+  'backgroundOffer.hrHours':                    'Personalitöötaja tunnid',
+  'backgroundOffer.managerHours':               'Juhi tunnid',
+  // Onboarding
+  'onboarding.onboardingMonths':                'Sisseelamisperiood (kuud)',
+  'onboarding.productivityPct':                 'Keskmine tootlikkus (%)',
+  // Vacant position impact
+  'vacantPositionImpact.percentageUndone':      'Kui suur osa tööst jääb tegemata',
+  'vacantPositionImpact.monthlyPositionValue':  'Positsiooni hinnanguline kuine väärtus',
+  'vacantPositionImpact.additionalHours':       'Lisatunnid kuus',
+  'vacantPositionImpact.avgHourlyCost':         'Keskmine tunnikulu',
+  'vacantPositionImpact.overtimeMultiplier':    'Ületunni koefitsient',
 };
 
 // ============================================================================
