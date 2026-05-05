@@ -3,8 +3,8 @@ export type Language = 'est' | 'eng';
 export const translations = {
   est: {
     // Header
-    title: 'Värbamisprotsessi tegeliku kogukulu kalkulaator',
-    subtitle: 'See kalkulaator annab ligikaudse hinnangu värbamisprotsessi kogukulule. Tegelikud kulud võivad varieeruda sõltuvalt konkreetsetest asjaoludest ja sisestatud andmetest. Kalkulaator hõlmab kõiki värbamisprotsessiga seotud otseseid, kaudseid ja varjatud kulusid. Kõik kulud on arvestatud proportsioonis kuu kogukuluga. Kui täpsed andmed puuduvad, kasuta soovituslikke vahemikke või funktsiooni „Täida keskmistega".',
+    title: 'Värbamisprotsessiga seotud tegeliku kogukulu kalkulaator',
+    subtitle: 'See kalkulaator annab ligikaudse hinnangu värbamisprotsessi kogukulule. Tegelikud kulud võivad varieeruda sõltuvalt konkreetsetest asjaoludest ja sisestatud andmetest. Kalkulaator hõlmab uue töötajaga seotud otseseid, kaudseid ja varjatud kulusid. Kõik kulud on arvestatud proportsioonis kuu kogukuluga. Kui täpsed andmed puuduvad, kasuta soovituslikke vahemikke või funktsiooni „Täida keskmistega". Kalkulaator kasutab 2025. aasta 4. kvartali andmeid.',
     printReport: 'Prindi aruanne (PDF)',
     reset: 'Lähtesta',
     admin: 'Admin',
@@ -414,8 +414,8 @@ export const translations = {
 
   eng: {
     // Header
-    title: 'True Cost of Recruitment Calculator',
-    subtitle: 'This calculator provides an approximate estimate of the total cost of the recruitment process. Actual costs may vary depending on specific circumstances and the data entered. The calculator covers all direct, indirect, and hidden costs associated with the recruitment process. All costs are calculated in proportion to total monthly cost. If precise data is unavailable, use the recommended ranges or the "Fill with averages" function.',
+    title: 'Calculator for the Actual Total Cost Associated with the Recruitment Process',
+    subtitle: 'This calculator provides an approximate estimate of the total cost of the recruitment process. Actual costs may vary depending on the specific circumstances and the data entered. The calculator includes direct, indirect, and hidden costs associated with a new employee. All costs are calculated in proportion to the total monthly cost. If precise data is unavailable, use the recommended ranges or the “Fill with averages” function. The calculator uses data from the fourth quarter of 2025.',
     printReport: 'Print Report (PDF)',
     reset: 'Reset',
     admin: 'Admin',
