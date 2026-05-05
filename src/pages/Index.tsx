@@ -133,7 +133,7 @@ const Index = () => {
               <h1 className="text-2xl laptop:text-xl font-bold text-foreground">
                 {config.pageTitle?.[language] || t('title')}
               </h1>
-              <p className="mt-1 max-w-2xl text-sm laptop:text-xs text-muted-foreground">
+              <p className="mt-1 max-w-2xl text-sm laptop:text-xs text-foreground">
                 {config.pageSubtitle?.[language] || t('subtitle')}
               </p>
             </div>
