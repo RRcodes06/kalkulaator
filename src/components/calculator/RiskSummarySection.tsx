@@ -132,26 +132,26 @@ export function RiskSummarySection() {
           )}
 
           <Card className="border-2 border-[hsl(var(--total-highlight))] bg-gradient-to-br from-[hsl(var(--total-highlight)/0.12)] via-[hsl(var(--total-highlight)/0.06)] to-background shadow-[0_0_40px_-8px_hsl(var(--total-glow)/0.35)]">
-            <CardContent className="py-12">
-              <div className="text-center space-y-5">
+            <CardContent className="py-10">
+              <div className="text-center space-y-4">
                 <div className="flex items-center justify-center gap-2">
-                  <TrendingDown className="w-7 h-7 text-[hsl(var(--total-highlight))]" />
-                  <h2 className="text-2xl font-bold text-[hsl(var(--total-highlight))]">{t('totalCostTitle')}</h2>
+                  <TrendingDown className="w-8 h-8 text-[hsl(var(--total-highlight))]" />
+                  <h2 className="text-3xl font-bold text-[hsl(var(--total-highlight))]">{t('totalCostTitle')}</h2>
                 </div>
-                
-                <p className="text-6xl font-bold text-[hsl(var(--total-highlight))] animate-pulse-subtle tracking-tight">
+
+                <p className="text-7xl font-bold text-[hsl(var(--total-highlight))] animate-pulse-subtle tracking-tight leading-none">
                   {formatCurrency(results.totalCost)}
                 </p>
-                
-                <p className="text-muted-foreground max-w-lg mx-auto leading-relaxed">
+
+                <p className="text-lg text-muted-foreground max-w-lg mx-auto leading-snug">
                   {t('totalCostDescription')}
                 </p>
 
-                <div className="pt-6 mt-2 border-t-2 border-[hsl(var(--total-highlight)/0.3)] max-w-md mx-auto space-y-4">
-                  <p className="text-xl font-semibold text-foreground">
+                <div className="pt-5 mt-1 border-t-2 border-[hsl(var(--total-highlight)/0.3)] max-w-md mx-auto space-y-3">
+                  <p className="text-2xl font-semibold text-foreground">
                     {t('didThisSurpriseYou')}
                   </p>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+                  <p className="text-base text-muted-foreground leading-snug">
                     {t('contactUs')}
                   </p>
                   <a
@@ -159,11 +159,11 @@ export function RiskSummarySection() {
                     target="_blank"
                     rel="noopener noreferrer"
                     referrerPolicy="no-referrer"
-                    className="inline-flex items-center justify-center gap-2 rounded-md bg-[hsl(var(--total-highlight))] px-6 py-3 text-sm font-semibold text-white shadow-lg hover:bg-[hsl(var(--total-highlight)/0.9)] transition-colors"
+                    className="inline-flex items-center justify-center gap-2 rounded-md bg-[hsl(var(--total-highlight))] px-6 py-3 text-base font-semibold text-white shadow-lg hover:bg-[hsl(var(--total-highlight)/0.9)] transition-colors"
                   >
                     {t('contactButton')}
                   </a>
-                  <p className="text-xs text-muted-foreground/70">
+                  <p className="text-sm text-muted-foreground/70">
                     {t('contactFormNote')}
                   </p>
                 </div>
@@ -173,8 +173,8 @@ export function RiskSummarySection() {
 
           <Card className="border-warning/30 bg-warning/5">
             <CardHeader className="pb-2">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <AlertTriangle className="w-5 h-5 text-warning" />
+              <CardTitle className="flex items-center gap-2 text-xl">
+                <AlertTriangle className="w-6 h-6 text-warning" />
                 {t('riskScenarioTitle')}
                 <button
                   onClick={() => setShowInfo(!showInfo)}
@@ -190,13 +190,13 @@ export function RiskSummarySection() {
                 </button>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-3">
               {showInfo && (
-                <div className="p-4 bg-muted/50 rounded-lg border border-border animate-fade-in">
+                <div className="p-3 bg-muted/50 rounded-lg border border-border animate-fade-in">
                   <div className="flex items-start justify-between gap-3">
                     <div className="space-y-1 flex-1">
-                      <p className="text-sm text-foreground">{sectionInfoDesc}</p>
-                      <p className="text-xs text-muted-foreground">{sectionInfoGuidance}</p>
+                      <p className="text-base text-foreground leading-snug">{sectionInfoDesc}</p>
+                      <p className="text-sm text-muted-foreground leading-snug">{sectionInfoGuidance}</p>
                     </div>
                     <button
                       onClick={() => setShowInfo(false)}
@@ -209,43 +209,43 @@ export function RiskSummarySection() {
                 </div>
               )}
               
-              <div className="p-5 bg-background rounded-lg border-2 border-warning/30">
-                <p className="text-lg font-medium text-foreground mb-2">
+              <div className="p-4 bg-background rounded-lg border-2 border-warning/30">
+                <p className="text-xl font-medium text-foreground mb-1">
                   {t('riskProbabilityAdds', { pct: riskPercentage })}
                 </p>
-                <p className="text-4xl font-bold text-warning">
+                <p className="text-5xl font-bold text-warning leading-tight">
                   {formatCurrency(results.badHireExtraIfHappens)}
                 </p>
-                <p className="text-sm text-muted-foreground mt-2">
+                <p className="text-base text-muted-foreground mt-1">
                   {t('notAddedToTotal')}
                 </p>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 bg-background rounded-lg border border-border">
-                  <p className="text-sm text-muted-foreground mb-1">{t('riskProbabilityLabel')}</p>
-                  <p className="text-2xl font-bold text-warning">{riskPercentage}%</p>
-                  <p className="text-xs text-muted-foreground mt-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="p-3 bg-background rounded-lg border border-border">
+                  <p className="text-base text-muted-foreground mb-1">{t('riskProbabilityLabel')}</p>
+                  <p className="text-3xl font-bold text-warning leading-tight">{riskPercentage}%</p>
+                  <p className="text-sm text-muted-foreground mt-1">
                     {t('hiringFails')}
                   </p>
                 </div>
                 
-                <div className="p-4 bg-background rounded-lg border border-border">
-                  <p className="text-sm text-muted-foreground mb-1">{t('additionalCostComposition')}</p>
-                  <p className="text-base font-medium text-foreground">
+                <div className="p-3 bg-background rounded-lg border border-border">
+                  <p className="text-base text-muted-foreground mb-1">{t('additionalCostComposition')}</p>
+                  <p className="text-lg font-medium text-foreground leading-snug">
                     {t('monthsSalaryPlusRepeat', { months: config.BAD_HIRE_PAY_MONTHS })}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="text-sm text-muted-foreground mt-1">
                     {t('salary')} {formatCurrency(results.badHireSalaryCost)}
                   </p>
                 </div>
               </div>
 
-              <div className="p-4 bg-muted rounded-lg flex items-start gap-3">
+              <div className="p-3 bg-muted rounded-lg flex items-start gap-3">
                 <Info className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5" />
-                <div className="text-sm">
-                  <p className="font-medium mb-1">{t('whatDoesThisMean')}</p>
-                  <p className="text-muted-foreground">
+                <div className="text-base">
+                  <p className="font-semibold mb-1">{t('whatDoesThisMean')}</p>
+                  <p className="text-muted-foreground leading-snug">
                     {t('riskExplanation', { pct: riskPercentage, amount: formatCurrency(results.badHireExtraIfHappens) })}
                   </p>
                 </div>
