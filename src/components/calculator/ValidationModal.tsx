@@ -58,7 +58,7 @@ export function ValidationModal({
               </li>
             ))}
             {remaining > 0 && (
-              <li className="text-muted-foreground/70 pl-5">
+              <li className="text-muted-foreground pl-5">
                 {t('validationMore', { count: remaining })}
               </li>
             )}

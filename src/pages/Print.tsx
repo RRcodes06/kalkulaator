@@ -310,12 +310,13 @@ const Print = () => {
               <p className="text-sm text-gray-600">{t('printGenerated')} {formatDate(generatedAt)}</p>
             </div>
           </div>
-          <div className="text-right text-sm text-gray-500">
+          <div className="text-right text-sm text-gray-700">
             <p>{t('printPosition')} <strong>{inputs.positionTitle || t('printNotSet')}</strong></p>
           </div>
         </div>
       </header>
 
+      <main>
       {/* SUMMARY */}
       <section className="print-section px-8 py-6 page-break-inside-avoid">
         <h2 className="text-lg font-semibold mb-4 border-b border-gray-200 pb-2">{t('printSummary')}</h2>
@@ -323,7 +324,7 @@ const Print = () => {
         <div className="bg-gray-50 rounded-lg p-4 mb-6 text-center">
           <p className="text-sm text-gray-600 mb-1">{t('printTotalCost')}</p>
           <p className="text-4xl font-bold text-primary">{formatCurrency(results.totalCost)}</p>
-          <p className="text-sm text-gray-500 mt-1">{t('printRiskSeparate')}</p>
+          <p className="text-sm text-gray-700 mt-1">{t('printRiskSeparate')}</p>
         </div>
 
         {results.emptyFields && results.emptyFields.length > 0 && (
@@ -338,7 +339,7 @@ const Print = () => {
                 </div>
               ))}
               {results.emptyFields.length > 10 && (
-                <div className="col-span-2 text-gray-500 italic">
+                <div className="col-span-2 text-gray-700 italic">
                   {t('printAndMore', { count: results.emptyFields.length - 10 })}
                 </div>
               )}
@@ -363,7 +364,7 @@ const Print = () => {
                   <tr key={line.key} className="border-b border-gray-100">
                     <td className="py-1">{line.label}</td>
                     <td className="py-1 text-right">{formatCurrency(line.value)}</td>
-                    <td className="py-1 text-right text-gray-500">
+                    <td className="py-1 text-right text-gray-700">
                       {results.percentages[line.key as BlockName]?.toFixed(0) || 0}%
                     </td>
                   </tr>
@@ -375,7 +376,7 @@ const Print = () => {
                 </tr>
               </tbody>
             </table>
-            <p className="text-xs text-gray-500 mt-2 italic">{t('printRiskNotIncluded')}</p>
+            <p className="text-xs text-gray-700 mt-2 italic">{t('printRiskNotIncluded')}</p>
           </div>
 
           <div>
@@ -409,15 +410,15 @@ const Print = () => {
           <h3 className="font-medium text-sm text-gray-600 mb-2">{t('printHiredEmployee')}</h3>
           <div className="grid grid-cols-3 gap-4 text-sm bg-gray-50 p-3 rounded">
             <div>
-              <p className="text-gray-500">{t('positionTitle')}</p>
+              <p className="text-gray-700">{t('positionTitle')}</p>
               <p className="font-medium">{inputs.positionTitle || t('printNotSet')}</p>
             </div>
             <div>
-              <p className="text-gray-500">{t('printPayType')}</p>
+              <p className="text-gray-700">{t('printPayType')}</p>
               <p className="font-medium">{getPayTypeLabel(inputs.hirePay.payType)}</p>
             </div>
             <div>
-              <p className="text-gray-500">{t('grossSalary')}</p>
+              <p className="text-gray-700">{t('grossSalary')}</p>
               <p className="font-medium">
                 {inputs.hirePay.payType === 'hourly'
                   ? `${inputs.hirePay.payAmount} €/h × ${inputs.hirePay.hoursPerMonth || config.HOURS_PER_MONTH}h`
@@ -427,7 +428,7 @@ const Print = () => {
               </p>
             </div>
             <div>
-              <p className="text-gray-500">{t('printEmployerTotal')}</p>
+              <p className="text-gray-700">{t('printEmployerTotal')}</p>
               <p className="font-medium">{formatCurrency(results.normalizedHirePay.employerMonthlyCost)}{t('printPerMonth')}</p>
             </div>
           </div>
@@ -505,13 +506,13 @@ const Print = () => {
             <h4 className="font-medium mb-2">{t('blockVacantImpact')}</h4>
             {inputs.vacantPositionImpact.mode === 'uncovered' ? (
               <>
-                <p className="text-xs text-gray-500 mb-1">{t('vacantModeUncovered')}</p>
+                <p className="text-xs text-gray-700 mb-1">{t('vacantModeUncovered')}</p>
                 <p>{t('vacantPercentageUndone')}: {inputs.vacantPositionImpact.percentageUndone}%</p>
                 <p>{t('vacantMonthlyPositionValue')}: {formatCurrency(inputs.vacantPositionImpact.monthlyPositionValue)}</p>
               </>
             ) : (
               <>
-                <p className="text-xs text-gray-500 mb-1">{t('vacantModeTeamCoverage')}</p>
+                <p className="text-xs text-gray-700 mb-1">{t('vacantModeTeamCoverage')}</p>
                 <p>{t('vacantAdditionalHours')}: {inputs.vacantPositionImpact.additionalHours} h</p>
                 <p>{t('vacantAvgHourlyCost')}: {formatCurrency(inputs.vacantPositionImpact.avgHourlyCost)}</p>
                 <p>{t('vacantOvertimeMultiplier')}: {inputs.vacantPositionImpact.overtimeMultiplier}x</p>
@@ -589,14 +590,14 @@ const Print = () => {
         <div className="grid grid-cols-2 gap-4 text-center">
           <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
             <p className="text-sm text-gray-600 mb-1">{t('printRiskScenario')}</p>
-            <p className="text-sm text-gray-500 mb-2">{t('printRiskProbAdds', { pct: riskPct })}</p>
+            <p className="text-sm text-gray-700 mb-2">{t('printRiskProbAdds', { pct: riskPct })}</p>
             <p className="text-2xl font-bold text-orange-700">+{formatCurrency(results.badHireExtraIfHappens)}</p>
-            <p className="text-xs text-gray-500 mt-2">{t('printNotInTotal')}</p>
+            <p className="text-xs text-gray-700 mt-2">{t('printNotInTotal')}</p>
           </div>
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
             <p className="text-sm text-gray-600 mb-1">{t('printStatProbability')}</p>
             <p className="text-3xl font-bold text-gray-700">{riskPct}%</p>
-            <p className="text-xs text-gray-500 mt-2">{t('printHiringFails')}</p>
+            <p className="text-xs text-gray-700 mt-2">{t('printHiringFails')}</p>
           </div>
         </div>
       </section>
@@ -614,12 +615,14 @@ const Print = () => {
           >
             {t('printContactButton')}
           </a>
-          <p className="text-xs text-gray-500 mt-2">manpower.ee/et/vaerbamisteenused</p>
+          <p className="text-xs text-gray-700 mt-2">manpower.ee/et/vaerbamisteenused</p>
         </div>
       </section>
 
+      </main>
+
       {/* FOOTER */}
-      <footer className="print-footer px-8 py-4 border-t border-gray-200 text-xs text-gray-500">
+      <footer className="print-footer px-8 py-4 border-t border-gray-300 text-xs text-gray-700">
         <p>{t('configDisclaimer')}</p>
         <p className="mt-2">{t('printReportGenerated')} {formatDate(generatedAt)}</p>
       </footer>

@@ -163,7 +163,7 @@ export function RiskSummarySection() {
                   >
                     {t('contactButton')}
                   </a>
-                  <p className="text-sm text-muted-foreground/70">
+                  <p className="text-sm text-muted-foreground">
                     {t('contactFormNote')}
                   </p>
                 </div>
