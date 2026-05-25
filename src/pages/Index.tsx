@@ -13,6 +13,7 @@ import { useAppStore } from '@/store/appStore';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { sanitizeHttpUrl } from '@/lib/utils';
 
 const PRINT_SNAPSHOT_KEY = 'recruitment-calc-print-snapshot';
 
@@ -122,7 +123,7 @@ const Index = () => {
                     <h2 className="text-base laptop:text-sm font-semibold text-foreground">{t('helpTitle')}</h2>
                     <p className="text-sm laptop:text-xs leading-relaxed text-muted-foreground">{t('helpText')}</p>
                     <a
-                      href={config.helpUrl}
+                      href={sanitizeHttpUrl(config.helpUrl)}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
