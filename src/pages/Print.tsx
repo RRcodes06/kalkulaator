@@ -241,6 +241,21 @@ const Print = () => {
     setLoading(false);
   }, []);
 
+  useEffect(() => {
+    let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (!link) {
+      link = document.createElement('link');
+      link.setAttribute('rel', 'canonical');
+      document.head.appendChild(link);
+    }
+    link.setAttribute('href', 'https://manpowerkalkulaator.lovable.app/print');
+    return () => {
+      if (link && link.parentNode) {
+        link.parentNode.removeChild(link);
+      }
+    };
+  }, []);
+
   const lang: Language = snapshot?.language || 'est';
   const t = createT(lang);
 
