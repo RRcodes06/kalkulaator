@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { PRINT_SNAPSHOT_KEY } from './Index';
 import type { CalculatorInputs, ComputedResult, BlockName } from '@/types/calculator';
 import type { Language, TranslationKey } from '@/i18n/translations';
@@ -239,21 +240,6 @@ const Print = () => {
       }
     }
     setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
-    if (!link) {
-      link = document.createElement('link');
-      link.setAttribute('rel', 'canonical');
-      document.head.appendChild(link);
-    }
-    link.setAttribute('href', 'https://manpowerkalkulaator.lovable.app/print');
-    return () => {
-      if (link && link.parentNode) {
-        link.parentNode.removeChild(link);
-      }
-    };
   }, []);
 
   const lang: Language = snapshot?.language || 'est';
