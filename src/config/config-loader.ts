@@ -35,6 +35,24 @@ function isPlainObject(v: unknown): v is Plain {
   return typeof v === 'object' && v !== null && !Array.isArray(v);
 }
 
+const DEFAULT_HELP_URL = 'https://www.manpower.ee/et/vaerbamisteenused';
+
+/**
+ * Strictly accept http(s) URLs only. Anything else (e.g. javascript:, data:)
+ * is replaced with the safe default to prevent XSS via href injection.
+ */
+function sanitizeHelpUrl(url: unknown): string {
+  if (typeof url !== 'string' || url.trim() === '') return DEFAULT_HELP_URL;
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:'
+      ? url
+      : DEFAULT_HELP_URL;
+  } catch {
+    return DEFAULT_HELP_URL;
+  }
+}
+
 /**
  * Recursive merge: `override` wins, but missing keys fall back to `base`.
  * Arrays and primitives are replaced wholesale (not merged element-wise).
@@ -60,7 +78,9 @@ function deepMerge<T>(base: T, override: unknown): T {
  * initial value before async runtime config has loaded).
  */
 export function getCalculatorConfig(): CalculatorConfig {
-  return { ...CALCULATOR_CONFIG };
+  const cfg = { ...CALCULATOR_CONFIG };
+  cfg.helpUrl = sanitizeHelpUrl(cfg.helpUrl);
+  return cfg;
 }
 
 /**
@@ -81,7 +101,9 @@ export async function loadCalculatorConfig(): Promise<CalculatorConfig> {
     if (!trimmed.startsWith('{')) return defaults;
     const json = JSON.parse(trimmed) as unknown;
     if (!isPlainObject(json)) return defaults;
-    return deepMerge(defaults, json);
+    const merged = deepMerge(defaults, json);
+    merged.helpUrl = sanitizeHelpUrl(merged.helpUrl);
+    return merged;
   } catch {
     return defaults;
   }
