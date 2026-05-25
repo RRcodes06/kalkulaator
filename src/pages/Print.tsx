@@ -347,7 +347,7 @@ const Print = () => {
         {/* Breakdown Table */}
         <div className="grid grid-cols-2 gap-8">
           <div>
-            <h3 className="font-medium mb-2 text-sm text-gray-600">{t('printCostBreakdown')}</h3>
+            <h3 className="font-medium mb-2 text-sm text-gray-700">{t('printCostBreakdown')}</h3>
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b">
@@ -361,7 +361,7 @@ const Print = () => {
                   <tr key={line.key} className="border-b border-gray-100">
                     <td className="py-1">{line.label}</td>
                     <td className="py-1 text-right">{formatCurrency(line.value)}</td>
-                    <td className="py-1 text-right text-gray-700">
+                    <td className="py-1 text-right text-gray-800">
                       {results.percentages[line.key as BlockName]?.toFixed(0) || 0}%
                     </td>
                   </tr>
@@ -373,11 +373,11 @@ const Print = () => {
                 </tr>
               </tbody>
             </table>
-            <p className="text-xs text-gray-700 mt-2 italic">{t('printRiskNotIncluded')}</p>
+            <p className="text-xs text-gray-800 mt-2 italic">{t('printRiskNotIncluded')}</p>
           </div>
 
           <div>
-            <h3 className="font-medium mb-2 text-sm text-gray-600">{t('printVisualBreakdown')}</h3>
+            <h3 className="font-medium mb-2 text-sm text-gray-700">{t('printVisualBreakdown')}</h3>
             <PrintChart results={results} t={t} />
           </div>
         </div>
@@ -385,12 +385,12 @@ const Print = () => {
         {/* Top Drivers */}
         {results.topDrivers.length > 0 && (
           <div className="mt-6 bg-gray-50 rounded-lg p-4">
-            <h3 className="font-medium mb-2 text-sm text-gray-600">{t('printTopDrivers')}</h3>
+            <h3 className="font-medium mb-2 text-sm text-gray-700">{t('printTopDrivers')}</h3>
             <ol className="list-decimal list-inside space-y-1">
               {results.topDrivers.map((driver, idx) => (
                 <li key={idx} className="text-sm">
                   <strong>{t(BLOCK_LABEL_KEYS[driver.block] || 'blockStrategyPrep')}</strong>
-                  <span className="text-gray-600"> — {formatCurrency(driver.amount)} ({driver.percentage.toFixed(0)}%)</span>
+                  <span className="text-gray-700"> — {formatCurrency(driver.amount)} ({driver.percentage.toFixed(0)}%)</span>
                 </li>
               ))}
             </ol>
@@ -404,7 +404,7 @@ const Print = () => {
 
         {/* Position & Hire Pay */}
         <div className="mb-6 page-break-inside-avoid">
-          <h3 className="font-medium text-sm text-gray-600 mb-2">{t('printHiredEmployee')}</h3>
+          <h3 className="font-medium text-sm text-gray-700 mb-2">{t('printHiredEmployee')}</h3>
           <div className="grid grid-cols-3 gap-4 text-sm bg-gray-50 p-3 rounded">
             <div>
               <p className="text-gray-700">{t('positionTitle')}</p>
@@ -436,7 +436,7 @@ const Print = () => {
 
         {/* Roles */}
         <div className="mb-6 page-break-inside-avoid">
-          <h3 className="font-medium text-sm text-gray-600 mb-2">{t('printParticipants')}</h3>
+          <h3 className="font-medium text-sm text-gray-700 mb-2">{t('printParticipants')}</h3>
           <div className="grid grid-cols-3 gap-4 text-sm">
             {(['hr', 'manager', 'team'] as const).map((role) => {
               const roleData = inputs.roles[role];
