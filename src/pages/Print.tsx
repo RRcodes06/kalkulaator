@@ -316,6 +316,7 @@ const Print = () => {
         </div>
       </header>
 
+      <main>
       {/* SUMMARY */}
       <section className="print-section px-8 py-6 page-break-inside-avoid">
         <h2 className="text-lg font-semibold mb-4 border-b border-gray-200 pb-2">{t('printSummary')}</h2>
@@ -618,8 +619,10 @@ const Print = () => {
         </div>
       </section>
 
+      </main>
+
       {/* FOOTER */}
-      <footer className="print-footer px-8 py-4 border-t border-gray-200 text-xs text-gray-500">
+      <footer className="print-footer px-8 py-4 border-t border-gray-300 text-xs text-gray-700">
         <p>{t('configDisclaimer')}</p>
         <p className="mt-2">{t('printReportGenerated')} {formatDate(generatedAt)}</p>
       </footer>
