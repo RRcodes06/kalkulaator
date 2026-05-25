@@ -446,7 +446,7 @@ const Print = () => {
               return (
                 <div key={role} className="bg-gray-50 p-3 rounded">
                   <p className="font-medium capitalize mb-1">{roleLabel}</p>
-                  <p className="text-gray-600">{formatCurrency(normalized.employerHourlyRate)}/h ({t('printEmployerCostPerHour')})</p>
+                  <p className="text-gray-700">{formatCurrency(normalized.employerHourlyRate)}/h ({t('printEmployerCostPerHour')})</p>
                 </div>
               );
             })}
@@ -521,7 +521,7 @@ const Print = () => {
         {/* Other Services */}
         {inputs.otherServices.length > 0 && (
           <div className="mt-6 page-break-inside-avoid">
-            <h3 className="font-medium text-sm text-gray-600 mb-2">{t('blockOtherServices')}</h3>
+            <h3 className="font-medium text-sm text-gray-700 mb-2">{t('blockOtherServices')}</h3>
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b text-left">
@@ -560,14 +560,14 @@ const Print = () => {
         <h2 className="text-lg font-semibold mb-4 border-b border-gray-200 pb-2">{t('printRiskAnalysis')}</h2>
         
         <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
-          <p className="text-sm text-gray-700 mb-4">{t('configRiskExplanation')}</p>
+          <p className="text-sm text-gray-800 mb-4">{t('configRiskExplanation')}</p>
           <div className="grid grid-cols-2 gap-6">
             <div>
-              <p className="text-sm text-gray-600">{t('printRiskRate')}</p>
+              <p className="text-sm text-gray-700">{t('printRiskRate')}</p>
               <p className="text-2xl font-bold">{riskPct}%</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">{t('printBadHireCostMonths')}</p>
+              <p className="text-sm text-gray-700">{t('printBadHireCostMonths')}</p>
               <p className="text-2xl font-bold">{config.BAD_HIRE_PAY_MONTHS} {t('unitMonths')}</p>
             </div>
           </div>
@@ -586,14 +586,14 @@ const Print = () => {
 
         <div className="grid grid-cols-2 gap-4 text-center">
           <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-            <p className="text-sm text-gray-600 mb-1">{t('printRiskScenario')}</p>
-            <p className="text-sm text-gray-700 mb-2">{t('printRiskProbAdds', { pct: riskPct })}</p>
+            <p className="text-sm text-gray-700 mb-1">{t('printRiskScenario')}</p>
+            <p className="text-sm text-gray-800 mb-2">{t('printRiskProbAdds', { pct: riskPct })}</p>
             <p className="text-2xl font-bold text-orange-700">+{formatCurrency(results.badHireExtraIfHappens)}</p>
             <p className="text-xs text-gray-700 mt-2">{t('printNotInTotal')}</p>
           </div>
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-            <p className="text-sm text-gray-600 mb-1">{t('printStatProbability')}</p>
-            <p className="text-3xl font-bold text-gray-700">{riskPct}%</p>
+            <p className="text-sm text-gray-700 mb-1">{t('printStatProbability')}</p>
+            <p className="text-3xl font-bold text-gray-800">{riskPct}%</p>
             <p className="text-xs text-gray-700 mt-2">{t('printHiringFails')}</p>
           </div>
         </div>
@@ -603,7 +603,7 @@ const Print = () => {
       <section className="print-section px-8 py-6 page-break-inside-avoid">
         <div className="bg-primary/5 border border-primary/20 rounded-lg p-6 text-center">
           <h2 className="text-xl font-semibold mb-3">{t('configFinalQuestion')}</h2>
-          <p className="text-gray-600 mb-4">{t('configCtaPlaceholder')}</p>
+          <p className="text-gray-700 mb-4">{t('configCtaPlaceholder')}</p>
           <a
             href={sanitizeHttpUrl(config.helpUrl, 'https://www.manpower.ee/et/vaerbamisteenused')}
             target="_blank"
