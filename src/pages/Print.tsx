@@ -286,6 +286,16 @@ const Print = () => {
 
   return (
     <div className="print-page min-h-screen bg-white text-black">
+      <Helmet>
+        <title>Recruitment Cost Report — Manpower</title>
+        <meta name="description" content="Printable recruitment cost report — direct expenses, labor hours, and the hidden costs of vacancies and bad hires, ready for sharing." />
+        <link rel="canonical" href="https://manpowerkalkulaator.lovable.app/print" />
+        <meta property="og:title" content="Recruitment Cost Report — Manpower" />
+        <meta property="og:description" content="Printable recruitment cost report — direct expenses, labor hours, and the hidden costs of vacancies and bad hires." />
+        <meta property="og:url" content="https://manpowerkalkulaator.lovable.app/print" />
+        <meta name="twitter:title" content="Recruitment Cost Report — Manpower" />
+        <meta name="twitter:description" content="Printable recruitment cost report — direct expenses, labor hours, and the hidden costs of vacancies and bad hires." />
+      </Helmet>
       {/* HEADER */}
       <header className="print-header px-8 pt-8 pb-4 border-b-2 border-gray-300">
         <div className="flex items-center justify-between">

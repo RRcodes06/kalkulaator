@@ -12,6 +12,7 @@ import { Printer, Eraser, HelpCircle, Sparkles } from 'lucide-react';
 import { useAppStore } from '@/store/appStore';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 
 const PRINT_SNAPSHOT_KEY = 'recruitment-calc-print-snapshot';
 
@@ -96,6 +97,14 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>Recruitment Cost Calculator — Manpower</title>
+        <meta name="description" content="Calculate the total cost of recruitment including direct expenses, labor hours, and the hidden costs of vacancies and bad hires." />
+        <link rel="canonical" href="https://manpowerkalkulaator.lovable.app/" />
+        <meta property="og:title" content="Recruitment Cost Calculator — Manpower" />
+        <meta property="og:description" content="Estimate the total cost of recruitment — direct expenses, labor hours, and the hidden costs of vacancies and bad hires. By Manpower." />
+        <meta property="og:url" content="https://manpowerkalkulaator.lovable.app/" />
+      </Helmet>
       <main className="calc-shell-wrapper">
         <div className="calc-shell">
           {/* ── LEFT COLUMN: logo + help ── */}
