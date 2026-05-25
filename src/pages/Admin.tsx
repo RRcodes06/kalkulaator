@@ -370,12 +370,24 @@ function AdminPanel() {
         const stringKeys: (keyof CalculatorConfig)[] = [
           'disclaimerText', 'riskExplanationText', 'indirectExplanationText',
           'finalQuestionText', 'ctaPlaceholderText', 'resetConfirmText',
-          'defaultUsedText', 'privacyNotice',
+          'defaultUsedText', 'privacyNotice', 'helpUrl',
         ];
 
         for (const key of stringKeys) {
           if (typeof validatedConfig[key] !== 'string') {
             validatedConfig[key] = DEFAULT_CONFIG[key] as never;
+          }
+        }
+
+        // helpUrl is rendered as href — reject anything that isn't http(s).
+        if (typeof validatedConfig.helpUrl === 'string') {
+          try {
+            const parsed = new URL(validatedConfig.helpUrl);
+            if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+              validatedConfig.helpUrl = DEFAULT_CONFIG.helpUrl;
+            }
+          } catch {
+            validatedConfig.helpUrl = DEFAULT_CONFIG.helpUrl;
           }
         }
 
