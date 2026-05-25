@@ -214,7 +214,7 @@ function MissingSnapshot({ t }: { t: ReturnType<typeof createT> }) {
     <div className="min-h-screen flex items-center justify-center p-8">
       <div className="text-center max-w-md">
         <h1 className="text-2xl font-bold mb-4">{t('printMissingSnapshot')}</h1>
-        <p className="text-gray-600 mb-6">{t('printMissingDesc')}</p>
+        <p className="text-gray-700 mb-6">{t('printMissingDesc')}</p>
         <Link to="/" className="inline-block px-6 py-2 bg-primary text-white rounded-lg hover:opacity-90">
           {t('printBackToCalc')}
         </Link>
@@ -304,10 +304,10 @@ const Print = () => {
             <img src={manpowerLogo} alt={t('manpowerLogoAlt')} className="h-20 w-auto block" />
             <div>
               <h1 className="text-xl font-bold">{t('printTitle')}</h1>
-              <p className="text-sm text-gray-600">{t('printGenerated')} {formatDate(generatedAt)}</p>
+              <p className="text-sm text-gray-700">{t('printGenerated')} {formatDate(generatedAt)}</p>
             </div>
           </div>
-          <div className="text-right text-sm text-gray-700">
+          <div className="text-right text-sm text-gray-800">
             <p>{t('printPosition')} <strong>{inputs.positionTitle || t('printNotSet')}</strong></p>
           </div>
         </div>
@@ -319,9 +319,9 @@ const Print = () => {
         <h2 className="text-lg font-semibold mb-4 border-b border-gray-200 pb-2">{t('printSummary')}</h2>
         
         <div className="bg-gray-50 rounded-lg p-4 mb-6 text-center">
-          <p className="text-sm text-gray-600 mb-1">{t('printTotalCost')}</p>
+          <p className="text-sm text-gray-700 mb-1">{t('printTotalCost')}</p>
           <p className="text-4xl font-bold text-primary">{formatCurrency(results.totalCost)}</p>
-          <p className="text-sm text-gray-700 mt-1">{t('printRiskSeparate')}</p>
+          <p className="text-sm text-gray-800 mt-1">{t('printRiskSeparate')}</p>
         </div>
 
         {results.emptyFields && results.emptyFields.length > 0 && (
