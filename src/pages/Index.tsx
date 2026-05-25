@@ -83,7 +83,7 @@ const Index = () => {
       ? 'Palun ava kalkulaator süle- või lauaarvutis, et näha täielikku arvutust ja tulemusi.'
       : 'Please open it on a laptop or desktop computer to view the full calculation and results.';
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-6">
+      <main className="min-h-screen bg-background flex items-center justify-center p-6">
         <div className="max-w-md w-full rounded-xl border border-border bg-card p-8 shadow-lg text-center space-y-4">
           <h1 className="text-xl font-bold text-foreground">
             {guardTitle}
@@ -92,7 +92,7 @@ const Index = () => {
             {guardText}
           </p>
         </div>
-      </div>
+      </main>
     );
   }
 
