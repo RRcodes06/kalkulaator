@@ -10,7 +10,7 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted">
+    <main className="flex min-h-screen items-center justify-center bg-muted">
       <Helmet>
         <title>Page not found — Manpower</title>
         <meta name="description" content="The page you requested could not be found. Return to the Recruitment Cost Calculator." />
@@ -24,7 +24,7 @@ const NotFound = () => {
           Return to Home
         </a>
       </div>
-    </div>
+    </main>
   );
 };
 
