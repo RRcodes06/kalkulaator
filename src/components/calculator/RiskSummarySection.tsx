@@ -8,6 +8,7 @@ import { ValidationModal, type EmptyField } from './ValidationModal';
 import { MissingInputsInfo, type MissingInputInfo } from './MissingInputsInfo';
 import { useAccordionController } from '@/hooks/useAccordionController';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { sanitizeHttpUrl } from '@/lib/utils';
 
 export function RiskSummarySection() {
   const { results, config, hasCalculated, triggerCalculation } = useAppStore();
@@ -155,7 +156,7 @@ export function RiskSummarySection() {
                     {t('contactUs')}
                   </p>
                   <a
-                    href={config.helpUrl}
+                    href={sanitizeHttpUrl(config.helpUrl)}
                     target="_blank"
                     rel="noopener noreferrer"
                     referrerPolicy="no-referrer"
