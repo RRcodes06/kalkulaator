@@ -78,7 +78,7 @@ export function NumberInput({
                       ? 'bg-primary/10 text-primary'
                       : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                   )}
-                  aria-label="Info"
+                  aria-label={t('showFieldInfo')}
                 >
                   <HelpCircle className="h-3.5 w-3.5" />
                 </button>
