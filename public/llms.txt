@@ -1,0 +1,10 @@
+# Recruitment Cost Calculator — Manpower
+
+> Calculate the total cost of recruitment including direct expenses, labor hours, and the hidden costs of vacancies and bad hires.
+
+This calculator provides an estimate of the full cost of hiring a new employee, covering direct recruitment expenses, internal labor hours spent on the process, and the financial impact of a position remaining vacant. It also factors in risk scenarios such as a bad hire. All costs are proportionally calculated against the monthly total employee cost. The tool supports both Estonian and English.
+
+## Pages
+
+- [Calculator](/): Interactive recruitment cost calculator with adjustable inputs for recruitment activities, labor hours, vacancy impact, and other services.
+- [Print Report](/print): Printable summary of the calculated recruitment costs, formatted as a branded PDF-ready report.
