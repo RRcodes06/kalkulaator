@@ -122,6 +122,7 @@ function ServiceRowCard({ row, onUpdate, onRemove }: ServiceRowCardProps) {
           size="icon"
           onClick={onRemove}
           className="text-destructive hover:text-destructive"
+          aria-label={t('deleteService')}
         >
           <Trash2 className="w-4 h-4" />
         </Button>
@@ -134,7 +135,7 @@ function ServiceRowCard({ row, onUpdate, onRemove }: ServiceRowCardProps) {
             value={row.details.serviceType}
             onValueChange={(v) => handleServiceTypeChange(v as ServiceType)}
           >
-            <SelectTrigger className="bg-card h-11">
+            <SelectTrigger className="bg-card h-11" aria-label={t('serviceType')}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -160,7 +161,7 @@ function ServiceRowCard({ row, onUpdate, onRemove }: ServiceRowCardProps) {
                   })
                 }
               >
-                <SelectTrigger className="bg-card h-11">
+                <SelectTrigger className="bg-card h-11" aria-label={t('payTypeLabel')}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -211,7 +212,7 @@ function ServiceRowCard({ row, onUpdate, onRemove }: ServiceRowCardProps) {
                   })
                 }
               >
-                <SelectTrigger className="bg-card h-11">
+                <SelectTrigger className="bg-card h-11" aria-label={t('billingType')}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>

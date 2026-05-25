@@ -151,7 +151,7 @@ export function CalculatorSection({
                 </div>
                 <div className="text-left">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-base text-foreground">{title}</h3>
+                    <h2 className="font-semibold text-base text-foreground">{title}</h2>
                     <StateIndicator state={sectionState} />
                     {hasInfo && (
                       <button
@@ -162,7 +162,7 @@ export function CalculatorSection({
                             ? "bg-primary/10 text-primary" 
                             : "text-muted-foreground hover:text-foreground hover:bg-muted"
                         )}
-                        aria-label="ⓘ"
+                        aria-label={t('showSectionInfo')}
                       >
                         <HelpCircle className="w-4 h-4" />
                       </button>

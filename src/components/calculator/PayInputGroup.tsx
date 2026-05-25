@@ -59,7 +59,7 @@ export function PayInputGroup({
 
         <div className="min-w-0 space-y-3">
           <Select value={value.payType} onValueChange={handlePayTypeChange}>
-            <SelectTrigger className="h-11 w-full min-w-0 bg-card">
+            <SelectTrigger className="h-11 w-full min-w-0 bg-card" aria-label={`${label} - ${t('payTypeLabel')}`}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -107,7 +107,7 @@ export function PayInputGroup({
       <div className="space-y-2">
         <Label className="text-sm font-medium">{label} - {t('payTypeLabel')}</Label>
         <Select value={value.payType} onValueChange={handlePayTypeChange}>
-          <SelectTrigger className="bg-card h-11">
+          <SelectTrigger className="bg-card h-11" aria-label={`${label} - ${t('payTypeLabel')}`}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

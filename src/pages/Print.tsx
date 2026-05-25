@@ -304,7 +304,7 @@ const Print = () => {
       <header className="print-header px-8 pt-8 pb-4 border-b-2 border-gray-300">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <img src={manpowerLogo} alt="Manpower" className="h-20 w-auto block" />
+            <img src={manpowerLogo} alt={t('manpowerLogoAlt')} className="h-20 w-auto block" />
             <div>
               <h1 className="text-xl font-bold">{t('printTitle')}</h1>
               <p className="text-sm text-gray-600">{t('printGenerated')} {formatDate(generatedAt)}</p>
