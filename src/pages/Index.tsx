@@ -103,14 +103,14 @@ const Index = () => {
             <div className="space-y-6 laptop:space-y-4">
               <img
                 src={manpowerLogo}
-                alt="Manpower"
+                alt={t('manpowerLogoAlt')}
                 className="block w-full max-w-[180px] laptop:max-w-[150px] h-auto object-contain shrink-0 rounded-none ml-auto"
               />
               <div className="calc-help-sticky">
                 <div className="flex items-start gap-5 laptop:gap-3 rounded-xl border border-border bg-card p-6 laptop:p-4 shadow-lg">
                   <HelpCircle className="h-7 w-7 laptop:h-5 laptop:w-5 text-primary mt-0.5 flex-shrink-0" />
                   <div className="space-y-3 laptop:space-y-2">
-                    <h4 className="text-base laptop:text-sm font-semibold text-foreground">{t('helpTitle')}</h4>
+                    <h2 className="text-base laptop:text-sm font-semibold text-foreground">{t('helpTitle')}</h2>
                     <p className="text-sm laptop:text-xs leading-relaxed text-muted-foreground">{t('helpText')}</p>
                     <a
                       href={config.helpUrl}
