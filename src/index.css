@@ -278,13 +278,6 @@
       padding-block: 1rem;
     }
 
-    /* Order: logo+actions row context, calculator content, results */
-    .calc-left-col { order: 1; }
-    .calc-right-col { order: 2; }
-    /* Center column (the form) sits between via DOM order; force it last so
-       results appear after the form. */
-    .calc-shell > section { order: 3; }
-
     /* Help box should not be fixed on mobile — let it flow inline. */
     .calc-help-sticky {
       position: static !important;
