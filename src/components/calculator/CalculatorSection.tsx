@@ -138,20 +138,20 @@ export function CalculatorSection({
           sectionState === 'completed' && "ring-1 ring-success/20",
           sectionState === 'in-progress' && "ring-1 ring-primary/20"
         )}>
-          <AccordionTrigger className="px-6 py-5 hover:no-underline [&[data-state=open]>div>.chevron]:rotate-180">
-            <div className="flex items-center justify-between w-full pr-4">
-              <div className="flex items-center gap-4">
+          <AccordionTrigger className="px-4 sm:px-6 py-4 sm:py-5 hover:no-underline [&[data-state=open]>div>.chevron]:rotate-180">
+            <div className="flex items-center justify-between w-full pr-2 sm:pr-4 gap-2">
+              <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
                 <div className={cn(
-                  "w-11 h-11 rounded-lg flex items-center justify-center transition-colors",
+                  "w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center transition-colors flex-shrink-0",
                   sectionState === 'completed' && "bg-success/10 text-success",
                   sectionState === 'in-progress' && "bg-primary/10 text-primary",
                   sectionState === 'not-started' && "bg-muted text-muted-foreground"
                 )}>
                   {icon}
                 </div>
-                <div className="text-left">
-                  <div className="flex items-center gap-2">
-                    <h2 className="font-semibold text-base text-foreground">{title}</h2>
+                <div className="text-left min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h2 className="font-semibold text-sm sm:text-base text-foreground">{title}</h2>
                     <StateIndicator state={sectionState} />
                     {hasInfo && (
                       <button
@@ -171,18 +171,18 @@ export function CalculatorSection({
                 </div>
               </div>
               {subtotal !== undefined && subtotal > 0 && hasCalculated && (
-                <span className="text-lg font-semibold text-primary">
+                <span className="text-base sm:text-lg font-semibold text-primary flex-shrink-0 whitespace-nowrap">
                   {formatCurrency(subtotal)}
                 </span>
               )}
               {subtotal !== undefined && subtotal > 0 && !hasCalculated && (
-                <span className="text-lg font-semibold text-muted-foreground">
+                <span className="text-base sm:text-lg font-semibold text-muted-foreground flex-shrink-0">
                   —
                 </span>
               )}
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 pb-8 pt-4">
+          <AccordionContent className="px-4 sm:px-6 pb-6 sm:pb-8 pt-4">
             <div className="flex items-center justify-between mb-4">
               <div className="flex-1">
                 {showInfo && hasInfo && (
