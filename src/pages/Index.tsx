@@ -5,6 +5,7 @@ import { SummarySidebar } from '@/components/calculator/SummarySidebar';
 import { ResetModal } from '@/components/calculator/ResetModal';
 import { PrivacyNotice } from '@/components/calculator/PrivacyNotice';
 import { LanguageToggle } from '@/components/calculator/LanguageToggle';
+import { MobileHelpPopup } from '@/components/calculator/MobileHelpPopup';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
@@ -69,7 +70,7 @@ const Index = () => {
                 alt={t('manpowerLogoAlt')}
                 className="block w-full max-w-[160px] sm:max-w-[180px] laptop:max-w-[150px] h-auto object-contain shrink-0 rounded-none mx-auto md:ml-auto md:mr-0"
               />
-              <div className="calc-help-sticky">
+              <div className="calc-help-sticky hidden md:block">
                 <div className="flex items-start gap-5 laptop:gap-3 rounded-xl border border-border bg-card p-6 laptop:p-4 shadow-lg">
                   <HelpCircle className="h-7 w-7 laptop:h-5 laptop:w-5 text-primary mt-0.5 flex-shrink-0" />
                   <div className="space-y-3 laptop:space-y-2">
@@ -149,6 +150,7 @@ const Index = () => {
           <p>{t('footer')}</p>
         </div>
       </footer>
+      <MobileHelpPopup />
     </div>
   );
 };
