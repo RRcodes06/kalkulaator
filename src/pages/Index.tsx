@@ -150,6 +150,7 @@ const Index = () => {
           <p>{t('footer')}</p>
         </div>
       </footer>
+      <MobileHelpPopup />
     </div>
   );
 };
