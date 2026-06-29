@@ -6,6 +6,7 @@ import { ResetModal } from '@/components/calculator/ResetModal';
 import { PrivacyNotice } from '@/components/calculator/PrivacyNotice';
 import { LanguageToggle } from '@/components/calculator/LanguageToggle';
 import { MobileHelpPopup } from '@/components/calculator/MobileHelpPopup';
+import { MobileControls } from '@/components/calculator/MobileControls';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
@@ -61,6 +62,7 @@ const Index = () => {
         <meta property="og:url" content="https://manpowerkalkulaator.lovable.app/" />
       </Helmet>
       <main className="calc-shell-wrapper">
+        <MobileControls onPrint={handlePrint} />
         <div className="calc-shell">
           {/* ── LEFT COLUMN: logo + help ── */}
           <aside className="calc-left-col self-start">
@@ -131,7 +133,7 @@ const Index = () => {
           {/* ── RIGHT COLUMN: actions + results ── */}
           <aside className="calc-right-col">
             <div className="space-y-4 laptop:space-y-3">
-              <div className="flex flex-wrap items-center justify-end gap-2 laptop:gap-1">
+              <div className="hidden md:flex flex-wrap items-center justify-end gap-2 laptop:gap-1">
                 <LanguageToggle />
                 <Button variant="outline" size="sm" onClick={handlePrint} className="gap-1.5 laptop:text-xs laptop:h-7 laptop:px-2">
                   <Printer className="h-4 w-4 laptop:h-3 laptop:w-3" />
@@ -140,6 +142,7 @@ const Index = () => {
                 <ResetModal />
               </div>
               <SummarySidebar />
+              <MobileControls onPrint={handlePrint} />
             </div>
           </aside>
         </div>
