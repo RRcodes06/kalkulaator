@@ -15,7 +15,6 @@ const NotFound = () => {
         <title>Page not found — Manpower</title>
         <meta name="description" content="The page you requested could not be found. Return to the Recruitment Cost Calculator." />
         <meta name="robots" content="noindex" />
-        <link rel="canonical" href={`https://manpowerkalkulaator.lovable.app${location.pathname}`} />
       </Helmet>
       <div className="text-center">
         <h1 className="mb-4 text-4xl font-bold">404</h1>

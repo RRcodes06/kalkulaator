@@ -7,4 +7,3 @@ This calculator provides an estimate of the full cost of hiring a new employee, 
 ## Pages
 
 - [Calculator](/): Interactive recruitment cost calculator with adjustable inputs for recruitment activities, labor hours, vacancy impact, and other services.
-- [Print Report](/print): Printable summary of the calculated recruitment costs, formatted as a branded PDF-ready report.

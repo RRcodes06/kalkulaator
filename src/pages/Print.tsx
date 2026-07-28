@@ -290,7 +290,7 @@ const Print = () => {
       <Helmet>
         <title>Recruitment Cost Report — Manpower</title>
         <meta name="description" content="Printable recruitment cost report — direct expenses, labor hours, and the hidden costs of vacancies and bad hires, ready for sharing." />
-        <link rel="canonical" href="https://manpowerkalkulaator.lovable.app/print" />
+        <meta name="robots" content="noindex, follow" />
         <meta property="og:title" content="Recruitment Cost Report — Manpower" />
         <meta property="og:description" content="Printable recruitment cost report — direct expenses, labor hours, and the hidden costs of vacancies and bad hires." />
         <meta property="og:url" content="https://manpowerkalkulaator.lovable.app/print" />
