@@ -129,7 +129,7 @@ export function NumberInput({
         <div
           className={cn(
             'flex items-start gap-1.5 text-xs',
-            warning.severity === 'warning' && 'text-warning',
+            warning.severity === 'warning' && 'text-warning-text',
             warning.severity === 'info' && 'text-muted-foreground',
             warning.severity === 'error' && 'text-destructive'
           )}
