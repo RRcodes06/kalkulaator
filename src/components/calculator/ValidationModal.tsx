@@ -40,7 +40,7 @@ export function ValidationModal({
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-warning">
+          <DialogTitle className="flex items-center gap-2 text-warning-text">
             <AlertTriangle className="w-5 h-5" />
             {t('validationTitle')}
           </DialogTitle>
@@ -53,7 +53,7 @@ export function ValidationModal({
           <ul className="space-y-1.5 text-sm text-muted-foreground">
             {displayList.map((label, idx) => (
               <li key={idx} className="flex items-center gap-2">
-                <ChevronRight className="w-3 h-3 text-warning flex-shrink-0" />
+                <ChevronRight className="w-3 h-3 text-warning-text flex-shrink-0" />
                 <span>{label}</span>
               </li>
             ))}

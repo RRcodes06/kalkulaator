@@ -83,8 +83,8 @@ export function PayInputGroup({
 
         {isDefaultUsed && defaultSalaryHint && (
           <div className="flex items-start gap-2 rounded-md border border-warning/20 bg-warning/10 px-4 py-3">
-            <span className="shrink-0 text-warning">⚠</span>
-            <p className="text-sm leading-relaxed text-warning">{defaultSalaryHint}</p>
+            <span className="shrink-0 text-warning-text">⚠</span>
+            <p className="text-sm leading-relaxed text-warning-text">{defaultSalaryHint}</p>
           </div>
         )}
 
@@ -159,7 +159,7 @@ export function PayInputGroup({
             </div>
           </div>
           {isDefaultUsed && (
-            <p className="text-sm text-warning mt-3">{t('usesEstonianAverage')}</p>
+            <p className="text-sm text-warning-text mt-3">{t('usesEstonianAverage')}</p>
           )}
         </div>
       )}

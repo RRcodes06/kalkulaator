@@ -57,6 +57,8 @@ export default {
         warning: {
           DEFAULT: "hsl(var(--warning))",
           foreground: "hsl(var(--warning-foreground))",
+          text: "hsl(var(--warning-text))",
+          "text-on-dark": "hsl(var(--warning-text-on-dark))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",

@@ -175,7 +175,7 @@ export function RiskSummarySection() {
           <Card className="border-warning/30 bg-warning/5">
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-2 text-xl">
-                <AlertTriangle className="w-6 h-6 text-warning" />
+                <AlertTriangle className="w-6 h-6 text-warning-text" />
                 {t('riskScenarioTitle')}
                 <button
                   onClick={() => setShowInfo(!showInfo)}
@@ -214,7 +214,7 @@ export function RiskSummarySection() {
                 <p className="text-xl font-medium text-foreground mb-1">
                   {t('riskProbabilityAdds', { pct: riskPercentage })}
                 </p>
-                <p className="text-5xl font-bold text-warning leading-tight">
+                <p className="text-5xl font-bold text-warning-text leading-tight">
                   {formatCurrency(results.badHireExtraIfHappens)}
                 </p>
                 <p className="text-base text-muted-foreground mt-1">
@@ -225,7 +225,7 @@ export function RiskSummarySection() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div className="p-3 bg-background rounded-lg border border-border">
                   <p className="text-base text-muted-foreground mb-1">{t('riskProbabilityLabel')}</p>
-                  <p className="text-3xl font-bold text-warning leading-tight">{riskPercentage}%</p>
+                  <p className="text-3xl font-bold text-warning-text leading-tight">{riskPercentage}%</p>
                   <p className="text-sm text-muted-foreground mt-1">
                     {t('hiringFails')}
                   </p>

@@ -196,13 +196,13 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
       {hasCalculated && (
         <div className="mb-5 p-4 bg-warning/10 rounded-lg border border-warning/20">
           <div className="flex items-center gap-2 mb-2">
-            <AlertTriangle className="w-4 h-4 text-warning" />
-            <p className="text-warning text-sm font-semibold">{t('additionalRiskScenario')}</p>
+            <AlertTriangle className="w-4 h-4 text-warning-text-on-dark" />
+            <p className="text-warning-text-on-dark text-sm font-semibold">{t('additionalRiskScenario')}</p>
           </div>
           <p className="text-sm text-white mb-1">
             {t('riskProbability', { pct: (config.BAD_HIRE_RISK_RATE * 100).toFixed(0) })}
           </p>
-          <p className="text-2xl font-bold text-warning">
+          <p className="text-2xl font-bold text-warning-text-on-dark">
             {formatCurrency(results.badHireExtraIfHappens)}
           </p>
           <p className="text-xs text-white/75 mt-2">
@@ -215,12 +215,12 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
         <div className="p-4 bg-warning/10 rounded-lg border border-warning/20">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-warning" />
-              <p className="text-warning text-sm font-medium">{t('warnings')}</p>
+              <AlertTriangle className="w-4 h-4 text-warning-text-on-dark" />
+              <p className="text-warning-text-on-dark text-sm font-medium">{t('warnings')}</p>
             </div>
             <span className={cn(
               "text-xs font-semibold px-2 py-0.5 rounded-full",
-              "bg-warning/20 text-warning"
+              "bg-warning/20 text-warning-text-on-dark"
             )}>
               {warningsCount}
             </span>
@@ -235,7 +235,7 @@ export const SummarySidebar = forwardRef<HTMLElement>(function SummarySidebar(_,
             {results.rangeWarnings.map((w, i) => (
               <li key={`range-${i}`} className={cn(
                 "flex flex-col",
-                w.severity === 'warning' && "text-warning/90",
+                w.severity === 'warning' && "text-warning-text-on-dark/90",
                 w.severity === 'info' && "text-summary-muted"
               )}>
                 <span className="font-medium text-summary-foreground">{w.label}</span>

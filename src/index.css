@@ -43,6 +43,9 @@
     /* Warning - Attention needed */
     --warning: 38 92% 50%;
     --warning-foreground: 222 47% 11%;
+    /* Accessible warning text colors (WCAG AA) - not used for fills/borders */
+    --warning-text: 35 100% 28%;
+    --warning-text-on-dark: 38 92% 65%;
 
     /* Destructive */
     --destructive: 0 72% 51%;
